@@ -1,0 +1,141 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:ride_sharing/core/components/custom_button.dart';
+import 'package:ride_sharing/core/components/custom_text_field.dart';
+import 'package:ride_sharing/core/components/reusable_google_signin_button.dart';
+import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
+import 'package:ride_sharing/features/auth/signup/sign_up_controller/sign_up_controller.dart';
+
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Access the controller via Provider
+    final controller = context.watch<SignUpController>();
+
+    return BaseScaffold(
+      title: "Sign Up",
+      isCurved: true,
+      titleAlign: TextAlign.center, 
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.pop(context),
+      ),
+      child: Column(
+        children: [
+          // Top Logo and Connecting Line
+          Image.asset(
+            'assets/images/logo_small.png',
+            height: 80.h,
+          ),
+          SizedBox(height: 20.h),
+          // Main Title
+          Text(
+            "Create account",
+            style: TextStyle(
+              fontSize: 32.sp,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xFF001524),
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            "Sign up to continue",
+            style: TextStyle(fontSize: 18.sp, color: const Color(0xFF757575)),
+          ),
+          SizedBox(height: 20.h),
+
+          // --- INPUT FIELDS ---
+          
+          _buildLabel("Full Name"),
+          CustomTextField(
+            controller: controller.nameController,
+            hintText: "Enter your name",
+            prefixIconPath: 'assets/icons/email.svg', 
+          ),
+          SizedBox(height: 10.h),
+
+          _buildLabel("Email"),
+          CustomTextField(
+            controller: controller.emailController,
+            hintText: "your@email.com",
+            prefixIconPath: 'assets/icons/lock.svg', 
+            keyboardType: TextInputType.emailAddress,
+          ),
+          SizedBox(height: 10.h),
+
+          _buildLabel("Phone Number"),
+          CustomTextField(
+            controller: controller.phoneController,
+            hintText: "+1 (555) 000-0000",
+            prefixIconPath: 'assets/icons/phone.svg',
+            keyboardType: TextInputType.phone,
+          ),
+
+          SizedBox(height: 20.h),
+
+          // --- CREATE ACCOUNT BUTTON ---
+          CustomButton(
+            text: "Create account",
+            onTap: () => controller.createAccount(context),
+          ),
+
+          SizedBox(height: 20.h),
+
+          // OR Divider
+          const Row(
+            children: [
+              Expanded(child: Divider(color: Color(0xFFE0E0E0), thickness: 1.5)),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text("OR", style: TextStyle(color: Color(0xFFE0E0E0), fontSize: 16, fontWeight: FontWeight.bold)),
+              ),
+              Expanded(child: Divider(color: Color(0xFFE0E0E0), thickness: 1.5)),
+            ],
+          ),
+          SizedBox(height: 20.h),
+
+          // --- GOOGLE SIGN-UP BUTTON ---
+          GoogleSignInButton(
+            onTap: () => controller.signUpWithGoogle(context),
+          ),
+          SizedBox(height: 20.h),
+          // Footer Signup Text
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Already have an account? ",
+                style: TextStyle(color: Color(0xFF757575), fontSize: 16),
+              ),
+              GestureDetector(
+                onTap: () => controller.navigateToSignIn(context),
+                child: const Text(
+                  "Sign In",
+                  style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10.h),
+        ],
+      ),
+    );
+  }
+
+  // Helper for input labels
+  Widget _buildLabel(String text) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 5.h),
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
+        ),
+      ),
+    );
+  }
+}
