@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:ride_sharing/features/home/view/home_view.dart';
 import 'package:ride_sharing/features/payment/payment_model/payment_model.dart';
+import 'package:ride_sharing/features/payment/payment_view/stripe_view.dart';
 
 class PaymentController extends ChangeNotifier {
-  // 1. Dynamic Payment state from image_10.png
+  // 1. Dynamic Payment state
   late PaymentModel _payment;
   PaymentMethodType? _selectedMethod = PaymentMethodType.card; 
 
   PaymentModel get payment => _payment;
   PaymentMethodType? get selectedMethod => _selectedMethod;
 
-  // 2. static Payment Methods data per MVC pattern
+  // 2. Static Payment Methods data
   final List<PaymentMethodData> _availableMethods = [
     PaymentMethodData(
       title: "Card Payment",
@@ -52,26 +54,45 @@ class PaymentController extends ChangeNotifier {
     );
   }
 
-  // --- Dynamic Methods ---
+  // --- Logic for Success Redirect ---
+
+  void completeStripePayment(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const HomeScreen()), 
+      (route) => false,
+    );
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Payment Successful!"),
+        backgroundColor: Color(0xFF1DB954), 
+      ),
+    );
+  }
+
+  // --- Action Methods ---
 
   void selectPaymentMethod(PaymentMethodType method) {
     _selectedMethod = method;
     _payment.selectedMethod = method; 
     notifyListeners(); 
-    print("Standard dynamic update to payment method: ${method.name}");
   }
 
-  void processPayment(BuildContext context) {
-    if (_selectedMethod != null) {
-      print("Processing Dynamic Payment of \$${_payment.totalAmount.toStringAsFixed(0)} via ${_selectedMethod?.name}...");
-      // --- API CALL LOGIC ---
-      // GoRouter.of(context).push('/paymentSuccess');
-    } else {
-      // Show error validation dialog
+ void processPayment(BuildContext context) {
+    if (_selectedMethod == PaymentMethodType.card) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true, 
+        backgroundColor: Colors.transparent,
+        builder: (context) => const StripeCardBottomSheet(),
+      );
+    } else if (_selectedMethod != null) {
+      completeStripePayment(context);
     }
   }
 
   void navigateBack(BuildContext context) {
-    // GoRouter.of(context).pop(); // standard go back
+    Navigator.pop(context);
   }
 }

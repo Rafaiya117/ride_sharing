@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CashPaymentController extends ChangeNotifier {
   String _selectedMethod = 'cash'; 
@@ -12,6 +13,6 @@ class CashPaymentController extends ChangeNotifier {
 
   void processCashPayment(BuildContext context, double amount) {
     print("User confirmed cash payment of \$$amount to the driver.");
-    // Navigator.pushNamed(context, '/paymentSuccess');
+    GoRouter.of(context).push('/rating_screen');
   }
 }

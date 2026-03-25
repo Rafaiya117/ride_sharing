@@ -24,11 +24,12 @@ class ReviewsView extends StatelessWidget {
       ),
       child: Column(
         children: [
-          SizedBox(height: 10.h),
           const ReviewsSummaryCard(),
           _buildSectionTitle("All Reviews"),
-          SizedBox(height: 20.h),
+          // Removed the manual SizedBox here if your _buildSectionTitle already has one
           ListView.builder(
+            padding: EdgeInsets
+                .zero, // FIX: Removes the default top/bottom list padding
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: controller.reviews.length,

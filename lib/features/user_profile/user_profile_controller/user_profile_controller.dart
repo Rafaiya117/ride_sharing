@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/features/user_profile/user_profile_model/user_profile_model.dart';
 
 class ProfileController extends ChangeNotifier {
@@ -46,7 +47,7 @@ class ProfileController extends ChangeNotifier {
 
   void navigateToEditProfile(BuildContext context) {
     print("Navigating dynamically to edit profile...");
-    // GoRouter.of(context).push('/editProfile', extra: _profile);
+    GoRouter.of(context).push('/edit_profile', extra: _profile);
   }
 
   void viewCreditHistory(BuildContext context) {
@@ -61,7 +62,7 @@ class ProfileController extends ChangeNotifier {
 
   void navigateToReviews(BuildContext context) {
     print("Navigating dynamically to user reviews...");
-    // GoRouter.of(context).push('/userReviews');
+    GoRouter.of(context).push('/review_user');
   }
 
   void navigateToPaymentMethods(BuildContext context) {

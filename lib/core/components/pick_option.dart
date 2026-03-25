@@ -23,26 +23,56 @@ class PickupOptionTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.only(bottom: 12.h),
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: isSelected ? Colors.black : Colors.grey.shade200, width: isSelected ? 1.5 : 1),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16.r), 
+          border: Border.all(
+            color: isSelected ? Colors.black : const Color(0xFFE8E8E8), 
+            width: isSelected ? 1.5 : 1,
+          ),
         ),
         child: Row(
           children: [
-            Icon(isSelected ? Icons.radio_button_checked : Icons.radio_button_off, 
-                 color: isSelected ? Colors.black : Colors.grey),
-            SizedBox(width: 12.w),
+            // Custom Radio Icon to match the rounded design in the image
+            Icon(
+              isSelected ? Icons.radio_button_checked : Icons.radio_button_off,
+              color: isSelected ? Colors.black : const Color(0xFF101010), // Darker icon even when off
+              size: 22.sp,
+            ),
+            SizedBox(width: 16.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp)),
-                  Text(subtitle, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700, // Bold weight from image
+                      fontSize: 16.sp, // Slightly larger title
+                      color: const Color(0xFF101010),
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      color: const Color(0xFF757575), 
+                      fontSize: 13.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
                 ],
               ),
             ),
-            Text(trailing, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp)),
+            Text(
+              trailing,
+              style: TextStyle(
+                fontWeight: FontWeight.w800, 
+                fontSize: 14.sp,
+                color: const Color(0xFF101010),
+              ),
+            ),
           ],
         ),
       ),

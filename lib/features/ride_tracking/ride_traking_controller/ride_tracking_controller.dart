@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ride_sharing/core/components/ride_completed_popup.dart';
 import 'package:ride_sharing/features/ride_tracking/ride_tracking_model/ride_tracking_model.dart';
 
 class TrackRideController extends ChangeNotifier {
@@ -12,7 +16,7 @@ class TrackRideController extends ChangeNotifier {
   // 2. Dynamic Status (from image_11.png)
   String get estimatedArrival => "2h 45m";
   double get percentageComplete => 0.63;
-  String get currentStatusText => "Approaching Hartford, CT";
+  String get currentStatusText => ""; //Approaching Hartford, CT
 
   // 3. Dynamic Driver Data
   // ignore: prefer_final_fields
@@ -26,6 +30,28 @@ class TrackRideController extends ChangeNotifier {
   DriverModel get driver => _driver;
 
   // --- Methods ---
+  String selectedPaymentMethod = "Cash";
+  Timer? _popupTimer;
+  void startRideTimeout(BuildContext context) {
+    _popupTimer?.cancel(); 
+    _popupTimer = Timer(const Duration(seconds: 3), () {
+      if (context.mounted && ModalRoute.of(context)?.isCurrent == true) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => RideCompletedPopUp(
+            fromLocation: pickup,
+            toLocation: dropoff,
+            totalAmount: price,
+            isCash: selectedPaymentMethod == "Cash",
+            onContinueToPayment: () {
+              GoRouter.of(context).push('/cash_payment');
+            },
+          ),
+        );
+      }
+    });
+  }
 
   void triggerEmergencySOS(BuildContext context) {
     print("EMERGENCY SOS TRIGGERED! Calling emergency services and notifying platform...");

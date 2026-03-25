@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/features/ride_details/ride_details_model/ride_details_model.dart';
 
 class RideDetailsController extends ChangeNotifier {
-  // 1. Dynamic Ride Data (Mocked from image_7.png)
+   final List<String> _vehicleImages = [
+    'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=1000',
+    'https://images.unsplash.com/photo-1542281286-9e0a16bb7366?q=80&w=1000',
+    'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1000',
+    'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?q=80&w=1000',
+  ];
+
+  List<String> get vehicleImages => _vehicleImages;
   // ignore: prefer_final_fields
   RideDetailsModel _ride = RideDetailsModel(
     totalPrice: 38.0, date: "Mar 7, 2026", time: "10:00 AM", duration: "4h 45m", distance: "225 miles", totalSeats: 3,
@@ -12,6 +20,13 @@ class RideDetailsController extends ChangeNotifier {
   );
 
   RideDetailsModel get ride => _ride;
+  int _selectedPickupIndex = 0;
+  int get selectedPickupIndex => _selectedPickupIndex;
+
+  void setPickupOption(int index) {
+    _selectedPickupIndex = index;
+    notifyListeners();
+  }
   // --- Methods ---
 
   void callDriver(String phoneNumber) {
@@ -32,6 +47,7 @@ class RideDetailsController extends ChangeNotifier {
   }
 
   void bookNow(BuildContext context, double price) {
+    GoRouter.of(context).go('/payment');
     print("Booking now for \$$price...");
   }
 

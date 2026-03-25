@@ -9,69 +9,84 @@ class ReviewTileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const goldStarColor = const Color(0xFFFFC107); 
-    const softerGreyText = Colors.black54; 
-
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(bottom: 20.h), 
-      padding: EdgeInsets.all(18.w), 
+      margin: EdgeInsets.only(bottom: 16.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F3F3), 
-        borderRadius: BorderRadius.circular(15.r), 
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.r), // Softer radius per image
+        border: Border.all(color: const Color(0xFFF0F0F0)), // Light border
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // 1. --- Avatar ---
               Container(
-                width: 44.r,
-                height: 44.r,
+                width: 50.r,
+                height: 50.r,
                 alignment: Alignment.center,
-                decoration: const BoxDecoration(color: Color(0xFF1E1E1E), shape: BoxShape.circle), // standard near-black readability
+                decoration: const BoxDecoration(
+                  color: Color(0xFF1E1E1E), 
+                  shape: BoxShape.circle
+                ),
                 child: Text(
                   review.initials,
                   style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(width: 12.w),
+              SizedBox(width: 15.w),
+              
+              // 2. --- Name, Date, and Verified Icon ---
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      review.passengerName,
-                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.black),
+                    Row(
+                      children: [
+                        Text(
+                          review.passengerName,
+                          style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold, color: Colors.black),
+                        ),
+                        Spacer(),
+                        // Verified Checkmark
+                        Icon(Icons.check_circle_outline_rounded, color: const Color(0xFF43A047), size: 18.r),
+                        SizedBox(width: 8.w),
+                        // 3. --- Stars (Placed in same row as name) ---
+                        Row(
+                          children: List.generate(5, (index) {
+                            return Icon(
+                              index < review.rating ? Icons.star_rounded : Icons.star_outline_rounded,
+                              color: const Color(0xFFFFC107), 
+                              size: 20.r, 
+                            );
+                          }),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 2.h),
+                    SizedBox(height: 4.h),
                     Text(
                       review.date,
-                      style: TextStyle(fontSize: 14.sp, color: softerGreyText, fontWeight: FontWeight.w400),
+                      style: TextStyle(fontSize: 14.sp, color: Colors.grey[600], fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
               ),
-              Row(
-                children: List.generate(5, (index) {
-                  return Icon(
-                    index < review.rating ? Icons.star_rounded : Icons.star_border_rounded,
-                    color: goldStarColor, 
-                    size: 18.r, 
-                  );
-                }),
-              ),
             ],
           ),
-          SizedBox(height: 15.h), 
-          // dynamic standard passenger standard dynamic dynamic logic standard standard price
+          SizedBox(height: 20.h),
+          
+          // 4. --- Comment Text ---
           Text(
             review.comment,
             style: TextStyle(
-              fontSize: 15.sp,
-              color: Colors.black.withOpacity(0.85), 
+              fontSize: 14.sp,
+              color: Colors.black.withOpacity(0.7),
               fontWeight: FontWeight.w400,
-              height: 1.4, 
+              height: 1.5,
             ),
           ),
         ],

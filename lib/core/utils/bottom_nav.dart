@@ -6,19 +6,12 @@ class CustomBottomNavbar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
 
-  const CustomBottomNavbar({
-    super.key,
-    required this.currentIndex,
-    required this.onTap,
-  });
+  const CustomBottomNavbar({super.key, required this.currentIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    // Colors from image_5.png
     const backgroundColor = Color(0xFF000000); 
-    const activeBoxColor = Colors.white;
-    const inactiveIconColor = Colors.white;
-
+    
     final List<Map<String, String>> navItems = [
       {'title': 'Home', 'icon': 'assets/icons/home.svg'},
       {'title': 'My Trips', 'icon': 'assets/icons/trips.svg'},
@@ -27,12 +20,8 @@ class CustomBottomNavbar extends StatelessWidget {
     ];
 
     return Container(
-      height: 90.h,
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-      decoration: const BoxDecoration(
-        color: backgroundColor,
-        // Optional: match the mesh pattern header style if needed
-      ),
+      color: backgroundColor,
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom + 10.h, top: 10.h),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: List.generate(navItems.length, (index) {
@@ -40,23 +29,23 @@ class CustomBottomNavbar extends StatelessWidget {
 
           return GestureDetector(
             onTap: () => onTap(index),
+            behavior: HitTestBehavior.opaque,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // The "Stage" or Active Box
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: EdgeInsets.all(8.w),
+                // The White Container for the Active Icon
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   decoration: BoxDecoration(
-                    color: isActive ? activeBoxColor : Colors.transparent,
-                    borderRadius: BorderRadius.circular(12.r),
+                    color: isActive ? Colors.white : Colors.transparent,
+                    borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: SvgPicture.asset(
                     navItems[index]['icon']!,
                     width: 24.w,
                     height: 24.w,
                     colorFilter: ColorFilter.mode(
-                      isActive ? Colors.black : inactiveIconColor,
+                      isActive ? Colors.black : Colors.white,
                       BlendMode.srcIn,
                     ),
                   ),

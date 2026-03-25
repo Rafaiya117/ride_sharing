@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:ride_sharing/core/components/custom_button.dart';
 import 'package:ride_sharing/core/components/payment_info_card.dart';
 import 'package:ride_sharing/core/components/payment_method_card.dart';
-import 'package:ride_sharing/core/components/reusable_primary_button.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/payment/payment_controller/payment_controller.dart';
 import 'package:ride_sharing/features/payment/payment_model/payment_model.dart';
@@ -42,8 +42,6 @@ class PaymentScreen extends StatelessWidget {
       // --- BODY CONTENT ---
       child: Column(
         children: [
-          SizedBox(height: 10.h), // Top padding inside curved container
-
           // 1. --- Dynamic Trip Summary Card ---
           PaymentInfoCard(
             title: "Trip Summary", // Section title above card fits design
@@ -56,52 +54,64 @@ class PaymentScreen extends StatelessWidget {
               ],
             ),
           ),
-
           // 2. --- Dynamic Payment Methods List ---
           PaymentInfoCard(
             title: "Payment Method",
-            child: Padding(
-              padding: EdgeInsets.all(5.w),
-              child: ListView.builder(
-                shrinkWrap: true, // required inside BaseScaffold scrolling
-                physics: const NeverScrollableScrollPhysics(), // scrolling handled by base
-                itemCount: controller.availableMethods.length,
-                itemBuilder: (context, index) {
-                  final method = controller.availableMethods[index];
-                  // DYNAMIC SELECTION Logic exactly like design
-                  final isSelected = method.type == controller.selectedMethod;
-                  return PaymentMethodCard(
-                    method: method,
-                    isSelected: isSelected,
-                    onSelect: (type) => controller.selectPaymentMethod(type),
-                  );
-                },
-              ),
+            showShadow: false,
+            isMainPadding: false,
+            titleInside: false,
+            child: ListView.builder(
+              padding: EdgeInsets.zero, // Set to zero to remove extra gap inside card
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: controller.availableMethods.length,
+              itemBuilder: (context, index) {
+                final method = controller.availableMethods[index];
+                final isSelected = method.type == controller.selectedMethod;
+                return PaymentMethodCard(
+                  method: method,
+                  isSelected: isSelected,
+                  onSelect: (type) => controller.selectPaymentMethod(type),
+                );
+              },
             ),
           ),
-
           // 3. --- Dynamic Price Breakdown Card ---
           PaymentInfoCard(
             title: "Price Breakdown",
+            showShadow: true, 
+            titleInside: true, 
+            isMainPadding: true,
             child: Column(
               children: [
-                _buildBreakdownTile("Ride fare (${controller.payment.seats} seat)", controller.payment.rideFare, Colors.grey),
-                _buildBreakdownTile("Service fee", controller.payment.serviceFee, Colors.grey),
+                _buildBreakdownTile(
+                  "Ride fare (${controller.payment.seats} seat)",
+                  controller.payment.rideFare,
+                  Colors.grey,
+                ),
+                _buildBreakdownTile(
+                  "Service fee",
+                  controller.payment.serviceFee,
+                  Colors.grey,
+                ),
                 SizedBox(height: 10.h),
                 const Divider(thickness: 1, color: Color(0xFFE0E0E0)),
                 SizedBox(height: 10.h),
-                _buildBreakdownTile("Total", controller.payment.totalAmount, Colors.black, isBold: true),
+                _buildBreakdownTile(
+                  "Total",
+                  controller.payment.totalAmount,
+                  Colors.black,
+                  isBold: true,
+                ),
               ],
             ),
           ),
-
-          SizedBox(height: 20.h), // spacing before standard primary button
-
+          //SizedBox(height: 20.h), 
           // 4. --- REUSABLE PRIMARY SOLID BLACK BUTTON ---
-          ReusablePrimaryButton( 
+          CustomButton( 
             // DYNAMIC LABEL: "Pay... Now" for card, "Save" for others (Cash/Credits)
             text: controller.selectedMethod == PaymentMethodType.card
-              ? "Pay \$${controller.payment.totalAmount.toStringAsFixed(0)} Now"
+              ? "Next \$${controller.payment.totalAmount.toStringAsFixed(0)} Now"
               : "Save",
             onTap: () => controller.processPayment(context),
           ),

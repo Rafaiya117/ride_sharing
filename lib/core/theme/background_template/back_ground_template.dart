@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BaseScaffold extends StatelessWidget {
-  final dynamic title; // Changed from String to dynamic to support Widgets
+  final dynamic title;
   final Widget child;
   final bool isCurved;
   final List<Widget>? actions;
   final Widget? leading;
-  final TextAlign titleAlign; 
-  final Widget? headerBackground; 
+  final TextAlign titleAlign;
+  final Widget? headerBackground;
+  final Widget? bottomNavigationBar; // Added this line
 
   const BaseScaffold({
     super.key,
@@ -18,13 +19,16 @@ class BaseScaffold extends StatelessWidget {
     this.actions,
     this.leading,
     this.headerBackground,
-    this.titleAlign = TextAlign.left, 
+    this.titleAlign = TextAlign.left,
+    this.bottomNavigationBar, // Added this line
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      // Pass the bottomNavigationBar to the internal Scaffold
+      bottomNavigationBar: bottomNavigationBar, 
       body: Column(
         children: [
           Container(
@@ -53,7 +57,7 @@ class BaseScaffold extends StatelessWidget {
                               child: title is Widget 
                                 ? title 
                                 : Text( 
-                                    title.toString(),
+                                  title.toString(),
                                     textAlign: titleAlign,
                                     style: TextStyle(
                                       color: Colors.white,
@@ -78,6 +82,7 @@ class BaseScaffold extends StatelessWidget {
           Flexible(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
+              // Removed vertical padding here so content can reach bottom if needed
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
               child: child,
             ),

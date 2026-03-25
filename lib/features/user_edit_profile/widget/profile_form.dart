@@ -88,6 +88,7 @@ class ProfileForm extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color(0xFFEFEFEF), 
             borderRadius: BorderRadius.circular(12.r), 
+            border: Border.all(color: Colors.grey)
           ),
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: TextField(

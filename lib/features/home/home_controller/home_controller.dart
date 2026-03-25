@@ -43,7 +43,7 @@ class HomeController extends ChangeNotifier {
 
   void trackTrip(BuildContext context, UpcomingTrip trip) {
     print("Tracking trip: ${trip.pickup} to ${trip.dropoff} with ${trip.driverName}...");
-    // GoRouter.of(context).push('/trackingMap');
+    GoRouter.of(context).push('/ride_tracking');
   }
 
   void shareTripWithFamily(BuildContext context) {
@@ -58,7 +58,7 @@ class HomeController extends ChangeNotifier {
 
   void openProfile(BuildContext context) {
     print("Opening profile...");
-    // GoRouter.of(context).push('/profile');
+    GoRouter.of(context).push('/profile_screen');
   }
 
   @override

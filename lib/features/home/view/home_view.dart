@@ -7,6 +7,7 @@ import 'package:ride_sharing/core/components/custom_text_field.dart';
 import 'package:ride_sharing/core/components/upcoming_card.dart';
 import 'package:ride_sharing/core/components/user_statcard.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
+import 'package:ride_sharing/core/utils/bottom_nav.dart';
 import 'package:ride_sharing/features/home/home_controller/home_controller.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -77,12 +78,15 @@ class HomeScreen extends StatelessWidget {
         ),
         SizedBox(width: 8.w), 
       ],
+      bottomNavigationBar: CustomBottomNavbar(
+        currentIndex: controller.currentNavbarIndex,
+        onTap: (index) => controller.setNavbarIndex(index),
+      ),
       // --- BODY CONTENT ---
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20.h), // Top padding within curved container
-
+          SizedBox(height: 20.h), 
           // 1. --- User Stats Row ---
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,7 +97,6 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 40.h),
-
           // 2. --- Plan Your Journey Section ---
           Text(
             "Plan Your Journey",

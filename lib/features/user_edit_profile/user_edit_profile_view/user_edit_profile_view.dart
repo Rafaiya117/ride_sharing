@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_sharing/core/components/reusable_primary_button.dart';
+import 'package:ride_sharing/core/components/custom_button.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/user_edit_profile/user_edit_profile_controller/user_edit_profile_controller.dart';
 import 'package:ride_sharing/features/user_edit_profile/widget/image_section.dart';
@@ -42,9 +42,10 @@ class EditProfileView extends StatelessWidget {
           const PhotoHeader(),
           const ProfileForm(),
           SizedBox(height: 40.h),
-          ReusablePrimaryButton(
+          CustomButton(
             text: "Save Changes",
             onTap: controller.saveChanges,
+            iconPath: 'assets/icons/save.svg',
             //isLoading: controller.isLoading,
           ),
           SizedBox(height: 20.h),

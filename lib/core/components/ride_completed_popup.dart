@@ -5,6 +5,7 @@ class RideCompletedPopUp extends StatelessWidget {
   final String fromLocation;
   final String toLocation;
   final double totalAmount;
+  final bool isCash; // New: To toggle button text
   final VoidCallback onContinueToPayment;
 
   const RideCompletedPopUp({
@@ -12,50 +13,50 @@ class RideCompletedPopUp extends StatelessWidget {
     required this.fromLocation,
     required this.toLocation,
     required this.totalAmount,
+    required this.isCash, // Required in constructor
     required this.onContinueToPayment,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Standard visual constants from mvc pattern
-    const greenColor = Color(0xFFFF3B30); // Matches the SOS/Pickup red, using that as the system primary green
-    const iconBackgroundColor = Color(0xFFFEE8E7); // Soft reddish/grey bg
-    const locationCardColor = Color(0xFFF3F3F3); // standard grey background from theme
-    const primaryTextColor = Colors.black; // Dark grey readability
-    const secondaryTextColor = Colors.grey; // standard subtext grey
+    const greenColor = Color.fromARGB(255, 86, 231, 42); 
+    const iconBackgroundColor = Color.fromARGB(255, 206, 235, 205); 
+    const locationCardColor = Color(0xFFF3F3F3); 
+    const primaryTextColor = Colors.black; 
+    const secondaryTextColor = Colors.grey; 
 
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.r), // Standard rounded corners for pop-ups in theme
+        borderRadius: BorderRadius.circular(20.r),
       ),
       elevation: 0,
       backgroundColor: Colors.white,
       child: Padding(
-        padding: EdgeInsets.all(24.w), // standard internal padding from design
+        padding: EdgeInsets.all(24.w),
         child: Column(
-          mainAxisSize: MainAxisSize.min, // dynamic sizing to content
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // 1. --- The Green Check Icon Section ---
+            // 1. Check Icon
             Container(
               width: 80.w,
               height: 80.w,
-              margin: EdgeInsets.only(top: 10.h, bottom: 25.h), // spacing above main text
+              margin: EdgeInsets.only(top: 10.h, bottom: 25.h),
               decoration: BoxDecoration(
-                color: iconBackgroundColor, // soft green background circle
+                color: iconBackgroundColor,
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.check_circle_outline_rounded,
-                color: greenColor, // standard green color standard
+                Icons.check_circle_outlined,
+                color: greenColor,
                 size: 50.r,
               ),
             ),
 
-            // 2. --- Main Titles ---
+            // 2. Titles
             Text(
               "Ride Completed!",
               style: TextStyle(
-                fontSize: 28.sp, // large standard title size
+                fontSize: 22.sp,
                 fontWeight: FontWeight.bold,
                 color: primaryTextColor,
               ),
@@ -65,36 +66,32 @@ class RideCompletedPopUp extends StatelessWidget {
               "You've arrived at your destination safely",
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 16.sp, // standard subtext size
-                color: secondaryTextColor, // fits standard grey theme readability
+                fontSize: 16.sp,
+                color: secondaryTextColor, 
                 fontWeight: FontWeight.w400,
               ),
             ),
-            SizedBox(height: 35.h), // standard large section spacing
+            SizedBox(height: 35.h), 
 
-            // 3. --- The Dynamic Location Summary Card ---
+            // 3. Location Summary Card
             Container(
               padding: EdgeInsets.all(20.w),
               decoration: BoxDecoration(
-                color: locationCardColor, // soft grey background fits mvc pattern
-                borderRadius: BorderRadius.circular(15.r), // Standard corner radius from theme
+                color: locationCardColor, 
+                borderRadius: BorderRadius.circular(15.r), 
               ),
               child: IntrinsicHeight(
-                // IntrinsicHeight aligns items with flexible dividers perfectly per design standard
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // A. Marker Timeline Column exactly like image_9.png design standard
                     Column(
                       children: [
-                        Icon(Icons.location_on, color: greenColor, size: 24.r), // Standard pins match design
-                        const Expanded(child: VerticalDivider(color: secondaryTextColor, thickness: 1)), // standard grey divider
-                        Icon(Icons.location_on, color: const Color(0xFFFF3B30), size: 24.r), // Dynamic price color standard
+                        Icon(Icons.location_on_outlined, color: greenColor, size: 24.r),
+                        const Expanded(child: VerticalDivider(color: secondaryTextColor, thickness: 1)),
+                        Icon(Icons.location_on_outlined, color: const Color(0xFFFF3B30), size: 24.r),
                       ],
                     ),
-                    SizedBox(width: 15.w),
-                    
-                    // B. Dynamic Location Text
+                    SizedBox(width: 15.w),                     
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +108,7 @@ class RideCompletedPopUp extends StatelessWidget {
             ),
             SizedBox(height: 25.h),
 
-            // 4. --- Total Amount Section per image_9.png design standard ---
+            // 4. Total Amount
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -120,81 +117,61 @@ class RideCompletedPopUp extends StatelessWidget {
                   style: TextStyle(fontSize: 16.sp, color: secondaryTextColor, fontWeight: FontWeight.w400),
                 ),
                 Text(
-                  "\$${totalAmount.toStringAsFixed(0)}", // Dynamic price logic standard
+                  "\$${totalAmount.toStringAsFixed(0)}",
                   style: TextStyle(
-                    fontSize: 32.sp, // Large dynamic standard size
+                    fontSize: 32.sp,
                     fontWeight: FontWeight.bold,
                     color: primaryTextColor,
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 35.h), // standard large spacing before primary button
+            SizedBox(height: 35.h), 
 
-            // 5. --- REUSABLE PRIMARY BLACK BUTTON per image_9.png design standard ---
+            // 5. Dynamic Primary Button
             SizedBox(
-              height: 60.h, // Standard primary button height from design
+              height: 60.h,
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context); // close pop up
-                  onContinueToPayment(); // trigger navigation callback
+                  Navigator.pop(context);
+                  onContinueToPayment(); 
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black, // Dark grey primary color standard
-                  foregroundColor: Colors.white, // Standard light readability
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white, 
                   elevation: 0,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)), // Standard corner radius per theme
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Continue to Payment",
+                      // Ternary logic for the button text
+                      isCash ? "Continue to Payment" : "Continue",
                       style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(width: 10.w),
-                    Icon(Icons.arrow_forward, color: Colors.white, size: 18.r), // Standard arrow matches design
+                    Icon(Icons.arrow_forward, color: Colors.white, size: 18.r), 
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 10.h), // standard bottom spacing inside dialog
+            SizedBox(height: 10.h),
           ],
         ),
       ),
     );
   }
 
-  // Simple Helper for Location Text Column per design standard
   Widget _buildLocationText(String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: TextStyle(fontSize: 14.sp, color: Colors.grey, fontWeight: FontWeight.w400)),
         SizedBox(height: 3.h),
-        Text(value, style: TextStyle(fontSize: 18.sp, color: Colors.black, fontWeight: FontWeight.bold)), // standard dynamic name/date logic
+        Text(value, style: TextStyle(fontSize: 18.sp, color: Colors.black, fontWeight: FontWeight.bold)),
       ],
     );
   }
 }
-
-// // Example of how to trigger the dialog
-// void onRideCompleteClicked(BuildContext context) {
-//   showDialog(
-//     context: context,
-//     // prevent dismissal by clicking outside
-//     barrierDismissible: false, 
-//     builder: (BuildContext context) {
-//       return RideCompletedPopUp(
-//         fromLocation: "Boston, MA", // Dynamic from controller
-//         toLocation: "New York, NY", // Dynamic from controller
-//         totalAmount: 42.0, // Dynamic total amount standard
-//         onContinueToPayment: () {
-//           // Add your navigation logic here
-//           // e.g., Navigator.pushNamed(context, '/payment');
-//         },
-//       );
-//     },
-//   );
-// }
