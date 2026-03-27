@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/action_card.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
-import 'package:ride_sharing/core/components/reusable_primary_button.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/user_profile/user_profile_controller/user_profile_controller.dart';
 import 'package:ride_sharing/features/user_profile/widget/available_card_widget.dart';

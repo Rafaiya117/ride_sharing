@@ -28,8 +28,7 @@ class ReviewsView extends StatelessWidget {
           _buildSectionTitle("All Reviews"),
           // Removed the manual SizedBox here if your _buildSectionTitle already has one
           ListView.builder(
-            padding: EdgeInsets
-                .zero, // FIX: Removes the default top/bottom list padding
+            padding: EdgeInsets.zero, 
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: controller.reviews.length,

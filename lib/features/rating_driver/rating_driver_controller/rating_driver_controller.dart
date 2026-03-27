@@ -4,19 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:ride_sharing/features/rating_driver/rating_driver_model/rating_driver_model.dart';
 
 class RatingController extends ChangeNotifier {
-  // 1. Dynamic Trip/Driver Data (Mocked from image_7.png)
   RatingDriverData _driver = RatingDriverData(name: "Jennifer Lee", initials: "J");
   RatingTripDetails _trip = RatingTripDetails(route: "Boston, MA → New York, NY", dateTime: "Feb 22, 2026 at 11:00 AM");
 
   RatingDriverData get driver => _driver;
   RatingTripDetails get trip => _trip;
 
-  // 2. Dynamic Rating State (0 to 5)
-  int _selectedRating = 0; // standard dynamic initialization
+  int _selectedRating = 0; 
 
   int get selectedRating => _selectedRating;
-
-  // 3. Dynamic Text Input for comments
   final TextEditingController commentsController = TextEditingController();
 
   // --- Methods ---
@@ -33,7 +29,7 @@ class RatingController extends ChangeNotifier {
   void updateRating(int newRating) {
     if (newRating >= 1 && newRating <= 5) {
       _selectedRating = newRating;
-      notifyListeners(); // standard dynamic state update
+      notifyListeners(); 
       print("Dynamic rating update: $newRating (${ratingLabels[newRating]})");
     }
   }

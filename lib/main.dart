@@ -10,7 +10,9 @@ import 'package:ride_sharing/features/auth/reset_password/reset_passsword_contro
 import 'package:ride_sharing/features/auth/signup/sign_up_controller/sign_up_controller.dart';
 import 'package:ride_sharing/features/cash_payment/cash_payment_controller/cash_payment_controller.dart';
 import 'package:ride_sharing/features/chat/chat_controller/chat_controller.dart';
+import 'package:ride_sharing/features/diver/driver_triphistory/driver_triphistory_controller/driver_triphistory_controller.dart';
 import 'package:ride_sharing/features/home/home_controller/home_controller.dart';
+import 'package:ride_sharing/features/my_trip/controller/my_trip_controller.dart';
 import 'package:ride_sharing/features/onboarding_screens/controller/onboarding_screen_controller.dart';
 import 'package:ride_sharing/features/payment/payment_controller/payment_controller.dart';
 import 'package:ride_sharing/features/rating_driver/rating_driver_controller/rating_driver_controller.dart';
@@ -21,8 +23,11 @@ import 'package:ride_sharing/features/role_selection/controller/role_selection_c
 import 'package:ride_sharing/features/auth/verify_otp/verify_otp_controller/verify_otp_controller.dart';
 import 'package:ride_sharing/features/search/controller/search_ride_controller.dart';
 import 'package:ride_sharing/features/sharetrip/share_trip_controller/share_trip_controller.dart';
+import 'package:ride_sharing/features/trip_history/controller/my_trip_history_controller.dart';
 import 'package:ride_sharing/features/user_edit_profile/user_edit_profile_controller/user_edit_profile_controller.dart';
 import 'package:ride_sharing/features/user_profile/user_profile_controller/user_profile_controller.dart';
+import 'package:ride_sharing/features/user_settings/account/controller/account_controller.dart';
+import 'package:ride_sharing/features/user_settings/account_notification_settings/account_notification_setting_controller.dart/account_notification_controller.dart';
 
 void main() {
   runApp(const MyApp());
@@ -85,6 +90,13 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(create: (_)=> EditProfileController()),
             ChangeNotifierProvider(create: (_)=> ReviewsController()),
             ChangeNotifierProvider(create: (_)=> ShareTripController()),
+            ChangeNotifierProvider(create: (_)=> MyTripsController()),
+            ChangeNotifierProvider(create: (_)=> TripHistoryController()),
+            ChangeNotifierProvider(create: (_)=> AccountController()),
+            ChangeNotifierProvider(create: (_)=> ProfileSettingsController()),
+
+            //!------------ Driver ------------!
+            ChangeNotifierProvider(create: (_)=> DriverTripHistoryController()),
           ],
           child: Builder(
             builder: (context) {

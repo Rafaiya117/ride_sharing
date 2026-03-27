@@ -1,12 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/core/components/ride_completed_popup.dart';
 import 'package:ride_sharing/features/ride_tracking/ride_tracking_model/ride_tracking_model.dart';
 
 class TrackRideController extends ChangeNotifier {
-  // 1. Dynamic Trip Data (Mocked from image_11.png)
+  // 1. Dynamic Trip Data 
   String get pickup => "New York, NY";
   String get dropoff => "Boston, MA";
   double get totalDistanceMiles => 215.0; 
