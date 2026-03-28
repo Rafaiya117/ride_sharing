@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RoleCard extends StatelessWidget {
   final String title;
@@ -63,7 +64,7 @@ class RoleCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
+                    style: GoogleFonts.inter(
                       color: Colors.white,
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
@@ -72,7 +73,7 @@ class RoleCard extends StatelessWidget {
                   SizedBox(height: 4.h),
                   Text(
                     description,
-                    style: TextStyle(
+                    style: GoogleFonts.inter(
                       color: const Color(0xFFC0C0C0),
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w400,

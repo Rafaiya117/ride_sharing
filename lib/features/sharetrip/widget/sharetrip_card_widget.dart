@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/sharetrip/share_trip_controller/share_trip_controller.dart';
 
@@ -32,7 +33,7 @@ class ShareTripCard extends StatelessWidget {
             children: [
               Text(
                 "Sharing trip details for",
-                style: TextStyle(fontSize: 14.sp, color: textColorSecondary, fontWeight: FontWeight.w400),
+                style: GoogleFonts.inter(fontSize: 14.sp, color: textColorSecondary, fontWeight: FontWeight.w400),
               ),
               Container(
                 padding: EdgeInsets.all(12.r),
@@ -44,7 +45,7 @@ class ShareTripCard extends StatelessWidget {
           SizedBox(height: 8.h),
           Text(
             controller.trip.fromLocation,
-            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold, color: textColorPrimary),
+            style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold, color: textColorPrimary),
           ),
           SizedBox(height: 10.h),
           Row(
@@ -53,7 +54,7 @@ class ShareTripCard extends StatelessWidget {
               SizedBox(width: 8.w),
               Text(
                 controller.trip.toLocation, 
-                style: TextStyle(fontSize: 14.sp, color: textColorSecondary),
+                style: GoogleFonts.inter(fontSize: 14.sp, color: textColorSecondary),
               ),
             ],
           ),
@@ -97,13 +98,13 @@ class ShareTripCard extends StatelessWidget {
           children: [
             SvgPicture.asset(iconPath, width: 16.w, colorFilter: ColorFilter.mode(textColorSecondary, BlendMode.srcIn)), // standard softer grey standard
             SizedBox(width: 8.w),
-            Text(label, style: TextStyle(fontSize: 12.sp, color: textColorSecondary, fontWeight: FontWeight.w400)),
+            Text(label, style: GoogleFonts.inter(fontSize: 12.sp, color: textColorSecondary, fontWeight: FontWeight.w400)),
           ],
         ),
         SizedBox(height: 8.h),
-        Text(valueText, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: textColorPrimary)),
+        Text(valueText, style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold, color: textColorPrimary)),
         SizedBox(height: 4.h),
-        Text(subValueText, style: TextStyle(fontSize: 12.sp, color: textColorSecondary, fontWeight: FontWeight.w400)),
+        Text(subValueText, style: GoogleFonts.inter(fontSize: 12.sp, color: textColorSecondary, fontWeight: FontWeight.w400)),
       ],
     );
   }

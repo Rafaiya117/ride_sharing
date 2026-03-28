@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/diver/driver_ride_details/driver_ridedetails_controller/driver_ridedetails_controller.dart';
@@ -53,11 +54,11 @@ class DriverRideDetailsScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(data.passengerName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+                      Text(data.passengerName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
                       Row(children: [
                         _buildBadge(Icons.star, "${data.rating}"),
                         SizedBox(width: 8.w),
-                        Text("• ${data.totalTrips} trips", style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+                        Text("• ${data.totalTrips} trips", style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
                       ]),
                     ],
                   ),
@@ -94,7 +95,7 @@ class DriverRideDetailsScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 16.h),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
               ),
-              child: Text("Start Ride", style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
+              child: Text("Start Ride", style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
             ),
           ),
           SizedBox(height: 20.h),
@@ -118,13 +119,13 @@ class DriverRideDetailsScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text("Total Price", style: TextStyle(color: Colors.white70, fontSize: 12.sp)),
-                Text("\$${data.totalPrice}", style: TextStyle(color: Colors.white, fontSize: 32.sp, fontWeight: FontWeight.bold)),
-                Text("per seat", style: TextStyle(color: Colors.white70, fontSize: 12.sp)),
+                Text("Total Price", style: GoogleFonts.inter(color: Colors.white70, fontSize: 12.sp)),
+                Text("\$${data.totalPrice}", style: GoogleFonts.inter(color: Colors.white, fontSize: 32.sp, fontWeight: FontWeight.bold)),
+                Text("per seat", style: GoogleFonts.inter(color: Colors.white70, fontSize: 12.sp)),
               ]),
               Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Text(data.date, style: TextStyle(color: Colors.white, fontSize: 14.sp)),
-                Text(data.time, style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold)),
+                Text(data.date, style: GoogleFonts.inter(color: Colors.white, fontSize: 14.sp)),
+                Text(data.time, style: GoogleFonts.inter(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold)),
               ]),
             ],
           ),
@@ -153,7 +154,7 @@ class DriverRideDetailsScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+          Text(title, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
           SizedBox(height: 16.h),
           child,
         ],
@@ -169,9 +170,9 @@ class DriverRideDetailsScreen extends StatelessWidget {
         SizedBox(width: 15.w),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(label, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
-            Text(location, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp)),
-            Text(time, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+            Text(label, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
+            Text(location, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 15.sp)),
+            Text(time, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
           ]),
         )
       ],
@@ -190,7 +191,7 @@ class DriverRideDetailsScreen extends StatelessWidget {
     return Container(
       width: 45.r, height: 45.r,
       decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(12.r)),
-      child: Center(child: Text(initial, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
+      child: Center(child: Text(initial, style:GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold))),
     );
   }
 
@@ -216,8 +217,8 @@ class DriverRideDetailsScreen extends StatelessWidget {
         SizedBox(width: 15.w),
         Expanded(
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp)),
-            Text(sub, style: TextStyle(color: Colors.grey, fontSize: 11.sp)),
+            Text(title, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 14.sp)),
+            Text(sub, style: GoogleFonts.inter(color: Colors.grey, fontSize: 11.sp)),
           ]),
         )
       ],
@@ -228,7 +229,7 @@ class DriverRideDetailsScreen extends StatelessWidget {
     return Row(children: [
       Icon(icon, color: Colors.white70, size: 16.r),
       SizedBox(width: 5.w),
-      Text(text, style: TextStyle(color: Colors.white, fontSize: 12.sp)),
+      Text(text, style: GoogleFonts.inter(color: Colors.white, fontSize: 12.sp)),
     ]);
   }
 
@@ -238,7 +239,7 @@ class DriverRideDetailsScreen extends StatelessWidget {
       decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(12.r)),
       child: Row(children: [
         Icon(icon, color: Colors.amber, size: 10.r),
-        Text(" $label", style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.bold)),
+        Text(" $label", style: GoogleFonts.inter(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.bold)),
       ]),
     );
   }

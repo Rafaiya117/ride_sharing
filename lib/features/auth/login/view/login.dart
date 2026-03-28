@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
 import 'package:ride_sharing/core/components/custom_text_field.dart';
@@ -33,7 +34,7 @@ class SignInScreen extends StatelessWidget {
           
           Text(
             "Welcome back",
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 28.sp,
               fontWeight: FontWeight.bold,
               color: const Color(0xFF001524),
@@ -42,7 +43,7 @@ class SignInScreen extends StatelessWidget {
           SizedBox(height: 8.h),
           Text(
             "Sign in to continue",
-            style: TextStyle(fontSize: 16.sp, color: const Color(0xFF757575)),
+            style: GoogleFonts.inter(fontSize: 16.sp, color: const Color(0xFF757575)),
           ),
           SizedBox(height: 20.h),
 
@@ -74,7 +75,7 @@ class SignInScreen extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: () => context.push('/forgot_password'),
-              child: Text("Forgot Password", style: TextStyle(fontSize: 14.sp)),
+              child: Text("Forgot Password", style: GoogleFonts.inter(fontSize: 14.sp)),
             ),
           ),
 
@@ -85,12 +86,12 @@ class SignInScreen extends StatelessWidget {
           ),
 
           SizedBox(height: 20.h),
-          const Row(
+           Row(
             children: [
               Expanded(child: Divider()),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text("OR", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
+                child: Text("OR", style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: Colors.grey)),
               ),
               Expanded(child: Divider()),
             ],
@@ -103,10 +104,10 @@ class SignInScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Don't have an account? "),
+              Text("Don't have an account? "),
               GestureDetector(
                 onTap: () => context.push('/sign_up'),
-                child: const Text("Sign Up", style: TextStyle(fontWeight: FontWeight.bold)),
+                child: Text("Sign Up", style: GoogleFonts.inter(fontWeight: FontWeight.bold)),
               ),
             ],
           ),
@@ -122,7 +123,7 @@ class SignInScreen extends StatelessWidget {
         padding: EdgeInsets.only(bottom: 5.h),
         child: Text(
           text,
-          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w500),
+          style: GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.w500),
         ),
       ),
     );

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ride_sharing/features/diver/driver_triphistory/driver_trip_history_model/driver_triphistory_model.dart';
 
 class DriverTripHistoryController extends ChangeNotifier {
+  int _currentNavbarIndex = 0;
+  int get currentNavbarIndex => _currentNavbarIndex;
   List<DriverTripHistoryModel> trips = [
     DriverTripHistoryModel(
       date: "Feb 28, 2026",
@@ -40,4 +42,10 @@ class DriverTripHistoryController extends ChangeNotifier {
       duration: "4h 00m",
     ),
   ];
+
+  void setNavbarIndex(int index) {
+    _currentNavbarIndex = index;
+    notifyListeners();
+  }
+
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/diver/driver_rating/driver_rating_controller/driver_rating_controller.dart';
@@ -31,7 +32,7 @@ class DriverRatingScreen extends StatelessWidget {
               backgroundColor: const Color(0xFF131D33),
               child: Text(
                 controller.passengerInitial,
-                style: TextStyle(fontSize: 32.sp, color: Colors.white, fontWeight: FontWeight.bold),
+                style: GoogleFonts.inter(fontSize: 32.sp, color: Colors.white, fontWeight: FontWeight.bold),
               ),
             ),
             
@@ -40,12 +41,12 @@ class DriverRatingScreen extends StatelessWidget {
             // 2. Headings
             Text(
               "How was your trip?",
-              style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
+              style: GoogleFonts.inter(fontSize: 24.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8.h),
             Text(
               "Rate your experience with ${controller.passengerName}",
-              style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
+              style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey[600]),
             ),
 
             SizedBox(height: 30.h),
@@ -60,7 +61,7 @@ class DriverRatingScreen extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 "Additional Comments (Optional)",
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(height: 12.h),
@@ -69,7 +70,7 @@ class DriverRatingScreen extends StatelessWidget {
               maxLines: 4,
               decoration: InputDecoration(
                 hintText: "Share more details about your experience...",
-                hintStyle: TextStyle(color: Colors.grey, fontSize: 14.sp),
+                hintStyle: GoogleFonts.inter(color: Colors.grey, fontSize: 14.sp),
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
@@ -97,7 +98,7 @@ class DriverRatingScreen extends StatelessWidget {
                 ),
                 child: Text(
                   "Submit Rating",
-                  style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -146,7 +147,7 @@ class DriverRatingScreen extends StatelessWidget {
             SizedBox(height: 8.h),
             Text(
               controller.currentLabel,
-              style: TextStyle(fontSize: 16.sp, color: Colors.grey[700], fontWeight: FontWeight.w500),
+              style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey[700], fontWeight: FontWeight.w500),
             ),
           ]
         ],
@@ -166,11 +167,11 @@ class DriverRatingScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Trip Details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp, color: Colors.grey[600])),
+          Text("Trip Details", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 14.sp, color: Colors.grey[600])),
           SizedBox(height: 12.h),
-          Text(controller.route, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14.sp)),
+          Text(controller.route, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14.sp)),
           SizedBox(height: 4.h),
-          Text(controller.dateTime, style: TextStyle(color: Colors.grey, fontSize: 13.sp)),
+          Text(controller.dateTime, style: GoogleFonts.inter(color: Colors.grey, fontSize: 13.sp)),
         ],
       ),
     );

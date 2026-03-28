@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/user_settings/account/controller/account_controller.dart';
@@ -21,9 +22,9 @@ class AccountScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text("Welcome back", 
-                style: TextStyle(color: Colors.white70, fontSize: 14.sp)),
+                style: GoogleFonts.inter(color: Colors.white70, fontSize: 14.sp)),
               Text("Safi", 
-                style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold)),
+                style: GoogleFonts.inter(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold)),
             ],
           ),
           Row(
@@ -109,7 +110,7 @@ class AccountScreen extends StatelessWidget {
           Icon(Icons.swap_horiz, color: Colors.white, size: 22.r),
           SizedBox(width: 12.w),
           Text("Switch to Driver Mode", 
-            style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.w500)),
+            style: GoogleFonts.inter(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.w500)),
           const Spacer(),
           CircleAvatar(
             radius: 12.r,
@@ -125,7 +126,7 @@ class AccountScreen extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 4.w, bottom: 10.h, top: 5.h),
       child: Text(text, 
-        style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.5)),
+        style: GoogleFonts.inter(fontSize: 12.sp, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.5)),
     );
   }
 
@@ -154,7 +155,7 @@ class AccountScreen extends StatelessWidget {
   Widget _buildListTile(IconData icon, String title) {
     return ListTile(
       leading: Icon(icon, color: Colors.black87, size: 22.r),
-      title: Text(title, style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500)),
+      title: Text(title, style: GoogleFonts.inter(fontSize: 15.sp, fontWeight: FontWeight.w500)),
       trailing: Icon(Icons.arrow_forward_ios, size: 14.r, color: Colors.grey.shade400),
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
       onTap: () {},
@@ -167,7 +168,7 @@ class AccountScreen extends StatelessWidget {
         title.contains("Notifications") || title.contains("Updates") ? Icons.notifications_none : Icons.shield_outlined, 
         color: Colors.black87, size: 22.r
       ),
-      title: Text(title, style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500)),
+      title: Text(title, style: GoogleFonts.inter(fontSize: 15.sp, fontWeight: FontWeight.w500)),
       trailing: Switch(
         value: value, 
         onChanged: onChanged,
@@ -189,7 +190,7 @@ class AccountScreen extends StatelessWidget {
         onPressed: () {},
         icon: const Icon(Icons.logout, color: Colors.red),
         label: Text("Log Out", 
-          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 16.sp)),
+          style: GoogleFonts.inter(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 16.sp)),
         style: TextButton.styleFrom(padding: EdgeInsets.symmetric(vertical: 15.h)),
       ),
     );

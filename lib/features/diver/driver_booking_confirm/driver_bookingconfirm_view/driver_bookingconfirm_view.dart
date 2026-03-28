@@ -1,250 +1,136 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
-import 'package:ride_sharing/features/diver/driver_booking_confirm/driver_booking_confirm_model/driver_booking_confirm_model.dart';
 import 'package:ride_sharing/features/diver/driver_booking_confirm/driver_bookingconfirm_controller/driver_bookingconfirm_controller.dart';
+
 
 class BookingConfirmScreen extends StatelessWidget {
   const BookingConfirmScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<BookingConfirmController>();
-    final data = controller.ride;
-
-    return BaseScaffold(
-      title: "Booking Confirm",
-      titleAlign: TextAlign.center,
-      isCurved: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.share_outlined, color: Colors.white),
-          onPressed: controller.shareTrip,
-        ),
-      ],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 1. Blue Gradient Summary Card
-          _buildSummaryCard(data),
-          SizedBox(height: 20.h),
-
-          // 2. Journey Route Section
-          _buildWhiteCard(
-            title: "Journey Route",
-            child: Column(
-              children: [
-                _buildRoutePoint(Icons.circle, Colors.grey, "Pickup", data.pickupLocation, data.pickupTime),
-                _buildRouteConnector(),
-                _buildRoutePoint(Icons.circle, Colors.black, "Drop-off", data.dropoffLocation, data.estArrival),
-              ],
-            ),
-          ),
-          SizedBox(height: 20.h),
-
-          // 3. Passenger Card with Chat/Call
-          _buildWhiteCard(
-            title: "Passenger",
-            child: Row(
-              children: [
-                _buildPassengerAvatar(data.passengerInitial),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(data.passengerName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
-                      Row(children: [
-                        _buildBadge(Icons.star, "${data.rating}"),
-                        SizedBox(width: 8.w),
-                        Text("• ${data.totalTrips} trips", style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
-                      ]),
-                    ],
+    context.watch<BookingConfirmController>(); 
+    Future.delayed(const Duration(seconds: 3), () {
+      if (context.mounted) {
+        context.go('/drive_home_screen'); 
+      }
+    });
+    
+    return Scaffold(
+    
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: 20.h), 
+            
+            // 1. Success Checkmark Icon
+            Container(
+              width: 100.r,
+              height: 100.r,
+              decoration: const BoxDecoration(
+                color: Color(0xFFE8F5E9),
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/icons/success_icon.svg', 
+                  width: 50.r,
+                  colorFilter: const ColorFilter.mode(
+                    Color(0xFF00C853), // Success green
+                    BlendMode.srcIn,
                   ),
                 ),
-                _buildRoundAction(Icons.chat_bubble_outline, controller.messageDriver),
-                SizedBox(width: 10.w),
-                _buildRoundAction(Icons.phone_outlined, controller.callDriver),
-              ],
-            ),
-          ),
-          SizedBox(height: 20.h),
-
-          // 4. Safety & Support
-          _buildWhiteCard(
-            title: "Safety & Support",
-            child: Column(
-              children: [
-                _buildSupportTile(Icons.shield_outlined, Colors.green, "Live Trip Tracking", "Share location with family & friends"),
-                Divider(height: 24.h, indent: 45.w),
-                _buildSupportTile(Icons.phone_in_talk_outlined, Colors.red, "Emergency Support", "24/7 assistance & emergency contacts"),
-              ],
-            ),
-          ),
-          
-          SizedBox(height: 30.h),
-          
-          // 5. Start Ride Button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => controller.startRide(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1A1A1A),
-                padding: EdgeInsets.symmetric(vertical: 16.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
               ),
-              child: Text("Start Ride", style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
             ),
-          ),
-          SizedBox(height: 20.h),
-        ],
-      ),
-    );
-  }
+            
+            SizedBox(height: 40.h),
 
-  // --- UI Component Builders ---
+            // 2. Main Title
+            Text(
+              "Withdrawal Successful!",
+              style: GoogleFonts.inter(
+                fontSize: 28.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
 
-  Widget _buildSummaryCard(BookingConfirmModel data) {
-    return Container(
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [Color(0xFF1E4597), Color(0xFF0C1C3E)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text("Total Price", style: TextStyle(color: Colors.white70, fontSize: 12.sp)),
-                Text("\$${data.totalPrice}", style: TextStyle(color: Colors.white, fontSize: 32.sp, fontWeight: FontWeight.bold)),
-                Text("per seat", style: TextStyle(color: Colors.white70, fontSize: 12.sp)),
-              ]),
-              Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Text(data.date, style: TextStyle(color: Colors.white, fontSize: 14.sp)),
-                Text(data.time, style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold)),
-              ]),
-            ],
-          ),
-          Padding(padding: EdgeInsets.symmetric(vertical: 15.h), child: Divider(color: Colors.white24, height: 1)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _whiteIconText(Icons.access_time, data.duration),
-              _whiteIconText(Icons.location_on_outlined, data.distance),
-              _whiteIconText(Icons.people_outline, "${data.seats} seats"),
-            ],
-          )
-        ],
-      ),
-    );
-  }
+            SizedBox(height: 15.h),
 
-  Widget _buildWhiteCard({required String title, required Widget child}) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4))],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-          SizedBox(height: 16.h),
-          child,
-        ],
-      ),
-    );
-  }
+            // 3. Amount Section
+            Text(
+              "Your withdrawal of",
+              style: GoogleFonts.inter(color: Colors.grey, fontSize: 16.sp),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              "\$50.00",
+              style: GoogleFonts.inter(
+                fontSize: 48.sp,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              "is being processed",
+              style: GoogleFonts.inter(color: Colors.grey, fontSize: 16.sp),
+            ),
 
-  Widget _buildRoutePoint(IconData icon, Color color, String label, String location, String time) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Icon(icon, size: 14.r, color: color),
-        SizedBox(width: 15.w),
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(label, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
-            Text(location, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp)),
-            Text(time, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
-          ]),
-        )
-      ],
-    );
-  }
+            SizedBox(height: 40.h),
 
-  Widget _buildRouteConnector() {
-    return Container(
-      margin: EdgeInsets.only(left: 6.5.w, top: 2.h, bottom: 2.h),
-      width: 1, height: 30.h,
-      color: Colors.grey.shade200,
-    );
-  }
-
-  Widget _buildPassengerAvatar(String initial) {
-    return Container(
-      width: 45.r, height: 45.r,
-      decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(12.r)),
-      child: Center(child: Text(initial, style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.sp))),
-    );
-  }
-
-  Widget _buildRoundAction(IconData icon, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(10.r),
-        decoration: BoxDecoration(color: Colors.grey.shade50, shape: BoxShape.circle),
-        child: Icon(icon, size: 20.r, color: Colors.black87),
-      ),
-    );
-  }
-
-  Widget _buildSupportTile(IconData icon, Color color, String title, String sub) {
-    return Row(
-      children: [
-        Container(
-          padding: EdgeInsets.all(8.r),
-          decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8.r)),
-          child: Icon(icon, color: color, size: 20.r),
+            // 4. Details Card
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.w),
+              padding: EdgeInsets.all(24.r),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(color: Colors.grey.shade100),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.02),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  )
+                ],
+              ),
+              child: Column(
+                children: [
+                  _buildDetailRow("Payment Method", "Bank Account"),
+                  SizedBox(height: 20.h),
+                  _buildDetailRow("Transaction ID", "TXN-2026-701"),
+                ],
+              ),
+            ),
+            SizedBox(height: 60.h),
+          ],
         ),
-        SizedBox(width: 15.w),
-        Expanded(
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp)),
-            Text(sub, style: TextStyle(color: Colors.grey, fontSize: 11.sp)),
-          ]),
-        )
-      ],
+      ),
     );
   }
 
-  Widget _whiteIconText(IconData icon, String text) {
-    return Row(children: [
-      Icon(icon, color: Colors.white70, size: 16.r),
-      SizedBox(width: 5.w),
-      Text(text, style: TextStyle(color: Colors.white, fontSize: 12.sp)),
-    ]);
-  }
-
-  Widget _buildBadge(IconData icon, String label) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-      decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(12.r)),
-      child: Row(children: [
-        Icon(icon, color: Colors.amber, size: 10.r),
-        Text(" $label", style: TextStyle(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.bold)),
-      ]),
+  Widget _buildDetailRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.inter(color: Colors.grey.shade600, fontSize: 14.sp),
+        ),
+        Text(
+          value,
+          style: GoogleFonts.inter(
+            color: Colors.black,
+            fontSize: 14.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
     );
   }
 }

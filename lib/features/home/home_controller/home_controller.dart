@@ -20,12 +20,12 @@ class HomeController extends ChangeNotifier {
   
   // 3. Navbar State
   int _currentNavbarIndex = 0;
-
+  int get currentNavbarIndex => _currentNavbarIndex;
   // Getters
   String get userName => _userName;
   UserStats get stats => _stats;
   UpcomingTrip get nextTrip => _nextTrip;
-  int get currentNavbarIndex => _currentNavbarIndex;
+  
 
   // --- Methods ---
   

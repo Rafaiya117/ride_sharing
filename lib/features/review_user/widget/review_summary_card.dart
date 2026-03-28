@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/review_user/review_user_controller/review_user_controller.dart';
 
@@ -52,7 +53,7 @@ class ReviewsSummaryCard extends StatelessWidget {
                     children: [
                       Text(
                         "Overall Rating",
-                        style: TextStyle(fontSize: 16.sp, color: Colors.white70, fontWeight: FontWeight.w400),
+                        style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.white70, fontWeight: FontWeight.w400),
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -60,11 +61,11 @@ class ReviewsSummaryCard extends StatelessWidget {
                         children: [
                           Text(
                             controller.overallRating.toStringAsFixed(1),
-                            style: TextStyle(fontSize: 56.sp, fontWeight: FontWeight.bold, color: Colors.white),
+                            style: GoogleFonts.inter(fontSize: 56.sp, fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                           Text(
                             " / 5.0",
-                            style: TextStyle(fontSize: 20.sp, color: Colors.white60),
+                            style: GoogleFonts.inter(fontSize: 20.sp, color: Colors.white60),
                           ),
                         ],
                       ),
@@ -89,7 +90,7 @@ class ReviewsSummaryCard extends StatelessWidget {
                       children: [
                         Icon(Icons.trending_up_rounded, color: Colors.greenAccent, size: 32.r),
                         SizedBox(height: 8.h),
-                        Text("Excellent", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14.sp)),
+                        Text("Excellent", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14.sp)),
                       ],
                     ),
                   )
@@ -123,7 +124,7 @@ class ReviewsSummaryCard extends StatelessWidget {
                 children: [
                   Text(
                     "Rating Breakdown",
-                    style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
+                    style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
                   ),
                   GestureDetector(
                     onTap: controller.showAllReviews,
@@ -135,7 +136,7 @@ class ReviewsSummaryCard extends StatelessWidget {
                       ),
                       child: Text(
                         "Show All", 
-                        style: TextStyle(color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.bold)
+                        style: GoogleFonts.inter(color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.bold)
                       ),
                     ),
                   ),
@@ -164,7 +165,7 @@ class ReviewsSummaryCard extends StatelessWidget {
             width: 35.w,
             child: Row(
               children: [
-                Text("$starLevel", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                Text("$starLevel", style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
                 SizedBox(width: 4.w),
                 Icon(Icons.star_rounded, color: Colors.grey, size: 18.r),
               ],
@@ -188,7 +189,7 @@ class ReviewsSummaryCard extends StatelessWidget {
             child: Text(
               (controller.starCounts[starLevel] ?? 0).toString(),
               textAlign: TextAlign.end,
-              style: TextStyle(fontSize: 16.sp, color: Colors.grey[700], fontWeight: FontWeight.w500),
+              style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey[700], fontWeight: FontWeight.w500),
             ),
           ),
         ],
@@ -206,9 +207,9 @@ class ReviewsSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: TextStyle(color: Colors.white70, fontSize: 12.sp)),
+          Text(label, style: GoogleFonts.inter(color: Colors.white70, fontSize: 12.sp)),
           SizedBox(height: 8.h),
-          Text(value, style: TextStyle(color: Colors.white, fontSize: 28.sp, fontWeight: FontWeight.bold)),
+          Text(value, style: GoogleFonts.inter(color: Colors.white, fontSize: 28.sp, fontWeight: FontWeight.bold)),
         ],
       ),
     );

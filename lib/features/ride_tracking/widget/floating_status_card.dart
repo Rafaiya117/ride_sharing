@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/ride_tracking/ride_traking_controller/ride_tracking_controller.dart';
 
@@ -33,11 +34,11 @@ class FloatingStatusCard extends StatelessWidget {
             children: [
               Icon(Icons.access_time_outlined, size: 20.r, color: iconColor), 
               SizedBox(width: 8.w),
-              Text("Estimated Arrival", style: TextStyle(fontSize: 14.sp, color: iconColor)),
+              Text("Estimated Arrival", style: GoogleFonts.inter(fontSize: 14.sp, color: iconColor)),
               const Spacer(),
               Text(
                 controller.estimatedArrival, // dynamic status per design
-                style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold, color: Colors.black),
+                style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold, color: Colors.black),
               ),
             ],
           ),
@@ -54,10 +55,10 @@ class FloatingStatusCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(controller.pickup, style: TextStyle(fontSize: 12.sp, color: iconColor)),
+              Text(controller.pickup, style: GoogleFonts.inter(fontSize: 12.sp, color: iconColor)),
               // Dynamic Percentage logic per design standard
-              Text("${(controller.percentageComplete * 100).toStringAsFixed(0)}%", style: TextStyle(fontSize: 12.sp, color: iconColor)),
-              Text(controller.dropoff, style: TextStyle(fontSize: 12.sp, color: iconColor)),
+              Text("${(controller.percentageComplete * 100).toStringAsFixed(0)}%", style: GoogleFonts.inter(fontSize: 12.sp, color: iconColor)),
+              Text(controller.dropoff, style: GoogleFonts.inter(fontSize: 12.sp, color: iconColor)),
             ],
           ),
         ],

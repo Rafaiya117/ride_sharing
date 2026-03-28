@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/diver/platform_fee/platform_fee_controller/platform_fee_controller.dart';
 
@@ -27,8 +28,8 @@ class FeeRequiredPopup extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Trip Completed!", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
-                      Text("Platform fee required", style: TextStyle(fontSize: 14.sp, color: Colors.grey)),
+                      Text("Trip Completed!", style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+                      Text("Platform fee required", style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey)),
                     ],
                   ),
                   IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
@@ -47,10 +48,10 @@ class FeeRequiredPopup extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    Text("You Earned", style: TextStyle(color: const Color(0xFF27AE60), fontSize: 14.sp)),
+                    Text("You Earned", style: GoogleFonts.inter(color: const Color(0xFF27AE60), fontSize: 14.sp)),
                     Text("\$${controller.tripEarnings.toStringAsFixed(2)}", 
-                      style: TextStyle(color: const Color(0xFF27AE60), fontSize: 32.sp, fontWeight: FontWeight.bold)),
-                    Text("From this trip", style: TextStyle(color: const Color(0xFF27AE60), fontSize: 12.sp)),
+                      style: GoogleFonts.inter(color: const Color(0xFF27AE60), fontSize: 32.sp, fontWeight: FontWeight.bold)),
+                    Text("From this trip", style: GoogleFonts.inter(color: const Color(0xFF27AE60), fontSize: 12.sp)),
                     SizedBox(height: 15.h),
                     const Divider(color: Color(0xFFD4EFDF)),
                     _buildFeeRow("Trip Earnings", "\$${controller.tripEarnings.toStringAsFixed(2)}", Colors.black),
@@ -77,20 +78,20 @@ class FeeRequiredPopup extends StatelessWidget {
                       children: [
                         Icon(Icons.error_outline, color: const Color(0xFFE67E22), size: 20.sp),
                         SizedBox(width: 8.w),
-                        Text("Platform Fee Required", style: TextStyle(fontWeight: FontWeight.bold, color: const Color(0xFF873600), fontSize: 15.sp)),
+                        Text("Platform Fee Required", style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: const Color(0xFF873600), fontSize: 15.sp)),
                       ],
                     ),
                     SizedBox(height: 8.h),
                     Text(
                       "To continue using our platform and post new trips, please pay the 5% platform fee of \$${controller.platformFee.toStringAsFixed(2)}.",
-                      style: TextStyle(fontSize: 12.sp, color: const Color(0xFF873600)),
+                      style: GoogleFonts.inter(fontSize: 12.sp, color: const Color(0xFF873600)),
                     ),
                   ],
                 ),
               ),
 
               SizedBox(height: 20.h),
-              Text("Select Payment Method", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+              Text("Select Payment Method", style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
               SizedBox(height: 12.h),
 
               // Payment Methods
@@ -107,7 +108,7 @@ class FeeRequiredPopup extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => controller.handlePayment(context),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r))),
-                  child: Text("Pay \$${controller.platformFee.toStringAsFixed(2)} Now", style: const TextStyle(color: Colors.white)),
+                  child: Text("Pay \$${controller.platformFee.toStringAsFixed(2)} Now", style:GoogleFonts.inter(color: Colors.white)),
                 ),
               ),
               SizedBox(height: 10.h),
@@ -122,7 +123,7 @@ class FeeRequiredPopup extends StatelessWidget {
                     children: [
                       const Icon(Icons.access_time, color: Colors.black, size: 18),
                       SizedBox(width: 8.w),
-                      const Text("Pay Later", style: TextStyle(color: Colors.black)),
+                      Text("Pay Later", style: GoogleFonts.inter(color: Colors.black)),
                     ],
                   ),
                 ),
@@ -140,8 +141,8 @@ class FeeRequiredPopup extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(color: isBold ? color : Colors.grey[700], fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
-          Text(value, style: TextStyle(color: color, fontWeight: isBold ? FontWeight.bold : FontWeight.w600)),
+          Text(label, style: GoogleFonts.inter(color: isBold ? color : Colors.grey[700], fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
+          Text(value, style: GoogleFonts.inter(color: color, fontWeight: isBold ? FontWeight.bold : FontWeight.w600)),
         ],
       ),
     );
@@ -169,8 +170,8 @@ class FeeRequiredPopup extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp)),
-                  Text(subtitle, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+                  Text(title, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 14.sp)),
+                  Text(subtitle, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
                 ],
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'reusable_primary_button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; 
 
@@ -53,13 +54,13 @@ class OnboardingTemplate extends StatelessWidget {
                     children: [
                       Text(
                         "${currentIndex + 1} of 3", 
-                        style: TextStyle(color: Colors.grey, fontSize: 16.sp),
+                        style: GoogleFonts.inter(color: Colors.grey, fontSize: 16.sp),
                       ),
                       GestureDetector(
                         onTap: onSkip,
                         child: Text(
                           "Skip", 
-                          style: TextStyle(color: Colors.grey, fontSize: 16.sp),
+                          style: GoogleFonts.inter(color: Colors.grey, fontSize: 16.sp),
                         ),
                       ),
                     ],
@@ -79,7 +80,7 @@ class OnboardingTemplate extends StatelessWidget {
                       textAlign: TextAlign.center,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis, 
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         fontSize: 28.sp,
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF333333),
@@ -95,7 +96,7 @@ class OnboardingTemplate extends StatelessWidget {
                       textAlign: TextAlign.center,
                       maxLines: 3,
                       softWrap: true,
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         fontSize: 16.sp,
                         color: const Color(0xFF757575),
                         height: 1.5.h,

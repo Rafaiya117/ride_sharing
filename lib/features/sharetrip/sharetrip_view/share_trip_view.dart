@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/sharetrip/share_trip_controller/share_trip_controller.dart';
@@ -49,7 +50,7 @@ class ShareTripView extends StatelessWidget {
               children: [
                 Text(
                   "What will be shared?",
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 16.sp, 
                     fontWeight: FontWeight.bold, 
                     color: const Color(0xFF1E1E1E),
@@ -99,7 +100,7 @@ class ShareTripView extends StatelessWidget {
             Expanded(
               child: Text(
                 option['label']!,
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+                style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w500),
               ),
             ),
             const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
@@ -122,7 +123,7 @@ class ShareTripView extends StatelessWidget {
           SizedBox(width: 8.w),
           Text(
             title,
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 20.sp, 
               fontWeight: FontWeight.bold, 
               color: const Color(0xFF1E1E1E),
@@ -147,7 +148,7 @@ class ShareTripView extends StatelessWidget {
           Expanded(
             child: Text(
               infoText,
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 14.sp, 
                 color: Colors.black.withOpacity(0.85), 
                 fontWeight: FontWeight.w400,

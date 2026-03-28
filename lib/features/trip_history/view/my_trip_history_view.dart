@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/trip_card_container.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -51,8 +52,8 @@ class TripHistoryScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Welcome back", style: TextStyle(color: Colors.white70, fontSize: 14.sp)),
-            Text("Safi", style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold)),
+            Text("Welcome back", style: GoogleFonts.inter(color: Colors.white70, fontSize: 14.sp)),
+            Text("Safi", style: GoogleFonts.inter(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold)),
           ],
         ),
         Row(
@@ -76,7 +77,7 @@ class TripHistoryScreen extends StatelessWidget {
   Widget _sectionTitle(String title) {
     return Padding(
       padding: EdgeInsets.only(bottom: 20.h),
-      child: Text(title, style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade700)),
+      child: Text(title, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey.shade700)),
     );
   }
 }

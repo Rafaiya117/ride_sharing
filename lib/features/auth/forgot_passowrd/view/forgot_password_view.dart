@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
 import 'package:ride_sharing/core/components/custom_text_field.dart';
@@ -48,7 +49,7 @@ class ForgotPasswordScreen extends StatelessWidget {
           Text(
             "Enter your email address and we'll send you a verify code to reset your password.",
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 18.sp,
               color: const Color(0xFF1E1E1E), 
               fontWeight: FontWeight.w400,
@@ -61,7 +62,7 @@ class ForgotPasswordScreen extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               "Email",
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 16.sp,
                 color: Colors.grey[700], 
                 fontWeight: FontWeight.w500,
@@ -87,7 +88,7 @@ class ForgotPasswordScreen extends StatelessWidget {
             children: [
               Text(
                 "Back to ",
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   color: const Color(0xFF757575), 
                   fontSize: 16.sp,
                 ),
@@ -96,7 +97,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 onTap: () => controller.navigateBackToSignIn(context),
                 child: Text(
                   "Sign In",
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     color: Colors.black,
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,

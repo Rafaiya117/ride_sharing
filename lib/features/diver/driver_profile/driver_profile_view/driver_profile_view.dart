@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/diver/driver_profile/driver_profile_controller/driver_profile_controller.dart';
@@ -35,11 +37,11 @@ class DriverProfileView extends StatelessWidget {
             CircleAvatar(
               radius: 45.r,
               backgroundColor: const Color(0xFF1E283A),
-              child: Text(profile.initials, style: TextStyle(color: Colors.white, fontSize: 32.sp, fontWeight: FontWeight.bold)),
+              child: Text(profile.initials, style: GoogleFonts.inter(color: Colors.white, fontSize: 32.sp, fontWeight: FontWeight.bold)),
             ),
             SizedBox(height: 15.h),
-            Text(profile.name, style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold)),
-            Text(profile.email, style: TextStyle(fontSize: 14.sp, color: Colors.grey)),
+            Text(profile.name, style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold)),
+            Text(profile.email, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey)),
             SizedBox(height: 12.h),
 
             // Verification Badge
@@ -51,7 +53,7 @@ class DriverProfileView extends StatelessWidget {
                 children: [
                   Icon(Icons.shield_outlined, color: Colors.green, size: 16.sp),
                   SizedBox(width: 6.w),
-                  Text("Verified Passenger", style: TextStyle(color: Colors.green, fontSize: 12.sp, fontWeight: FontWeight.bold)),
+                  Text("Verified Passenger", style: GoogleFonts.inter(color: Colors.green, fontSize: 12.sp, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
@@ -79,13 +81,21 @@ class DriverProfileView extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.directions_car_outlined, size: 24.sp, color: Colors.grey[700]),
+                      SvgPicture.asset(
+                        'assets/icons/car.svg',
+                        width: 24.sp,
+                        height: 24.sp,
+                        colorFilter: ColorFilter.mode(
+                          Colors.grey[700]!,
+                          BlendMode.srcIn,
+                        ),
+                      ),
                       SizedBox(width: 12.w),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(profile.carModel, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-                          Text(profile.plateNumber, style: TextStyle(fontSize: 13.sp, color: Colors.grey)),
+                          Text(profile.carModel, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                          Text(profile.plateNumber, style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.grey)),
                         ],
                       ),
                     ],
@@ -103,7 +113,7 @@ class DriverProfileView extends StatelessWidget {
             ),
             
             SizedBox(height: 30.h),
-            Align(alignment: Alignment.centerLeft, child: Text("Quick Actions", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold))),
+            Align(alignment: Alignment.centerLeft, child: Text("Quick Actions", style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold))),
             SizedBox(height: 15.h),
 
             // Quick Actions List
@@ -127,8 +137,8 @@ class DriverProfileView extends StatelessWidget {
           child: Icon(icon, color: Colors.black, size: 24.sp),
         ),
         SizedBox(height: 8.h),
-        Text(value, style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold)),
-        Text(label, style: TextStyle(fontSize: 14.sp, color: Colors.grey)),
+        Text(value, style: GoogleFonts.inter(fontSize: 20.sp, fontWeight: FontWeight.bold)),
+        Text(label, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey)),
       ],
     );
   }
@@ -137,8 +147,8 @@ class DriverProfileView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
-        Text(value, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600)),
+        Text(label, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
+        Text(value, style: GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.w600)),
       ],
     );
   }
@@ -152,7 +162,7 @@ class DriverProfileView extends StatelessWidget {
       ),
       child: ListTile(
         leading: Icon(icon, color: const Color(0xFF1E283A)),
-        title: Text(title, style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w500)),
+        title: Text(title, style: GoogleFonts.inter(fontSize: 15.sp, fontWeight: FontWeight.w500)),
         trailing: Icon(Icons.chevron_right, size: 20.sp, color: Colors.grey),
         onTap: onTap,
       ),

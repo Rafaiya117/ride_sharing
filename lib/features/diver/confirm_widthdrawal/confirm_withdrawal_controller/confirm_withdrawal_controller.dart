@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/features/diver/confirm_widthdrawal/confirm_withdrawal_model/confirm_withdrawal_model.dart';
 
 class ConfirmWithdrawalController extends ChangeNotifier {
@@ -20,6 +21,7 @@ class ConfirmWithdrawalController extends ChangeNotifier {
 
   void confirmAndWithdraw(BuildContext context) {
     debugPrint("Processing withdrawal of \$${_withdrawalData.amount}");
+    context.push('/drive_bookingconfirm_screen');
     // Add navigation to success screen here
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/filterpill_card.dart';
 import 'package:ride_sharing/core/components/ride_result_card.dart';
@@ -22,7 +23,7 @@ class SearchResultsScreen extends StatelessWidget {
         children: [
           Text(
             "Available Rides",
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -30,7 +31,7 @@ class SearchResultsScreen extends StatelessWidget {
           ),
           Text(
             "${controller.fromLocation} → ${controller.toLocation}",
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 14.sp,
               fontWeight: FontWeight.w400,
               color: Colors.white70,
@@ -69,12 +70,12 @@ class SearchResultsScreen extends StatelessWidget {
             children: [
               Text(
                 "${controller.results.length} rides found",
-                style: TextStyle(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
+                style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
               ),
               // Conditional dynamic filter text from image_7.png
               Text(
                 controller.results.length > 3 ? " + 3 for results" : " + live results",
-                style: TextStyle(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
+                style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
               ),
             ],
           ),

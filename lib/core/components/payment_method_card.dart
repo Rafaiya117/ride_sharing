@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ride_sharing/features/payment/payment_model/payment_model.dart';
 
 class PaymentMethodCard extends StatelessWidget {
@@ -68,7 +69,7 @@ class PaymentMethodCard extends StatelessWidget {
                 children: [
                   Text(
                     method.title,
-                    style: TextStyle(
+                    style: GoogleFonts.inter(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -77,7 +78,7 @@ class PaymentMethodCard extends StatelessWidget {
                   SizedBox(height: 2.h),
                   Text(
                     method.subtitle,
-                    style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]),
+                    style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey[700]),
                   ),
                   if (method.subSubtitle != null)
                     Padding(
@@ -94,7 +95,7 @@ class PaymentMethodCard extends StatelessWidget {
                           ),
                           child: Text(
                             method.subSubtitle!,
-                            style: TextStyle(
+                            style: GoogleFonts.inter(
                               color: badgeTextColor,
                               fontSize: 11.sp,
                             ),
@@ -102,7 +103,7 @@ class PaymentMethodCard extends StatelessWidget {
                         )
                         : Text(
                           method.subSubtitle!,
-                          style: TextStyle(
+                          style: GoogleFonts.inter(
                             color: Colors.grey[700],
                             fontSize: 14.sp,
                           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/user_profile/user_profile_controller/user_profile_controller.dart';
 
@@ -38,7 +39,7 @@ class AvailableCreditsCard extends StatelessWidget {
                     SizedBox(width: 10.w),
                     Text(
                       "Available Credits",
-                      style: TextStyle(fontSize: 14.sp, color: textColorPrimary, fontWeight: FontWeight.w400),
+                      style: GoogleFonts.inter(fontSize: 14.sp, color: textColorPrimary, fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
@@ -55,11 +56,11 @@ class AvailableCreditsCard extends StatelessWidget {
                 // Big Dynamic standard amount display standard
                 Text(
                   "\$${controller.profile.availableCredits.toStringAsFixed(2)}",
-                  style: TextStyle(fontSize: 32.sp, color: textColorPrimary, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.inter(fontSize: 32.sp, color: textColorPrimary, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   "Use on your next ride",
-                  style: TextStyle(fontSize: 12.sp, color: textColorSecondary, fontWeight: FontWeight.w400),
+                  style: GoogleFonts.inter(fontSize: 12.sp, color: textColorSecondary, fontWeight: FontWeight.w400),
                 ),
               ],
             ),

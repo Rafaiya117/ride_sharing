@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ride_sharing/features/ride_details/ride_details_model/ride_details_model.dart';
 
 class RideTopCard extends StatelessWidget {
@@ -38,24 +39,24 @@ class RideTopCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Total Price", 
-                      style: TextStyle(fontSize: 14.sp, color: subTextColor)),
+                      style: GoogleFonts.inter(fontSize: 14.sp, color: subTextColor)),
                     Text(
                       "\$${ride.totalPrice.toStringAsFixed(0)}", 
-                      style: TextStyle(fontSize: 36.sp, fontWeight: FontWeight.bold, color: headerTextColor),
+                      style: GoogleFonts.inter(fontSize: 36.sp, fontWeight: FontWeight.bold, color: headerTextColor),
                     ),
                     Text("per seat", 
-                      style: TextStyle(fontSize: 14.sp, color: subTextColor)),
+                      style: GoogleFonts.inter(fontSize: 14.sp, color: subTextColor)),
                   ],
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(ride.date, 
-                      style: TextStyle(fontSize: 14.sp, color: subTextColor)),
+                      style: GoogleFonts.inter(fontSize: 14.sp, color: subTextColor)),
                     SizedBox(height: 4.h),
                     Text(
                       ride.time, 
-                      style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold, color: headerTextColor),
+                      style: GoogleFonts.inter(fontSize: 24.sp, fontWeight: FontWeight.bold, color: headerTextColor),
                     ),
                   ],
                 ),
@@ -91,7 +92,7 @@ class RideTopCard extends StatelessWidget {
         SizedBox(width: 8.w),
         Text(
           text, 
-          style: TextStyle(fontSize: 14.sp, color: color, fontWeight: FontWeight.w500)
+          style: GoogleFonts.inter(fontSize: 14.sp, color: color, fontWeight: FontWeight.w500)
         ),
       ],
     );

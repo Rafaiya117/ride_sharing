@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:ride_sharing/features/diver/drive_trip/driver_trip_model/driver_trip_model.dart';
 
 class DriverTripController extends ChangeNotifier {
+  int _currentNavbarIndex = 0;
+  int get currentNavbarIndex => _currentNavbarIndex;
+
   PostedRideModel? postedRide = PostedRideModel(
     from: "Dhaka",
     to: "Khulna",
@@ -21,4 +24,9 @@ class DriverTripController extends ChangeNotifier {
     price: 45,
     duration: "4h 30m",
   );
+
+  void setNavbarIndex(int index) {
+    _currentNavbarIndex = index;
+    notifyListeners();
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BaseScaffold extends StatelessWidget {
   final dynamic title;
@@ -32,7 +33,6 @@ class BaseScaffold extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            height: 120.h,
             width: double.infinity,
             decoration: BoxDecoration(
               color: Colors.black,
@@ -59,7 +59,7 @@ class BaseScaffold extends StatelessWidget {
                                 : Text( 
                                   title.toString(),
                                     textAlign: titleAlign,
-                                    style: TextStyle(
+                                    style: GoogleFonts.inter(
                                       color: Colors.white,
                                       fontSize: 22.sp,
                                       fontWeight: FontWeight.bold,
@@ -83,7 +83,7 @@ class BaseScaffold extends StatelessWidget {
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               // Removed vertical padding here so content can reach bottom if needed
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+              padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 16.h ),//vertical: 20.h
               child: child,
             ),
           ),

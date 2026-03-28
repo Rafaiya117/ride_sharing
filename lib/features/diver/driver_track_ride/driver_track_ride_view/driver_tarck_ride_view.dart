@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/diver/driver_track_ride/driver_track_ride_controller/driver_track_ride_controller.dart';
@@ -82,9 +83,9 @@ class DriverTrackScreen extends StatelessWidget {
               Row(children: [
                 Icon(Icons.access_time, size: 18.r, color: Colors.grey),
                 SizedBox(width: 8.w),
-                Text("Estimated Arrival", style: TextStyle(color: Colors.grey, fontSize: 13.sp)),
+                Text("Estimated Arrival", style: GoogleFonts.inter(color: Colors.grey, fontSize: 13.sp)),
               ]),
-              Text(trip.estimatedArrival, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp)),
+              Text(trip.estimatedArrival, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18.sp)),
             ],
           ),
           SizedBox(height: 12.h),
@@ -98,9 +99,9 @@ class DriverTrackScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(trip.pickup, style: TextStyle(fontSize: 10.sp, color: Colors.grey)),
-              Text("${(trip.progress * 100).toInt()}%", style: TextStyle(fontSize: 10.sp, color: Colors.grey)),
-              Text(trip.destination, style: TextStyle(fontSize: 10.sp, color: Colors.grey)),
+              Text(trip.pickup, style: GoogleFonts.inter(fontSize: 10.sp, color: Colors.grey)),
+              Text("${(trip.progress * 100).toInt()}%", style: GoogleFonts.inter(fontSize: 10.sp, color: Colors.grey)),
+              Text(trip.destination, style: GoogleFonts.inter(fontSize: 10.sp, color: Colors.grey)),
             ],
           )
         ],
@@ -112,7 +113,7 @@ class DriverTrackScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(20.r)),
-      child: Text(status, style: TextStyle(color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.bold)),
+      child: Text(status, style: GoogleFonts.inter(color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.bold)),
     );
   }
 
@@ -120,7 +121,7 @@ class DriverTrackScreen extends StatelessWidget {
     return ElevatedButton.icon(
       onPressed: onTap,
       icon: Icon(Icons.warning_amber_rounded, color: Colors.white, size: 20.r),
-      label: Text("Emergency SOS", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      label: Text("Emergency SOS", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.red,
         padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -143,13 +144,13 @@ class DriverTrackScreen extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 25.r, backgroundColor: const Color(0xFF131D33),
-                child: Text(trip.initials, style: const TextStyle(color: Colors.white)),
+                child: Text(trip.initials, style: GoogleFonts.inter(color: Colors.white)),
               ),
               SizedBox(width: 12.w),
               Expanded(
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(trip.passengerName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
-                  Text("${trip.carModel} • ${trip.carPlate}", style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+                  Text(trip.passengerName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+                  Text("${trip.carModel} • ${trip.carPlate}", style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
                 ]),
               ),
               _roundIconBtn(Icons.phone_outlined, controller.callPassenger),
@@ -178,7 +179,7 @@ class DriverTrackScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 16.h),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
               ),
-              child: const Text("End Ride", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              child:Text("End Ride", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ),
         ],
@@ -196,8 +197,8 @@ class DriverTrackScreen extends StatelessWidget {
   );
 
   Widget _statItem(String l, String v) => Column(children: [
-    Text(l, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
-    Text(v, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+    Text(l, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
+    Text(v, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
   ]);
 
   Widget _actionOutlineBtn(String l, VoidCallback onTap) => SizedBox(
@@ -205,7 +206,7 @@ class DriverTrackScreen extends StatelessWidget {
     child: OutlinedButton.icon(
       onPressed: onTap,
       icon: Icon(Icons.share_outlined, size: 18.r, color: Colors.black),
-      label: Text(l, style: const TextStyle(color: Colors.black)),
+      label: Text(l, style:GoogleFonts.inter(color: Colors.black)),
       style: OutlinedButton.styleFrom(
         padding: EdgeInsets.symmetric(vertical: 14.h),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),

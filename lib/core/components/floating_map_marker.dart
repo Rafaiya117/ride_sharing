@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FloatingMapMarker extends StatelessWidget {
   final bool isPickup;
@@ -20,7 +21,7 @@ class FloatingMapMarker extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10.r)),
-          child: Text(locationName, style: TextStyle(color: Colors.black, fontSize: 12.sp)),
+          child: Text(locationName, style: GoogleFonts.inter(color: Colors.black, fontSize: 12.sp)),
         ),
       ],
     );

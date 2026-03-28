@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RatingSuccessPopUp extends StatelessWidget {
   const RatingSuccessPopUp({super.key});
@@ -32,7 +33,7 @@ class RatingSuccessPopUp extends StatelessWidget {
             // "All Done!" Title
             Text(
               "All Done!",
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -44,7 +45,7 @@ class RatingSuccessPopUp extends StatelessWidget {
             Text(
               "Rating submitted successfully",
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 16.sp,
                 color: Colors.grey[600],
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/action_card.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
@@ -46,19 +47,19 @@ class ProfileScreen extends StatelessWidget {
             decoration: const BoxDecoration(color: Color(0xFF1E1E1E), shape: BoxShape.circle),
             child: Text(
               controller.profile.initials,
-              style: TextStyle(color: Colors.white, fontSize: 32.sp, fontWeight: FontWeight.bold),
+              style: GoogleFonts.inter(color: Colors.white, fontSize: 32.sp, fontWeight: FontWeight.bold),
             ),
           ),
           SizedBox(height: 25.h),
 
           Text(
             controller.profile.name,
-            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
+            style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
           ),
           SizedBox(height: 4.h),
           Text(
             controller.profile.email,
-            style: TextStyle(fontSize: 14.sp, color: Colors.grey, fontWeight: FontWeight.w400),
+            style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey, fontWeight: FontWeight.w400),
           ),
           SizedBox(height: 15.h),
 
@@ -73,7 +74,7 @@ class ProfileScreen extends StatelessWidget {
                   SizedBox(width: 6.w),
                   Text(
                     "Verified Passenger",
-                    style: TextStyle(color: const Color(0xFF43A047), fontSize: 12.sp, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.inter(color: const Color(0xFF43A047), fontSize: 12.sp, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -109,10 +110,10 @@ class ProfileScreen extends StatelessWidget {
                   child: TextField(
                     controller: controller.promoCodeController,
                     onChanged: (val) => controller.onPromoInputChanged(val), 
-                    style: TextStyle(fontSize: 16.sp, color: Colors.black),
+                    style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.black),
                     decoration: InputDecoration(
                       hintText: "Enter promo code",
-                      hintStyle: TextStyle(fontSize: 16.sp, color: Colors.grey[700]), 
+                      hintStyle: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey[700]), 
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.symmetric(horizontal: 18.w), 
                     ),
@@ -161,7 +162,7 @@ class ProfileScreen extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Text(
         title,
-        style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
+        style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
       ),
     );
   }
@@ -173,12 +174,12 @@ class ProfileScreen extends StatelessWidget {
         SizedBox(height: 10.h),
         Text(
           value,
-          style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
+          style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
         ),
         SizedBox(height: 4.h),
         Text(
           label,
-          style: TextStyle(fontSize: 14.sp, color: Colors.grey, fontWeight: FontWeight.w400),
+          style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey, fontWeight: FontWeight.w400),
         ),
       ],
     );

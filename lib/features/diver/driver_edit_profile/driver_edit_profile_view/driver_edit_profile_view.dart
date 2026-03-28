@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/diver/driver_edit_profile/driver_edit_profile_controller/driver_edit_profile_controller.dart';
@@ -34,7 +35,7 @@ class DriverEditView extends StatelessWidget {
                       CircleAvatar(
                         radius: 60.r,
                         backgroundColor: const Color(0xFF4B5563),
-                        child: Text("J", style: TextStyle(fontSize: 40.sp, color: Colors.white, fontWeight: FontWeight.bold)),
+                        child: Text("J", style: GoogleFonts.inter(fontSize: 40.sp, color: Colors.white, fontWeight: FontWeight.bold)),
                       ),
                       Positioned(
                         bottom: 0,
@@ -51,13 +52,13 @@ class DriverEditView extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 10.h),
-                  Text("Tap to change photo", style: TextStyle(color: Colors.grey[600], fontSize: 14.sp)),
+                  Text("Tap to change photo", style: GoogleFonts.inter(color: Colors.grey[600], fontSize: 14.sp)),
                 ],
               ),
             ),
             
             SizedBox(height: 30.h),
-            Align(alignment: Alignment.centerLeft, child: Text("Basic Information", style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold))),
+            Align(alignment: Alignment.centerLeft, child: Text("Basic Information", style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold))),
             SizedBox(height: 20.h),
 
             // Form Fields
@@ -83,7 +84,7 @@ class DriverEditView extends StatelessWidget {
                   children: [
                     const Icon(Icons.save_outlined, color: Colors.white),
                     SizedBox(width: 10.w),
-                    const Text("Save Changes", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    Text("Save Changes", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -105,7 +106,7 @@ class DriverEditView extends StatelessWidget {
             children: [
               Icon(icon, size: 18.sp, color: Colors.black),
               SizedBox(width: 8.w),
-              Text(label, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600)),
+              Text(label, style: GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.w600)),
             ],
           ),
           SizedBox(height: 8.h),

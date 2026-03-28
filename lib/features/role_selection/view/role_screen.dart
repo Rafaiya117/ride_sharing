@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_role_card.dart';
 import 'package:ride_sharing/features/role_selection/controller/role_selection_controller.dart';
@@ -20,7 +21,7 @@ class RoleScreen extends StatelessWidget {
             const Spacer(flex: 2),
             Text(
               "Choose Your Role",
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 32.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -29,7 +30,7 @@ class RoleScreen extends StatelessWidget {
             SizedBox(height: 12.h),
             Text(
               "How would you like to use RideShare?",
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 16.sp,
                 color: const Color(0xFF7A7A7A),
                 fontWeight: FontWeight.w400,
@@ -52,7 +53,7 @@ class RoleScreen extends StatelessWidget {
               child: Text(
                 "You can switch roles anytime in settings",
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   fontSize: 14.sp,
                   color: const Color(0xFF7A7A7A),
                   fontWeight: FontWeight.w400,

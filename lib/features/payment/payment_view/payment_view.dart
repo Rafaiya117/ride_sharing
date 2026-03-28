@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
 import 'package:ride_sharing/core/components/payment_info_card.dart';
@@ -30,7 +31,7 @@ class PaymentScreen extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 20.h),
           child: Text(
             "Secure checkout",
-            style: TextStyle(
+            style: GoogleFonts.inter(
               color: Colors.white.withOpacity(0.8), // near-black readability standard
               fontSize: 14.sp,
               fontWeight: FontWeight.w400,
@@ -131,7 +132,7 @@ class PaymentScreen extends StatelessWidget {
             flex: 1,
             child: Text(
               label,
-              style: TextStyle(fontSize: 14.sp, color: Colors.grey, fontWeight: FontWeight.w400),
+              style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey, fontWeight: FontWeight.w400),
             ),
           ),
           SizedBox(width: 10.w),
@@ -140,7 +141,7 @@ class PaymentScreen extends StatelessWidget {
             child: Text(
               value,
               textAlign: TextAlign.end,
-              style: TextStyle(fontSize: 16.sp, color: Colors.black, fontWeight: FontWeight.bold),
+              style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -158,7 +159,7 @@ class PaymentScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 16.sp,
               color: isBold ? Colors.black : Colors.grey,
               fontWeight: isBold ? FontWeight.bold : FontWeight.w400,
@@ -166,7 +167,7 @@ class PaymentScreen extends StatelessWidget {
           ),
           Text(
             "\$${amount.toStringAsFixed(0)}",
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: isBold ? 24.sp : 16.sp,
               color: amountColor ?? Colors.black,
               fontWeight: FontWeight.bold,

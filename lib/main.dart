@@ -10,7 +10,22 @@ import 'package:ride_sharing/features/auth/reset_password/reset_passsword_contro
 import 'package:ride_sharing/features/auth/signup/sign_up_controller/sign_up_controller.dart';
 import 'package:ride_sharing/features/cash_payment/cash_payment_controller/cash_payment_controller.dart';
 import 'package:ride_sharing/features/chat/chat_controller/chat_controller.dart';
+import 'package:ride_sharing/features/diver/confirm_widthdrawal/confirm_withdrawal_controller/confirm_withdrawal_controller.dart';
+import 'package:ride_sharing/features/diver/drive_trip/driver_trip_controller/driver_trip_controller.dart';
+import 'package:ride_sharing/features/diver/driver_booking_confirm/driver_bookingconfirm_controller/driver_bookingconfirm_controller.dart';
+import 'package:ride_sharing/features/diver/driver_edit_profile/driver_edit_profile_controller/driver_edit_profile_controller.dart';
+import 'package:ride_sharing/features/diver/driver_homepage/controller/driver_homepage_controller.dart';
+import 'package:ride_sharing/features/diver/driver_profile/driver_profile_controller/driver_profile_controller.dart';
+import 'package:ride_sharing/features/diver/driver_rating/driver_rating_controller/driver_rating_controller.dart';
+import 'package:ride_sharing/features/diver/driver_review/driver_review_controller/driver_review_controller.dart';
+import 'package:ride_sharing/features/diver/driver_ride_complete/driver_ride_conmplete_controller/driver_ridecomplete_controller.dart';
+import 'package:ride_sharing/features/diver/driver_ride_details/driver_ridedetails_controller/driver_ridedetails_controller.dart';
+import 'package:ride_sharing/features/diver/driver_track_ride/driver_track_ride_controller/driver_track_ride_controller.dart';
 import 'package:ride_sharing/features/diver/driver_triphistory/driver_triphistory_controller/driver_triphistory_controller.dart';
+import 'package:ride_sharing/features/diver/driver_verification/driver_verification_controller/driver_verification_controller.dart';
+import 'package:ride_sharing/features/diver/earning/controller/earning_controller.dart';
+import 'package:ride_sharing/features/diver/post_new_ride/controller/post_new_ride_controller.dart';
+import 'package:ride_sharing/features/diver/withdrawal/withdrawal_controller/withdrawal_controller.dart';
 import 'package:ride_sharing/features/home/home_controller/home_controller.dart';
 import 'package:ride_sharing/features/my_trip/controller/my_trip_controller.dart';
 import 'package:ride_sharing/features/onboarding_screens/controller/onboarding_screen_controller.dart';
@@ -96,6 +111,21 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(create: (_)=> ProfileSettingsController()),
 
             //!------------ Driver ------------!
+            ChangeNotifierProvider(create: (_)=> DriverVerificationController()),
+            ChangeNotifierProvider(create: (_)=> DriverHomeController()),
+            ChangeNotifierProvider(create: (_)=> PostRideController()),
+            ChangeNotifierProvider(create: (_)=> EarningsController()),
+            ChangeNotifierProvider(create: (_)=> WithdrawalController()),
+            ChangeNotifierProvider(create: (_)=> ConfirmWithdrawalController()),
+            ChangeNotifierProvider(create: (_)=> BookingConfirmController()),
+            ChangeNotifierProvider(create: (_)=> DriverProfileController()),
+            ChangeNotifierProvider(create: (_)=> DriverEditController()),
+            ChangeNotifierProvider(create: (_)=> DriveReviewsController()),
+            ChangeNotifierProvider(create: (_)=> DriverTripController()),
+            ChangeNotifierProvider(create: (_)=> DriverRideDetailsController()),
+            ChangeNotifierProvider(create: (_)=> DriverTrackController()),
+            ChangeNotifierProvider(create: (_)=> DriverRatingController()),
+            ChangeNotifierProvider(create: (_)=> RideCompletedController()),
             ChangeNotifierProvider(create: (_)=> DriverTripHistoryController()),
           ],
           child: Builder(

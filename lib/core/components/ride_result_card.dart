@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ride_sharing/features/search/model/search_ride_model.dart';
 
 class RideResultCard extends StatelessWidget {
@@ -45,11 +46,11 @@ class RideResultCard extends StatelessWidget {
                     children: [
                       Text(
                         ride.departureTime,
-                        style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
+                        style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         ride.departureDate,
-                        style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+                        style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -60,11 +61,11 @@ class RideResultCard extends StatelessWidget {
                   children: [
                     Text(
                       "\$${ride.price.toStringAsFixed(0)}",
-                      style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
+                      style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "per seat",
-                      style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                      style: GoogleFonts.inter(fontSize: 12.sp, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -97,12 +98,12 @@ class RideResultCard extends StatelessWidget {
                             children: [
                               Text(
                                 ride.pickup,
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+                                style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w500),
                               ),
                               const Spacer(),
                               Text(
                                 ride.dropoff,
-                                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+                                style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
@@ -138,16 +139,16 @@ class RideResultCard extends StatelessWidget {
                 CircleAvatar(
                   radius: 20.r,
                   backgroundColor: Colors.black12,
-                  child: Text(ride.driverName.substring(0, 1), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: Text(ride.driverName.substring(0, 1), style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(ride.driverName, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                      Text(ride.driverName, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
                       SizedBox(height: 2.h),
-                      Text(ride.carModel, style: TextStyle(fontSize: 14.sp, color: Colors.grey)),
+                      Text(ride.carModel, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey)),
                     ],
                   ),
                 ),
@@ -158,7 +159,7 @@ class RideResultCard extends StatelessWidget {
                     children: [
                       Icon(Icons.star, color: Colors.amber, size: 16.r),
                       SizedBox(width: 4.w),
-                      Text(ride.driverRating.toStringAsFixed(1), style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+                      Text(ride.driverRating.toStringAsFixed(1), style: GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -176,7 +177,7 @@ class RideResultCard extends StatelessWidget {
       children: [
         SvgPicture.asset(iconPath, width: 14.w, colorFilter: ColorFilter.mode(color ?? Colors.grey, BlendMode.srcIn)),
         SizedBox(width: 6.w),
-        Text(text, style: TextStyle(fontSize: 14.sp, color: color ?? Colors.black)),
+        Text(text, style: GoogleFonts.inter(fontSize: 14.sp, color: color ?? Colors.black)),
       ],
     );
   }

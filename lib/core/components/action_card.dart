@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class QuickActionCard extends StatelessWidget {
   final String iconPath;
@@ -46,7 +47,7 @@ class QuickActionCard extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(fontSize: 16.sp, color: textColor, fontWeight: FontWeight.w500),
+                style: GoogleFonts.inter(fontSize: 16.sp, color: textColor, fontWeight: FontWeight.w500),
               ),
             ),
             SvgPicture.asset('assets/icons/arrow_right.svg', width: 14.w, colorFilter: const ColorFilter.mode(arrowColor, BlendMode.srcIn)),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/user_edit_profile/user_edit_profile_controller/user_edit_profile_controller.dart';
 
@@ -31,7 +32,7 @@ class PhotoHeader extends StatelessWidget {
               child: controller.currentUser.photoPath == null
                   ? Text(
                       controller.initialsData['letter'],
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         fontSize: 64.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -91,7 +92,7 @@ class PhotoHeader extends StatelessWidget {
                     onTap: () => controller.changePhoto(context),
                     child: Text(
                       "Tap to change photo",
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         fontSize: 14.sp,
                         color: Colors.black87,
                         fontWeight: FontWeight.w400,

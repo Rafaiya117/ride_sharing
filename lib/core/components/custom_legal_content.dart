@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 
 class LegalContentScreen extends StatelessWidget {
@@ -26,7 +27,7 @@ class LegalContentScreen extends StatelessWidget {
             child: Center(
               child: Text(
                 title,
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   color: Colors.white,
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
@@ -48,7 +49,7 @@ class LegalContentScreen extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 22.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black,
@@ -89,7 +90,7 @@ class LegalContentScreen extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 color: Colors.white,
                 fontSize: 14.sp,
                 height: 1.5,

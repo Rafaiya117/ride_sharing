@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
 import 'package:ride_sharing/core/components/custom_text_field.dart';
@@ -26,7 +27,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Text(
               "Welcome",
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w400,
                 color: Colors.white70,
@@ -34,7 +35,7 @@ class HomeScreen extends StatelessWidget {
             ),
             Text(
               "Safi",
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -69,14 +70,15 @@ class HomeScreen extends StatelessWidget {
         ),
         // 2. Profile Icon
         IconButton(
-          icon: Icon(
-            Icons.account_circle_outlined,
-            size: 28.r,
-            color: Colors.white,
+          icon: SvgPicture.asset(
+            'assets/icons/user_icon.svg',
+            width: 28.r,
+            height: 28.r,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           ),
           onPressed: () => controller.openProfile(context),
         ),
-        SizedBox(width: 8.w), 
+        SizedBox(width: 8.w),
       ],
       bottomNavigationBar: CustomBottomNavbar(
         currentIndex: controller.currentNavbarIndex,
@@ -100,7 +102,7 @@ class HomeScreen extends StatelessWidget {
           // 2. --- Plan Your Journey Section ---
           Text(
             "Plan Your Journey",
-            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
+            style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
           ),
           SizedBox(height: 20.h),
           
@@ -165,13 +167,13 @@ class HomeScreen extends StatelessWidget {
             children: [
               Text(
                 "Upcoming Trips",
-                style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
+                style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
               ),
               GestureDetector(
                 onTap: () {}, // View All Logic
                 child: Text(
                   "View all",
-                  style: TextStyle(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
+                  style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
                 ),
               ),
             ],
@@ -199,7 +201,7 @@ class HomeScreen extends StatelessWidget {
                 SizedBox(width: 10.w),
                 Text(
                   "Share Trip with Family",
-                  style: TextStyle(color: Colors.black, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.inter(color: Colors.black, fontSize: 16.sp, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -218,7 +220,7 @@ class HomeScreen extends StatelessWidget {
         padding: EdgeInsets.only(bottom: 5.h),
         child: Text(
           text,
-          style: TextStyle(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
+          style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
         ),
       ),
     );

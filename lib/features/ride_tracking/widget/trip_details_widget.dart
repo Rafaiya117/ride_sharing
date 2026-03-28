@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/ride_tracking/ride_traking_controller/ride_tracking_controller.dart';
 
@@ -27,7 +28,7 @@ class TripDetailsSheet extends StatelessWidget {
                 backgroundColor: const Color(0xFF0F172A), 
                 child: Text(
                   controller.driver.driverInitials,
-                  style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.inter(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold),
                 ),
               ),
               SizedBox(width: 12.w),
@@ -36,11 +37,11 @@ class TripDetailsSheet extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(controller.driver.name,
-                        style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black)),
+                        style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black)),
                     SizedBox(height: 3.h),
                     Text(
                       "${controller.driver.carModel} • ${controller.driver.carPlate}",
-                      style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade500),
+                      style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey.shade500),
                     ),
                   ],
                 ),
@@ -81,7 +82,7 @@ class TripDetailsSheet extends StatelessWidget {
                 SizedBox(width: 8.w),
                 Text(
                   "Share Trip with Family",
-                  style: TextStyle(color: Colors.black, fontSize: 15.sp, fontWeight: FontWeight.w600)),
+                  style: GoogleFonts.inter(color: Colors.black, fontSize: 15.sp, fontWeight: FontWeight.w600)),
               ],
             ),
           ),
@@ -108,9 +109,9 @@ class TripDetailsSheet extends StatelessWidget {
   Widget _buildStatItem(String label, String value) {
     return Column(
       children: [
-        Text(label, style: TextStyle(fontSize: 13.sp, color: Colors.grey.shade500)),
+        Text(label, style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.grey.shade500)),
         SizedBox(height: 6.h),
-        Text(value, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black)),
+        Text(value, style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black)),
       ],
     );
   }

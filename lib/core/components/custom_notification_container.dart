@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class NotificationsGroupContainer extends StatelessWidget {
   final List<NotificationItemModel> items;
@@ -27,7 +28,7 @@ class NotificationsGroupContainer extends StatelessWidget {
                         children: [
                           Text(
                             items[index].title,
-                            style: TextStyle(
+                            style: GoogleFonts.inter(
                               color: Colors.white,
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
@@ -36,7 +37,7 @@ class NotificationsGroupContainer extends StatelessWidget {
                           SizedBox(height: 4.h),
                           Text(
                             items[index].subtitle,
-                            style: TextStyle(
+                            style: GoogleFonts.inter(
                               color: Colors.white.withOpacity(0.9),
                               fontSize: 13.sp,
                             ),

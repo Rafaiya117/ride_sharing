@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RideCompletedPopUp extends StatelessWidget {
   final String fromLocation;
@@ -55,7 +56,7 @@ class RideCompletedPopUp extends StatelessWidget {
             // 2. Titles
             Text(
               "Ride Completed!",
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 22.sp,
                 fontWeight: FontWeight.bold,
                 color: primaryTextColor,
@@ -65,7 +66,7 @@ class RideCompletedPopUp extends StatelessWidget {
             Text(
               "You've arrived at your destination safely",
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 16.sp,
                 color: secondaryTextColor, 
                 fontWeight: FontWeight.w400,
@@ -114,11 +115,11 @@ class RideCompletedPopUp extends StatelessWidget {
               children: [
                 Text(
                   "Total Amount",
-                  style: TextStyle(fontSize: 16.sp, color: secondaryTextColor, fontWeight: FontWeight.w400),
+                  style: GoogleFonts.inter(fontSize: 16.sp, color: secondaryTextColor, fontWeight: FontWeight.w400),
                 ),
                 Text(
                   "\$${totalAmount.toStringAsFixed(0)}",
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 32.sp,
                     fontWeight: FontWeight.bold,
                     color: primaryTextColor,
@@ -149,7 +150,7 @@ class RideCompletedPopUp extends StatelessWidget {
                     Text(
                       // Ternary logic for the button text
                       isCash ? "Continue to Payment" : "Continue",
-                      style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+                      style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(width: 10.w),
                     Icon(Icons.arrow_forward, color: Colors.white, size: 18.r), 
@@ -168,9 +169,9 @@ class RideCompletedPopUp extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 14.sp, color: Colors.grey, fontWeight: FontWeight.w400)),
+        Text(label, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey, fontWeight: FontWeight.w400)),
         SizedBox(height: 3.h),
-        Text(value, style: TextStyle(fontSize: 18.sp, color: Colors.black, fontWeight: FontWeight.bold)),
+        Text(value, style: GoogleFonts.inter(fontSize: 18.sp, color: Colors.black, fontWeight: FontWeight.bold)),
       ],
     );
   }

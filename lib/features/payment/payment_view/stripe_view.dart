@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/reusable_primary_button.dart';
-import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/payment/payment_controller/payment_controller.dart';
 
 class StripeCardBottomSheet extends StatelessWidget {
@@ -35,7 +35,7 @@ class StripeCardBottomSheet extends StatelessWidget {
             SizedBox(height: 10.h),
             Text(
               "Add card",
-              style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
+              style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20.h),
 
@@ -85,7 +85,7 @@ class StripeCardBottomSheet extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: "ZIP",
                       border: InputBorder.none,
-                      hintStyle: TextStyle(color: Colors.grey.shade400),
+                      hintStyle: GoogleFonts.inter(color: Colors.grey.shade400),
                     ),
                   ),
                 ],
@@ -105,7 +105,7 @@ class StripeCardBottomSheet extends StatelessWidget {
                 Expanded(
                   child: Text(
                     "Save this card for future powdur payments",
-                    style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade600),
+                    style: GoogleFonts.inter(fontSize: 12.sp, color: Colors.grey.shade600),
                   ),
                 ),
               ],
@@ -131,7 +131,7 @@ class StripeCardBottomSheet extends StatelessWidget {
   Widget _buildSectionLabel(String text) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
-      child: Text(text, style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade600)),
+      child: Text(text, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey.shade600)),
     );
   }
 
@@ -142,7 +142,7 @@ class StripeCardBottomSheet extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hint,
           border: InputBorder.none,
-          hintStyle: TextStyle(color: Colors.grey.shade400),
+          hintStyle: GoogleFonts.inter(color: Colors.grey.shade400),
           suffixIcon: showIcons ? Icon(Icons.credit_card, size: 20.sp, color: Colors.grey) : null,
         ),
       ),

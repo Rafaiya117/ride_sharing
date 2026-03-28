@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -35,7 +37,7 @@ class WithdrawalView extends StatelessWidget {
                 amount: "\$${dashboard.availableBalance.toInt()}",
                 subText: "Ready to withdraw",
                 isDark: true,
-                icon: Icons.account_balance_wallet_outlined,
+                iconPath: 'assets/icons/credit.svg',
               ),
               SizedBox(width: 15.w),
               _buildBalanceCard(
@@ -43,7 +45,7 @@ class WithdrawalView extends StatelessWidget {
                 amount: "\$${dashboard.pendingBalance.toInt()}",
                 subText: "Processing",
                 isDark: false,
-                icon: Icons.access_time,
+                iconPath: 'assets/icons/clock.svg',
               ),
             ],
           ),
@@ -90,44 +92,70 @@ class WithdrawalView extends StatelessWidget {
   // --- UI Components ---
 
   Widget _buildSectionTitle(String title) {
-    return Text(title, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)));
+    return Text(title, style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)));
   }
 
-  Widget _buildBalanceCard({required String title, required String amount, required String subText, required bool isDark, required IconData icon}) {
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.all(16.r),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.r),
-          color: isDark ? const Color(0xFF1E4597) : Colors.white,
-          gradient: isDark ? const LinearGradient(colors: [Color(0xFF1E4597), Color(0xFF0C1C3E)], begin: Alignment.topLeft, end: Alignment.bottomRight) : null,
-          boxShadow: isDark ? null : [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(children: [
-              Icon(icon, color: isDark ? Colors.white70 : Colors.orange, size: 18.sp),
-              SizedBox(width: 8.w),
-              Text(title, style: TextStyle(color: isDark ? Colors.white70 : Colors.grey, fontSize: 13.sp)),
-            ]),
-            SizedBox(height: 12.h),
-            Text(amount, style: TextStyle(color: isDark ? Colors.white : Colors.black, fontSize: 32.sp, fontWeight: FontWeight.bold)),
-            SizedBox(height: 4.h),
-            Text(subText, style: TextStyle(color: isDark ? const Color(0xFF4CAF50) : Colors.grey, fontSize: 11.sp)),
-          ],
-        ),
+  Widget _buildBalanceCard({
+  required String title, 
+  required String amount, 
+  required String subText, 
+  required bool isDark, 
+  required String iconPath, // Changed from IconData to String
+}) {
+  return Expanded(
+    child: Container(
+      padding: EdgeInsets.all(16.r),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16.r),
+        color: isDark ? const Color(0xFF1E4597) : Colors.white,
+        gradient: isDark 
+            ? const LinearGradient(
+                colors: [Color(0xFF1E4597), Color(0xFF0C1C3E)], 
+                begin: Alignment.topLeft, 
+                end: Alignment.bottomRight) 
+            : null,
+        boxShadow: isDark ? null : [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))],
       ),
-    );
-  }
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            // Replaced Icon with SvgPicture
+            SvgPicture.asset(
+              iconPath,
+              width: 18.sp,
+              height: 18.sp,
+              colorFilter: ColorFilter.mode(
+                isDark ? Colors.white70 : Colors.deepOrange, // Adjusted color to match labels
+                BlendMode.srcIn,
+              ),
+            ),
+            SizedBox(width: 8.w),
+            Text(title, style: GoogleFonts.inter(color: isDark ? Colors.white70 : Colors.grey, fontSize: 13.sp)),
+          ]),
+          SizedBox(height: 12.h),
+          Text(amount, 
+            style: GoogleFonts.inter(
+              color: isDark ? Colors.white : const Color(0xFFFF4500), // Match the orange/red from image
+              fontSize: 28.sp, // Slightly adjusted for better fit
+              fontWeight: FontWeight.bold
+            )
+          ),
+          SizedBox(height: 4.h),
+          Text(subText, style: GoogleFonts.inter(color: isDark ? const Color(0xFF4CAF50) : Colors.grey, fontSize: 11.sp)),
+        ],
+      ),
+    ),
+  );
+}
 
   Widget _buildStatItem(String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(color: Colors.grey, fontSize: 13.sp)),
+        Text(label, style: GoogleFonts.inter(color: Colors.grey, fontSize: 13.sp)),
         SizedBox(height: 4.h),
-        Text(value, style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold)),
+        Text(value, style: GoogleFonts.inter(fontSize: 20.sp, fontWeight: FontWeight.bold)),
       ],
     );
   }
@@ -142,23 +170,31 @@ class WithdrawalView extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(10.r),
             decoration: BoxDecoration(color: const Color(0xFFE8F5E9), shape: BoxShape.circle),
-            child: Icon(Icons.check, color: const Color(0xFF4CAF50), size: 20.sp),
+            child: SvgPicture.asset(
+              'assets/icons/check.svg',
+              colorFilter: const ColorFilter.mode(
+                Color(0xFF4CAF50),
+                BlendMode.srcIn,
+              ),
+              width: 20.sp,
+              height: 20.sp,
+            ),
           ),
           SizedBox(width: 15.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("\$${tx.amount}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
-                Text(tx.method, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+                Text("\$${tx.amount}", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+                Text(tx.method, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
               ],
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(tx.date, style: TextStyle(fontSize: 13.sp, color: Colors.black87)),
-              Text(tx.status, style: TextStyle(color: const Color(0xFF4CAF50), fontSize: 12.sp, fontWeight: FontWeight.bold)),
+              Text(tx.date, style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.black87)),
+              Text(tx.status, style: GoogleFonts.inter(color: const Color(0xFF4CAF50), fontSize: 12.sp, fontWeight: FontWeight.bold)),
             ],
           )
         ],

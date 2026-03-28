@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/features/diver/post_new_ride/model/post_new_ride_model.dart';
 
 class PostRideController extends ChangeNotifier {
@@ -24,6 +25,7 @@ class PostRideController extends ChangeNotifier {
     // Logic to save the ride
     debugPrint("Posting Ride: ${ride.pickupLocation} to ${ride.dropoffLocation}");
     Navigator.pop(context);
+    context.push('/drive_earning_screen');
   }
 
   @override

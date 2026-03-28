@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -25,10 +27,10 @@ class ConfirmWithdrawalView extends StatelessWidget {
         children: [
           SizedBox(height: 10.h),
 
-          // 1. Blue Summary Card
+          // 1. Summary Card
           Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 30.h),
+            padding: EdgeInsets.all(20.r),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.r),
               gradient: const LinearGradient(
@@ -39,23 +41,34 @@ class ConfirmWithdrawalView extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text("Total Amount",
-                    style: TextStyle(color: Colors.white70, fontSize: 14.sp)),
-                SizedBox(height: 8.h),
+                Text("Total Amount", style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp)),
+                SizedBox(height: 5.h),
                 Text("\$${data.amount.toStringAsFixed(2)}",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40.sp,
-                        fontWeight: FontWeight.bold)),
-                SizedBox(height: 12.h),
+                    style: GoogleFonts.inter(color: Colors.white, fontSize: 48.sp, fontWeight: FontWeight.bold)),
+                Text(
+                  "Will arrive in 1-3 business days",
+                  style: GoogleFonts.inter(color: const Color(0xFF00E676), fontSize: 14.sp, fontWeight: FontWeight.w500),
+                ),
+                SizedBox(height: 20.h),
+                // Inner Breakdown
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                  padding: EdgeInsets.all(20.r),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20.r),
+                    borderRadius: BorderRadius.circular(25.r),
                   ),
-                  child: Text(data.date,
-                      style: TextStyle(color: Colors.white, fontSize: 12.sp)),
+                  child: Column(
+                    children: [
+                      _buildSummaryRow("Withdrawal Amount", "\$${data.amount.toInt()}"),
+                      SizedBox(height: 15.h),
+                      _buildSummaryRow("Processing Fee", "Free"),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 15.h),
+                        child: Divider(color: Colors.white24, thickness: 1),
+                      ),
+                      _buildSummaryRow("You'll Receive", "\$${data.amount.toStringAsFixed(2)}", isBold: true, fontSize: 20.sp),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -63,28 +76,22 @@ class ConfirmWithdrawalView extends StatelessWidget {
 
           SizedBox(height: 25.h),
 
-          // 2. Withdrawal Method Card
+          // 2. Withdrawal Method Section
           _buildInfoSection(
             title: "Withdraw to",
             child: Row(
               children: [
                 Container(
                   padding: EdgeInsets.all(12.r),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF3F4F6),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Icon(Icons.credit_card, size: 24.sp, color: Colors.black),
+                  decoration: BoxDecoration(color: const Color(0xFFF3F4F6), borderRadius: BorderRadius.circular(12.r)),
+                  child: SvgPicture.asset('assets/icons/card.svg', width: 24.sp, colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
                 ),
                 SizedBox(width: 15.w),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(data.methodTitle,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16.sp)),
-                    Text(data.methodSubtitle,
-                        style: TextStyle(color: Colors.grey, fontSize: 13.sp)),
+                    Text(data.methodTitle, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+                    Text(data.methodSubtitle, style: GoogleFonts.inter(color: Colors.grey, fontSize: 13.sp)),
                   ],
                 ),
               ],
@@ -93,47 +100,37 @@ class ConfirmWithdrawalView extends StatelessWidget {
 
           SizedBox(height: 25.h),
 
-          // 3. Important Info Box
+          // 3. SEPARATE Important Info Box
           Container(
             padding: EdgeInsets.all(16.r),
             decoration: BoxDecoration(
               color: const Color(0xFFE0E7FF).withOpacity(0.5),
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: BorderRadius.circular(15.r),
+              border: Border.all(color: const Color(0xFFE0E7FF)),
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // Left aligned
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.info_outline, color: const Color(0xFF1E4597), size: 20.sp),
-                    SizedBox(width: 8.w),
-                    Text("Important",
-                        style: TextStyle(
-                            color: const Color(0xFF1E4597),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14.sp)),
+                    SvgPicture.asset('assets/icons/info.svg', width: 24.sp, colorFilter: const ColorFilter.mode(Color(0xFF2563EB), BlendMode.srcIn)),
+                    SizedBox(width: 12.w),
+                    Text("Important", style: GoogleFonts.inter(color: const Color(0xFF1E3A8A), fontWeight: FontWeight.bold, fontSize: 18.sp)),
                   ],
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: 10.h),
                 Text(
-                  "Withdrawals usually take 3-5 business days to process depending on your bank.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: const Color(0xFF1E4597),
-                      fontSize: 12.sp,
-                      height: 1.5),
+                  "Once confirmed, this withdrawal cannot be cancelled. Please verify all details before proceeding.",
+                  style: GoogleFonts.inter(color: const Color(0xFF2563EB), fontSize: 14.sp, height: 1.4, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
           ),
 
-          const Spacer(),
+          SizedBox(height: 40.h), // Replaced Spacer to fix unbounded height crash
 
           // 4. Action Buttons
-          CustomButton(
-            text: "Withdraw Earnings",
-            onTap: () => controller.confirmAndWithdraw(context),
-          ),
+          CustomButton(text: "Withdraw Earnings", onTap: () => controller.confirmAndWithdraw(context)),
           SizedBox(height: 15.h),
           SizedBox(
             width: double.infinity,
@@ -142,14 +139,9 @@ class ConfirmWithdrawalView extends StatelessWidget {
               onPressed: () => controller.goBack(context),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.black12),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
               ),
-              child: Text("Go Back",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold)),
+              child: Text("Go Back", style: GoogleFonts.inter(color: Colors.black, fontSize: 16.sp, fontWeight: FontWeight.bold)),
             ),
           ),
           SizedBox(height: 20.h),
@@ -158,15 +150,21 @@ class ConfirmWithdrawalView extends StatelessWidget {
     );
   }
 
+  Widget _buildSummaryRow(String label, String value, {bool isBold = false, double? fontSize}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: GoogleFonts.inter(color: Colors.white.withOpacity(0.9), fontSize: fontSize ?? 15.sp, fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
+        Text(value, style: GoogleFonts.inter(color: Colors.white, fontSize: fontSize ?? 15.sp, fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
+      ],
+    );
+  }
+
   Widget _buildInfoSection({required String title, required Widget child}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: TextStyle(
-                color: Colors.grey,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500)),
+        Text(title, style: GoogleFonts.inter(color: Colors.grey, fontSize: 14.sp, fontWeight: FontWeight.w500)),
         SizedBox(height: 12.h),
         child,
       ],

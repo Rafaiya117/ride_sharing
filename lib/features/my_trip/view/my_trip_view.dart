@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/my_trip/controller/my_trip_controller.dart';
@@ -47,9 +48,9 @@ class MyTripsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Welcome back",
-                style: TextStyle(color: Colors.white70, fontSize: 14.sp)),
+                style: GoogleFonts.inter(color: Colors.white70, fontSize: 14.sp)),
             Text("Safi",
-                style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold)),
+                style: GoogleFonts.inter(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold)),
           ],
         ),
         Row(
@@ -89,12 +90,12 @@ class MyTripsScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
                 padding: EdgeInsets.symmetric(vertical: 12.h),
               ),
-              child: const Text("Cancel Booking", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+              child:Text("Cancel Booking", style: GoogleFonts.inter(color: Colors.red, fontWeight: FontWeight.bold)),
             ),
           ),
           SizedBox(height: 8.h),
           Text("Free cancellation up to 24 hours before departure",
-              textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 11.sp)),
+              textAlign: TextAlign.center, style: GoogleFonts.inter(color: Colors.grey, fontSize: 11.sp)),
         ],
       ),
     );
@@ -124,8 +125,8 @@ class MyTripsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(trip.driverName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp)),
-                    Text(trip.durationOrCar, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+                    Text(trip.driverName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 15.sp)),
+                    Text(trip.durationOrCar, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
                   ],
                 ),
               ),
@@ -161,13 +162,13 @@ class MyTripsScreen extends StatelessWidget {
 
   Widget _sectionTitle(String title) => Padding(
         padding: EdgeInsets.only(bottom: 16.h),
-        child: Text(title, style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold)),
+        child: Text(title, style: GoogleFonts.inter(fontSize: 20.sp, fontWeight: FontWeight.bold)),
       );
 
   Widget _driverAvatar(String initial) => Container(
         width: 40.r, height: 40.r,
         decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(10.r)),
-        child: Center(child: Text(initial, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
+        child: Center(child: Text(initial, style:GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold))),
       );
 
   Widget _buildRouteInfo(String p, String d) => Column(
@@ -185,7 +186,7 @@ class MyTripsScreen extends StatelessWidget {
         children: [
           Icon(icon, size: 12.r, color: color),
           SizedBox(width: 12.w),
-          Text(loc, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+          Text(loc, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
         ],
       );
 
@@ -200,13 +201,13 @@ class MyTripsScreen extends StatelessWidget {
           Row(children: [
             Icon(Icons.calendar_today_outlined, size: 16.r, color: Colors.grey),
             SizedBox(width: 8.w),
-            Text(date, style: TextStyle(color: Colors.grey.shade700, fontSize: 13.sp)),
+            Text(date, style: GoogleFonts.inter(color: Colors.grey.shade700, fontSize: 13.sp)),
           ]),
           if (isUpcoming)
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(color: const Color(0xFFE8F0FE), borderRadius: BorderRadius.circular(20.r)),
-              child: Text("Upcoming", style: TextStyle(color: const Color(0xFF1967D2), fontWeight: FontWeight.bold, fontSize: 12.sp)),
+              child: Text("Upcoming", style: GoogleFonts.inter(color: const Color(0xFF1967D2), fontWeight: FontWeight.bold, fontSize: 12.sp)),
             )
         ],
       );
@@ -217,13 +218,13 @@ class MyTripsScreen extends StatelessWidget {
           SizedBox(width: 12.w),
           Expanded(
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(trip.driverName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
-              Row(children: [Icon(Icons.star, size: 14.r, color: Colors.orange), Text(" ${trip.rating}", style: TextStyle(fontSize: 12.sp))]),
+              Text(trip.driverName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+              Row(children: [Icon(Icons.star, size: 14.r, color: Colors.orange), Text(" ${trip.rating}", style: GoogleFonts.inter(fontSize: 12.sp))]),
             ]),
           ),
           Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            Text("\$${trip.price}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.sp)),
-            Text(trip.durationOrCar, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+            Text("\$${trip.price}", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 20.sp)),
+            Text(trip.durationOrCar, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
           ])
         ],
       );
@@ -231,18 +232,18 @@ class MyTripsScreen extends StatelessWidget {
   Widget _priceColumn(String price) => Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Text("\$$price", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22.sp)),
-          Text("per seat", style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+          Text("\$$price", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 22.sp)),
+          Text("per seat", style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
         ],
       );
 
   Widget _buildTimeInfo(String date, String time) => Row(children: [
         Icon(Icons.calendar_today_outlined, size: 16.r, color: Colors.grey),
         SizedBox(width: 4.w),
-        Text(date, style: TextStyle(fontSize: 13.sp)),
+        Text(date, style: GoogleFonts.inter(fontSize: 13.sp)),
         SizedBox(width: 12.w),
         Icon(Icons.access_time, size: 16.r, color: Colors.grey),
         SizedBox(width: 4.w),
-        Text(time, style: TextStyle(fontSize: 13.sp)),
+        Text(time, style: GoogleFonts.inter(fontSize: 13.sp)),
       ]);
 }

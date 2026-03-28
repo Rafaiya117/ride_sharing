@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/user_edit_profile/user_edit_profile_controller/user_edit_profile_controller.dart';
 
@@ -17,7 +18,7 @@ class ProfileForm extends StatelessWidget {
           padding: EdgeInsets.only(bottom: 20.h, left: 5.w),
           child: Text(
             "Basic Information",
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 18.sp, 
               fontWeight: FontWeight.bold,
               color: const Color(0xFF1E283A), 
@@ -73,7 +74,7 @@ class ProfileForm extends StatelessWidget {
             SizedBox(width: 8.w),
             Text(
               label,
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 16.sp, 
                 color: Colors.black87,
                 fontWeight: FontWeight.w400,
@@ -94,10 +95,10 @@ class ProfileForm extends StatelessWidget {
           child: TextField(
             controller: controller,
             keyboardType: keyboardType,
-            style: TextStyle(fontSize: 16.sp, color: Colors.black),
+            style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.black),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(fontSize: 16.sp, color: Colors.black54), 
+              hintStyle: GoogleFonts.inter(fontSize: 16.sp, color: Colors.black54), 
               border: InputBorder.none,
               contentPadding: EdgeInsets.zero, 
             ),

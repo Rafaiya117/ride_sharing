@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // 1. The reusable Modular Tile Widget
 class SupportOptionTile extends StatelessWidget {
@@ -25,7 +26,6 @@ class SupportOptionTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Circular Icon Container with specified background color
           Container(
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
@@ -35,10 +35,10 @@ class SupportOptionTile extends StatelessWidget {
             child: Icon(
               icon,
               color: iconColor,
-              size: 24.sp, // Using ScreenUtil for scalable icons
+              size: 24.sp, 
             ),
           ),
-          SizedBox(width: 16.w), // Space between icon and text
+          SizedBox(width: 16.w), 
           // Text Block
           Expanded(
             child: Column(
@@ -46,20 +46,20 @@ class SupportOptionTile extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 16.sp,
-                    fontWeight: FontWeight.w700, // Matches image boldness
-                    color: const Color(0xFF101010), // Specific high-contrast text color
+                    fontWeight: FontWeight.w700, 
+                    color: const Color(0xFF101010), 
                   ),
                 ),
                 SizedBox(height: 2.h),
                 Text(
                   subtitle,
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w400,
-                    color: const Color(0xFF757575), // Specific grey subtitle color
-                    height: 1.3, // Improves readability of multi-line text
+                    color: const Color(0xFF757575), 
+                    height: 1.3,
                   ),
                 ),
               ],

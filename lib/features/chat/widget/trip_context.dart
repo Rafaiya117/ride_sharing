@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/chat/chat_controller/chat_controller.dart';
 
@@ -41,12 +42,12 @@ class TripContextWidget extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(controller.pickup, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)),
+                    Text(controller.pickup, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w400)),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 6.w),
                       child: SvgPicture.asset('assets/icons/arrow_right.svg', width: 14.w, colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn)),
                     ),
-                    Text(controller.dropoff, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w400)),
+                    Text(controller.dropoff, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w400)),
                   ],
                 ),
               ],
@@ -56,10 +57,10 @@ class TripContextWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(controller.date, style: TextStyle(fontSize: 14.sp, color: iconColor)),
+              Text(controller.date, style: GoogleFonts.inter(fontSize: 14.sp, color: iconColor)),
               Text(
                 "\$${controller.pricePerSeat.toStringAsFixed(0)}/seat", 
-                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black),
+                style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black),
               ),
             ],
           ),

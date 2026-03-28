@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/features/diver/driver_profile/driver_profile_model/driver_profile_model.dart';
 
 class DriverProfileController extends ChangeNotifier {
@@ -26,8 +27,8 @@ class DriverProfileController extends ChangeNotifier {
 
   // Navigation methods
   void navigateToEdit(BuildContext context) => debugPrint("Edit Profile");
-  void navigateToHistory(BuildContext context) => debugPrint("Trip History");
-  void navigateToReviews(BuildContext context) => debugPrint("Reviews");
-  void navigateToEarnings(BuildContext context) => debugPrint("Earnings");
+  void navigateToHistory(BuildContext context) => context.push('/drive_triphistory');
+  void navigateToReviews(BuildContext context) => context.push('/drive_review_screen');
+  void navigateToEarnings(BuildContext context) => context.push('/drive_earning_screen');
   void navigateToPayments(BuildContext context) => debugPrint("Payments");
 }

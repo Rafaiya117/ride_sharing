@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class NoInternetWidget extends StatelessWidget {
   const NoInternetWidget({super.key});
@@ -16,7 +17,7 @@ class NoInternetWidget extends StatelessWidget {
             SizedBox(height: 24.h),
             Text(
               'No Internet Connection',
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 22.sp,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -25,7 +26,7 @@ class NoInternetWidget extends StatelessWidget {
             SizedBox(height: 8.h),
             Text(
               'Please check your network settings.',
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 16.sp,
                 color: Colors.grey,
               ),

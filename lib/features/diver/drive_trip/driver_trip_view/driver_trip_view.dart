@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
+import 'package:ride_sharing/core/utils/bottom_nav.dart';
 import 'package:ride_sharing/features/diver/drive_trip/driver_trip_controller/driver_trip_controller.dart';
 import 'package:ride_sharing/features/diver/drive_trip/driver_trip_model/driver_trip_model.dart';
 
@@ -21,8 +23,8 @@ class DriverTripScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Welcome back", style: TextStyle(color: Colors.white70, fontSize: 14.sp)),
-              Text("Safi", style: TextStyle(color: Colors.white, fontSize: 22.sp, fontWeight: FontWeight.bold)),
+              Text("Welcome back", style: GoogleFonts.inter(color: Colors.white70, fontSize: 14.sp)),
+              Text("Safi", style: GoogleFonts.inter(color: Colors.white, fontSize: 22.sp, fontWeight: FontWeight.bold)),
             ],
           ),
           Row(
@@ -43,7 +45,10 @@ class DriverTripScreen extends StatelessWidget {
           )
         ],
       ),
-
+      bottomNavigationBar: CustomBottomNavbar(
+        currentIndex: controller.currentNavbarIndex,
+        onTap: (index) => controller.setNavbarIndex(index), 
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -61,7 +66,7 @@ class DriverTripScreen extends StatelessWidget {
   Widget _buildTitle(String title) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 16.h),
-      child: Text(title, style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+      child: Text(title, style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold)),
     );
   }
 
@@ -81,7 +86,7 @@ class DriverTripScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildBadge("Active", const Color(0xFFE8F5E9), Colors.green, Icons.check_circle_outline),
-              Text("Posted ${ride.postedDate}", style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+              Text("Posted ${ride.postedDate}", style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
             ],
           ),
           SizedBox(height: 16.h),
@@ -127,7 +132,7 @@ class DriverTripScreen extends StatelessWidget {
               Row(children: [
                 Icon(Icons.calendar_today_outlined, size: 16.r, color: Colors.grey),
                 SizedBox(width: 8.w),
-                Text(trip.date, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp)),
+                Text(trip.date, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 14.sp)),
               ]),
               Row(children: [
                 _buildBadge("Active", const Color(0xFFE3F2FD), Colors.blue, null),
@@ -144,17 +149,17 @@ class DriverTripScreen extends StatelessWidget {
               Container(
                 width: 40.r, height: 40.r,
                 decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(8.r)),
-                child: Center(child: Text(trip.initials, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
+                child: Center(child: Text(trip.initials, style:GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold))),
               ),
               SizedBox(width: 12.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(trip.passengerName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp)),
+                    Text(trip.passengerName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 15.sp)),
                     Row(children: [
                       Icon(Icons.star, color: Colors.amber, size: 14.r),
-                      Text(" ${trip.rating}", style: TextStyle(fontSize: 12.sp, color: Colors.grey)),
+                      Text(" ${trip.rating}", style: GoogleFonts.inter(fontSize: 12.sp, color: Colors.grey)),
                     ]),
                   ],
                 ),
@@ -162,8 +167,8 @@ class DriverTripScreen extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text("\$${trip.price}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp)),
-                  Text(trip.duration, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+                  Text("\$${trip.price}", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18.sp)),
+                  Text(trip.duration, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
                 ],
               )
             ],
@@ -181,7 +186,7 @@ class DriverTripScreen extends StatelessWidget {
     child: Row(mainAxisSize: MainAxisSize.min, children: [
       if (i != null) Icon(i, size: 14.r, color: tc),
       if (i != null) SizedBox(width: 4.w),
-      Text(t, style: TextStyle(color: tc, fontSize: 12.sp, fontWeight: FontWeight.bold)),
+      Text(t, style: GoogleFonts.inter(color: tc, fontSize: 12.sp, fontWeight: FontWeight.bold)),
     ]),
   );
 
@@ -189,8 +194,8 @@ class DriverTripScreen extends StatelessWidget {
     Icon(Icons.location_on_outlined, color: c, size: 20.r),
     SizedBox(width: 12.w),
     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(l, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
-      Text(v, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp)),
+      Text(l, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
+      Text(v, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 14.sp)),
     ])
   ]);
 
@@ -202,7 +207,7 @@ class DriverTripScreen extends StatelessWidget {
   Widget _iconText(IconData i, String t) => Row(children: [
     Icon(i, size: 16.r, color: Colors.grey),
     SizedBox(width: 8.w),
-    Text(t, style: TextStyle(color: Colors.grey.shade700, fontSize: 13.sp)),
+    Text(t, style: GoogleFonts.inter(color: Colors.grey.shade700, fontSize: 13.sp)),
   ]);
 
   Widget _actionBtn(String l, Color tc, Color bc, IconData i) => Container(
@@ -210,7 +215,7 @@ class DriverTripScreen extends StatelessWidget {
     decoration: BoxDecoration(color: bc, borderRadius: BorderRadius.circular(12.r)),
     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Icon(i, color: tc, size: 18.r), SizedBox(width: 8.w),
-      Text(l, style: TextStyle(color: tc, fontWeight: FontWeight.bold)),
+      Text(l, style: GoogleFonts.inter(color: tc, fontWeight: FontWeight.bold)),
     ]),
   );
 
@@ -223,6 +228,6 @@ class DriverTripScreen extends StatelessWidget {
   Widget _trackBtn() => Container(
     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
     decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(10.r)),
-    child: Text("Track", style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w500)),
+    child: Text("Track", style: GoogleFonts.inter(fontSize: 12.sp, fontWeight: FontWeight.w500)),
   );
 }

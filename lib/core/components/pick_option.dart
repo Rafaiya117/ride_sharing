@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PickupOptionTile extends StatelessWidget {
   final String title;
@@ -47,16 +48,16 @@ class PickupOptionTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700, // Bold weight from image
-                      fontSize: 16.sp, // Slightly larger title
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.w700, 
+                      fontSize: 16.sp, 
                       color: const Color(0xFF101010),
                     ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
                     subtitle,
-                    style: TextStyle(
+                    style: GoogleFonts.inter(
                       color: const Color(0xFF757575), 
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w400,
@@ -67,7 +68,7 @@ class PickupOptionTile extends StatelessWidget {
             ),
             Text(
               trailing,
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontWeight: FontWeight.w800, 
                 fontSize: 14.sp,
                 color: const Color(0xFF101010),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/notification/notification_controller/notification_controller.dart';
@@ -20,7 +21,7 @@ class NotificationsScreen extends StatelessWidget {
         children: [
           Text(
             "Notifications",
-            style: TextStyle(
+            style: GoogleFonts.inter(
               color: Colors.white,
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
@@ -28,7 +29,7 @@ class NotificationsScreen extends StatelessWidget {
           ),
           Text(
             "${controller.unreadCount} new notifications",
-            style: TextStyle(
+            style: GoogleFonts.inter(
               color: Colors.white70,
               fontSize: 12.sp,
               fontWeight: FontWeight.normal,
@@ -43,7 +44,7 @@ class NotificationsScreen extends StatelessWidget {
           onPressed: () => controller.markAllAsRead(),
           child: Text(
             "Mark all read",
-            style: TextStyle(color: Colors.white, fontSize: 14.sp),
+            style: GoogleFonts.inter(color: Colors.white, fontSize: 14.sp),
           ),
         ),
       ],
@@ -100,7 +101,7 @@ class _NotificationTile extends StatelessWidget {
                   children: [
                     Text(
                       notification.title,
-                      style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                      style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold),
                     ),
                     if (!notification.isRead)
                       Container(
@@ -113,7 +114,7 @@ class _NotificationTile extends StatelessWidget {
                 SizedBox(height: 4.h),
                 Text(
                   notification.description,
-                  style: TextStyle(fontSize: 13.sp, color: Colors.grey[700], height: 1.4),
+                  style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.grey[700], height: 1.4),
                 ),
                 SizedBox(height: 8.h),
                 Row(
@@ -122,7 +123,7 @@ class _NotificationTile extends StatelessWidget {
                     SizedBox(width: 4.w),
                     Text(
                       notification.time,
-                      style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                      style: GoogleFonts.inter(fontSize: 12.sp, color: Colors.grey),
                     ),
                   ],
                 ),

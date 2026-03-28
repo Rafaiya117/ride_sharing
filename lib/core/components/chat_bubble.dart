@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ride_sharing/features/chat/chat_model/chat_model.dart';
 
 class ChatBubble extends StatelessWidget {
@@ -38,7 +39,7 @@ class ChatBubble extends StatelessWidget {
                 ),
                 child: Text(
                   message.text,
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 16.sp,
                     color: isMe ? Colors.white : Colors.black, 
                     fontWeight: FontWeight.w400, 
@@ -60,7 +61,7 @@ class ChatBubble extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 2.h),
       child: Text(
         time,
-        style: TextStyle(
+        style: GoogleFonts.inter(
           fontSize: 12.sp,
           color: Colors.grey, 
           fontWeight: FontWeight.w400,

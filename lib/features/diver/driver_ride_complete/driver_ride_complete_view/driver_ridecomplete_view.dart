@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/diver/driver_ride_complete/driver_ride_conmplete_controller/driver_ridecomplete_controller.dart';
@@ -47,13 +48,13 @@ class RideCompletedScreen extends StatelessWidget {
             // 2. Completion Text
             Text(
               "Ride Completed!",
-              style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
+              style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8.h),
             Text(
               "Great job! You've successfully completed\nthis trip",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14.sp, color: Colors.grey[600]),
+              style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey[600]),
             ),
 
             SizedBox(height: 30.h),
@@ -83,7 +84,7 @@ class RideCompletedScreen extends StatelessWidget {
                   children: [
                     Text(
                       "Continue",
-                      style: TextStyle(fontSize: 16.sp, color: Colors.white, fontWeight: FontWeight.bold),
+                      style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(width: 8.w),
                     const Icon(Icons.arrow_forward, color: Colors.white),
@@ -113,17 +114,17 @@ class RideCompletedScreen extends StatelessWidget {
               CircleAvatar(
                 radius: 24.r,
                 backgroundColor: const Color(0xFF1A1A1A),
-                child: Text(controller.initials, style: const TextStyle(color: Colors.white)),
+                child: Text(controller.initials, style: GoogleFonts.inter(color: Colors.white)),
               ),
               SizedBox(width: 12.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(controller.passengerName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+                  Text(controller.passengerName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
                   Row(
                     children: [
                       Icon(Icons.star, color: Colors.amber, size: 14.sp),
-                      Text(" ${controller.rating} rating", style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+                      Text(" ${controller.rating} rating", style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
                     ],
                   )
                 ],
@@ -151,8 +152,8 @@ class RideCompletedScreen extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: TextStyle(color: Colors.grey, fontSize: 10.sp)),
-            Text(city, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14.sp)),
+            Text(label, style: GoogleFonts.inter(color: Colors.grey, fontSize: 10.sp)),
+            Text(city, style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 14.sp)),
           ],
         ),
       ],
@@ -178,17 +179,17 @@ class RideCompletedScreen extends StatelessWidget {
             children: [
               const Icon(Icons.trending_up, color: Colors.white, size: 18),
               SizedBox(width: 8.w),
-              Text("Earnings", style: TextStyle(color: Colors.white, fontSize: 14.sp)),
+              Text("Earnings", style: GoogleFonts.inter(color: Colors.white, fontSize: 14.sp)),
             ],
           ),
           SizedBox(height: 4.h),
           Text(
             "\$$amount",
-            style: TextStyle(color: Colors.white, fontSize: 32.sp, fontWeight: FontWeight.bold),
+            style: GoogleFonts.inter(color: Colors.white, fontSize: 32.sp, fontWeight: FontWeight.bold),
           ),
           Text(
             "Added to your balance",
-            style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12.sp),
+            style: GoogleFonts.inter(color: Colors.white.withOpacity(0.8), fontSize: 12.sp),
           ),
         ],
       ),

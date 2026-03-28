@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DriverCardModular extends StatelessWidget {
   final String name;
@@ -33,7 +34,7 @@ class DriverCardModular extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Your Driver", 
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black)),
+                style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black)),
               Row(
                 children: [
                   // Matches the circular outlined chat icon in the image
@@ -54,7 +55,7 @@ class DriverCardModular extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(name, 
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp, color: Colors.black)),
+                    style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp, color: Colors.black)),
                   SizedBox(height: 4.h),
                   Row(
                     children: [
@@ -70,12 +71,12 @@ class DriverCardModular extends StatelessWidget {
                             Icon(Icons.star, size: 14.r, color: Colors.white),
                             SizedBox(width: 4.w),
                             Text(rating, 
-                              style: TextStyle(color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.bold)),
+                              style: GoogleFonts.inter(color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ),
                       Text("  •  $trips trips", 
-                        style: TextStyle(color: Colors.grey.shade600, fontSize: 13.sp)),
+                        style: GoogleFonts.inter(color: Colors.grey.shade600, fontSize: 13.sp)),
                     ],
                   )
                 ],
@@ -111,9 +112,9 @@ class DriverCardModular extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(carModel, 
-                    style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.bold, color: Colors.black)),
+                    style: GoogleFonts.inter(fontSize: 15.sp, fontWeight: FontWeight.bold, color: Colors.black)),
                   Text(plateNumber, 
-                    style: TextStyle(fontSize: 13.sp, color: Colors.grey.shade600)),
+                    style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.grey.shade600)),
                 ],
               ),
             ],
@@ -129,7 +130,7 @@ class DriverCardModular extends StatelessWidget {
               Icon(Icons.shield_outlined, color: const Color(0xFF27AE60), size: 18.r),
               SizedBox(width: 8.w),
               Text("Verified Driver & Vehicle", 
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   color: const Color(0xFF27AE60), 
                   fontWeight: FontWeight.w500, 
                   fontSize: 13.sp
@@ -159,7 +160,7 @@ class DriverCardModular extends StatelessWidget {
       ),
       child: Center(
         child: Text(initial, 
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.sp))
+          style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.sp))
       ),
     );
   }

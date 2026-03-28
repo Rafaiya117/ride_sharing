@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 class CustomTextField extends StatelessWidget {
@@ -38,10 +39,10 @@ class CustomTextField extends StatelessWidget {
         obscureText: isPassword,
         keyboardType: keyboardType,
         textAlignVertical: TextAlignVertical.center,
-        style: TextStyle(fontSize: 16.sp, color: Colors.black),
+        style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.black),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(fontSize: 14.sp, color: iconColor),
+          hintStyle: GoogleFonts.inter(fontSize: 14.sp, color: iconColor),
           border: InputBorder.none,
           contentPadding: EdgeInsets.zero,
           prefixIcon: Padding(

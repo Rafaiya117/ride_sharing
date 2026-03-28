@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PrivacySecurityContainer extends StatelessWidget {
   final List<Widget> children;
@@ -42,8 +43,8 @@ class PrivacySecurityContainer extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w600)),
-                Text(subtitle, style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 13.sp)),
+                Text(title, style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w600)),
+                Text(subtitle, style: GoogleFonts.inter(color: Colors.white.withOpacity(0.9), fontSize: 13.sp)),
               ],
             ),
           ),
@@ -77,8 +78,8 @@ class PrivacySecurityContainer extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w600)),
-                  Text(subtitle, style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 13.sp)),
+                  Text(title, style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w600)),
+                  Text(subtitle, style: GoogleFonts.inter(color: Colors.white.withOpacity(0.9), fontSize: 13.sp)),
                 ],
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class DriverVerificationController extends ChangeNotifier {
   // Car Details Controllers
@@ -27,7 +28,8 @@ class DriverVerificationController extends ChangeNotifier {
 
   void submitVerification(BuildContext context) {
     if (isAllVerified) {
-      debugPrint("Verification Submitted");
+      //debugPrint("Verification Submitted");
+      context.go('/drive_home_screen');
     }
   }
 

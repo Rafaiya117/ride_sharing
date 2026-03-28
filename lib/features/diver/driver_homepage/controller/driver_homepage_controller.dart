@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:ride_sharing/features/diver/driver_homepage/model/driver_homepage_model.dart';
 
 class DriverHomeController extends ChangeNotifier {
+  int _currentNavbarIndex = 0;
+  String _userRole = 'driver'; 
+
+  int get currentNavbarIndex => _currentNavbarIndex;
+  String get userRole => _userRole; 
+
   // Mock Driver Data matching the UI
   String driverName = "Safi";
   double driverRating = 4.9;
@@ -31,6 +37,17 @@ class DriverHomeController extends ChangeNotifier {
   // --- Actions ---
   void toggleOnlineStatus(bool value) {
     _isOnline = value;
+    notifyListeners();
+  }
+
+    void setNavbarIndex(int index) {
+    _currentNavbarIndex = index;
+    notifyListeners();
+  }
+
+  void setUserRole(String role) {
+    _userRole = role;
+    _currentNavbarIndex = 0; // Reset index when role changes
     notifyListeners();
   }
 

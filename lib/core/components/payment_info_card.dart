@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PaymentInfoCard extends StatelessWidget {
   final Widget child;
@@ -27,7 +28,7 @@ class PaymentInfoCard extends StatelessWidget {
             padding: EdgeInsets.only(bottom: 15.h, left: 5.w),
             child: Text(
               title!,
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
                 color: const Color(0xFF1E1E1E),
@@ -62,7 +63,7 @@ class PaymentInfoCard extends StatelessWidget {
                   padding: isMainPadding ? EdgeInsets.zero : EdgeInsets.all(20.w),
                   child: Text(
                     title!,
-                    style: TextStyle(
+                    style: GoogleFonts.inter(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF1E1E1E),

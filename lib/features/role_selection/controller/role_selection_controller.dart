@@ -25,12 +25,10 @@ class RoleController extends ChangeNotifier {
   void onRoleSelected(BuildContext context, String roleId) {
     _selectedRole = roleId;
     notifyListeners();
+
+    // Both roles now go to sign_in
     Timer(const Duration(milliseconds: 300), () {
-      if (roleId == 'passenger') {
-        context.go('/sign_in');
-      } else {
-        // context.go('/driverHome');
-      }
+      context.go('/sign_in');
     });
   }
 }

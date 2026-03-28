@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/features/diver/withdrawal/withdrawal_model/withdrawal_model.dart';
 
 class WithdrawalController extends ChangeNotifier {
@@ -26,10 +27,11 @@ class WithdrawalController extends ChangeNotifier {
 
   void navigateToWithdrawAmount(BuildContext context) {
     debugPrint("Navigating to Amount Selection...");
-    // GoRouter.of(context).push('/withdrawal_amount');
+    GoRouter.of(context).push('/drive_withdrawalflow_screen');
   }
 
   void navigateBack(BuildContext context) {
     Navigator.pop(context);
   }
+
 }

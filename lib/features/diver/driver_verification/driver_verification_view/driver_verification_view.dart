@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/diver/driver_verification/driver_verification_controller/driver_verification_controller.dart';
@@ -20,26 +22,25 @@ class DriverVerificationScreen extends StatelessWidget {
         onPressed: () => Navigator.pop(context),
       ),
       child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        //padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20.h),
             Center(
               child: Column(
                 children: [
                   Text("Driver Verification", 
-                    style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF131D33))),
+                    style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF131D33))),
                   SizedBox(height: 5.h),
                   Text("Complete verification to start offering rides", 
-                    style: TextStyle(fontSize: 13.sp, color: Colors.grey[600])),
+                    style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.grey[600])),
                 ],
               ),
             ),
             SizedBox(height: 25.h),
 
             // Car Details Section
-            Text("Car Details", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+            Text("Car Details", style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
             SizedBox(height: 15.h),
             _buildLabel("Car Model"),
             _buildTextField(controller.modelController, "e.g., Toyota Camry"),
@@ -59,14 +60,14 @@ class DriverVerificationScreen extends StatelessWidget {
             ),
 
             SizedBox(height: 30.h),
-            Text("Required Documents", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+            Text("Required Documents", style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
             SizedBox(height: 15.h),
 
             // Document Items
             _buildDocItem(
               title: "Selfie Verification",
               subtitle: controller.isSelfieCaptured ? "1/1 photos Captured" : "Take a live selfie (no uploads)",
-              icon: Icons.person_outline,
+              iconPath: 'assets/icons/selfie_icon.svg',
               iconColor: Colors.blue,
               isCaptured: controller.isSelfieCaptured,
               onTap: () => controller.toggleVerification('selfie'),
@@ -74,7 +75,7 @@ class DriverVerificationScreen extends StatelessWidget {
             _buildDocItem(
               title: "Car Photo",
               subtitle: controller.isCarPhotoCaptured ? "4/4 photos Captured" : "Capture car photo (no uploads)",
-              icon: Icons.directions_car_filled_outlined,
+              iconPath: 'assets/icons/car_icon.svg',
               iconColor: Colors.green,
               isCaptured: controller.isCarPhotoCaptured,
               multiPhotoCount: 4,
@@ -83,7 +84,7 @@ class DriverVerificationScreen extends StatelessWidget {
             _buildDocItem(
               title: "Number Plate",
               subtitle: controller.isNumberPlateCaptured ? "1/1 photos Captured" : "Capture plate photo (no uploads)",
-              icon: Icons.article_outlined,
+              iconPath: "assets/icons/number_plate_icon.svg",
               iconColor: Colors.orange,
               isCaptured: controller.isNumberPlateCaptured,
               onTap: () => controller.toggleVerification('plate'),
@@ -91,7 +92,7 @@ class DriverVerificationScreen extends StatelessWidget {
             _buildDocItem(
               title: "Driving License",
               subtitle: controller.isLicenseCaptured ? "1/1 photos Captured" : "Capture or upload license",
-              icon: Icons.credit_card,
+              iconPath: 'assets/icons/license_icon.svg',
               iconColor: Colors.purple,
               isCaptured: controller.isLicenseCaptured,
               showUpload: true,
@@ -118,11 +119,11 @@ class DriverVerificationScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Strong Security Verification", 
-                            style: TextStyle(fontWeight: FontWeight.bold, color: const Color(0xFF873600), fontSize: 14.sp)),
+                            style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: const Color(0xFF873600), fontSize: 14.sp)),
                           SizedBox(height: 4.h),
                           Text(
                             "We require live camera captures (not gallery uploads) for selfie, car, and number plate to prevent fake accounts and ensure passenger safety.",
-                            style: TextStyle(fontSize: 12.sp, color: const Color(0xFF873600)),
+                            style: GoogleFonts.inter(fontSize: 12.sp, color: const Color(0xFF873600)),
                           ),
                         ],
                       ),
@@ -145,7 +146,7 @@ class DriverVerificationScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
                 ),
                 child: Text("Complete Verification", 
-                  style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                  style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
               ),
             ),
             SizedBox(height: 40.h),
@@ -160,7 +161,7 @@ class DriverVerificationScreen extends StatelessWidget {
   Widget _buildLabel(String text) {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
-      child: Text(text, style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold, color: const Color(0xFF131D33))),
+      child: Text(text, style: GoogleFonts.inter(fontSize: 13.sp, fontWeight: FontWeight.bold, color: const Color(0xFF131D33))),
     );
   }
 
@@ -169,7 +170,7 @@ class DriverVerificationScreen extends StatelessWidget {
       controller: controller,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey, fontSize: 14.sp),
+        hintStyle: GoogleFonts.inter(color: Colors.grey, fontSize: 14.sp),
         filled: true,
         fillColor: Colors.white,
         contentPadding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
@@ -182,7 +183,7 @@ class DriverVerificationScreen extends StatelessWidget {
   Widget _buildDocItem({
     required String title,
     required String subtitle,
-    required IconData icon,
+    required String iconPath,
     required Color iconColor,
     required bool isCaptured,
     int multiPhotoCount = 1,
@@ -204,45 +205,92 @@ class DriverVerificationScreen extends StatelessWidget {
             children: [
               Container(
                 padding: EdgeInsets.all(10.r),
-                decoration: BoxDecoration(color: iconColor.withOpacity(0.1), borderRadius: BorderRadius.circular(10.r)),
-                child: Icon(icon, color: iconColor),
+                decoration: BoxDecoration(
+                  color: iconColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                // Replaced Icon with SvgPicture.asset
+                child: SvgPicture.asset(
+                  iconPath,
+                  colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                  width: 24.r,
+                  height: 24.r,
+                ),
               ),
               SizedBox(width: 15.w),
               Expanded(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp)),
-                  Text(subtitle, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
-                ]),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
+                      ),
+                    ),
+                    Text(
+                      subtitle,
+                      style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp),
+                    ),
+                  ],
+                ),
               ),
               if (!isCaptured)
-                IconButton(onPressed: onTap, icon: const Icon(Icons.camera_alt_outlined, color: Colors.redAccent))
+                IconButton(
+                  onPressed: onTap,
+                  icon: const Icon(
+                    Icons.camera_alt_outlined,
+                    color: Colors.redAccent,
+                  ),
+                )
               else
                 ElevatedButton(
                   onPressed: onTap,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[600],
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-                    padding: EdgeInsets.symmetric(horizontal: 15.w),
+                    fixedSize: Size(100.09.w, 36.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 10.w,), 
                   ),
-                  child: const Text("Change", style: TextStyle(color: Colors.white)),
+                  child: Text(
+                    "Change",
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontSize: 12.sp,
+                    ), 
+                  ),
                 ),
             ],
           ),
           if (isCaptured) ...[
             SizedBox(height: 10.h),
             Row(
-              children: List.generate(multiPhotoCount, (index) => Container(
-                width: 45.r,
-                height: 45.r,
-                margin: EdgeInsets.only(right: 8.w),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.r),
-                  border: Border.all(color: Colors.green),
+              children: List.generate(
+                multiPhotoCount,
+                (index) => Container(
+                  width: 45.r,
+                  height: 45.r,
+                  margin: EdgeInsets.only(right: 8.w),
+                  padding: EdgeInsets.all(10.r),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0FDF4),
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: Border.all(color: Colors.green),
+                  ),
+                  child: SvgPicture.asset(
+                    'assets/icons/check_circle.svg', 
+                    colorFilter: const ColorFilter.mode(
+                      Colors.green,
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
-                child: const Icon(Icons.check_circle, color: Colors.green),
-              )),
+              ),
             ),
-          ]
+          ],
         ],
       ),
     );

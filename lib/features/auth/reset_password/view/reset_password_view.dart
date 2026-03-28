@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
 import 'package:ride_sharing/core/components/custom_text_field.dart';
@@ -20,16 +21,15 @@ class ResetPasswordScreen extends StatelessWidget {
       // --- HEADER ---
       title: "Reset Password",
       isCurved: true,
-      titleAlign: TextAlign.center, // Centered title, flexible per previous requirement
+      titleAlign: TextAlign.center, 
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () => controller.navigateBackToSignIn(context),
       ),
-      // Set the mesh pattern SVG only for this page via headerBackground
       headerBackground: Opacity(
         opacity: 0.1,
         child: SvgPicture.asset(
-          'assets/icons/mesh_pattern.svg', // Assumed path
+          'assets/icons/mesh_pattern.svg', 
           fit: BoxFit.cover,
           width: double.infinity,
         ),
@@ -38,11 +38,10 @@ class ResetPasswordScreen extends StatelessWidget {
       // --- BODY CONTENT ---
       child: Column(
         children: [
-          SizedBox(height: 20.h), // Top padding within curved container
-
+          SizedBox(height: 20.h), 
           // 1. Top Logo (from image)
           Image.asset(
-            'assets/images/logo_small.png', // Ensure asset exists
+            'assets/images/logo_small.png', 
             height: 100.h,
           ),
           SizedBox(height: 30.h),
@@ -50,34 +49,31 @@ class ResetPasswordScreen extends StatelessWidget {
           // 2. Main Title and Description
           Text(
             "Create password",
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 28.sp,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF1E1E1E), // Near-black, standard readability
+              color: const Color(0xFF1E1E1E), 
             ),
           ),
           SizedBox(height: 8.h),
           Text(
             "Choose a strong password for your account",
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 18.sp,
-              color: const Color(0xFF757575), // Soft grey, standard subtext color
+              color: const Color(0xFF757575), 
               fontWeight: FontWeight.w400,
             ),
           ),
           SizedBox(height: 40.h),
-
           // 3. --- INPUT FIELDS (DYNAMIC VISIBILITY) ---
-
           // Label: New Password
           _buildLabel("New Password"),
-          // Reusable input field (using logic from image_3.png reference)
           CustomTextField(
             controller: controller.newPasswordController,
             hintText: "Enter password",
-            prefixIconPath: 'assets/icons/lock.svg', // Assumed lock icon path
-            isPassword: controller.isNewPasswordObscured, // Oberserved state
+            prefixIconPath: 'assets/icons/lock.svg', 
+            isPassword: controller.isNewPasswordObscured, 
             // Logic to add a visibility toggle (suffix icon)
             suffixIcon: IconButton(
               icon: Icon(
@@ -88,14 +84,13 @@ class ResetPasswordScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 15.h),
-
           // Label: Confirm Password
           _buildLabel("Confirm Password"),
           CustomTextField(
             controller: controller.confirmPasswordController,
             hintText: "Confirm password",
-            prefixIconPath: 'assets/icons/lock.svg', // Assumed lock icon path
-            isPassword: controller.isConfirmPasswordObscured, // Oberserved state
+            prefixIconPath: 'assets/icons/lock.svg', 
+            isPassword: controller.isConfirmPasswordObscured, 
             // Logic to add a visibility toggle (suffix icon)
             suffixIcon: IconButton(
               icon: Icon(
@@ -106,22 +101,20 @@ class ResetPasswordScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 40.h),
-
           // 4. REUSABLE PRIMARY BLACK BUTTON
           CustomButton( 
             text: "Reset Password",
             onTap: () => controller.resetPassword(context),
           ),
           SizedBox(height: 30.h),
-
           // 5. Footer Navigation Link
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 "Back to ",
-                style: TextStyle(
-                  color: const Color(0xFF757575), // Soft grey
+                style: GoogleFonts.inter(
+                  color: const Color(0xFF757575), 
                   fontSize: 16.sp,
                 ),
               ),
@@ -129,8 +122,8 @@ class ResetPasswordScreen extends StatelessWidget {
                 onTap: () => controller.navigateBackToSignIn(context),
                 child: Text(
                   "Sign In",
-                  style: TextStyle(
-                    color: Colors.black, // Dark grey/black
+                  style: GoogleFonts.inter(
+                    color: Colors.black, 
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -138,7 +131,7 @@ class ResetPasswordScreen extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 20.h), // Bottom spacing
+          SizedBox(height: 20.h), 
         ],
       ),
     );
@@ -152,9 +145,9 @@ class ResetPasswordScreen extends StatelessWidget {
         padding: EdgeInsets.only(bottom: 5.h),
         child: Text(
           text,
-          style: TextStyle(
+          style: GoogleFonts.inter(
             fontSize: 16.sp,
-            color: Colors.grey[700], // Soft grey label color
+            color: Colors.grey[700], 
             fontWeight: FontWeight.w500,
           ),
         ),

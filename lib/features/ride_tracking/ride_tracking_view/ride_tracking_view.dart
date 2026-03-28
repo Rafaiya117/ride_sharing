@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/floating_map_marker.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -81,14 +82,14 @@ class TrackRideScreen extends StatelessWidget {
                     children: [
                       Icon(Icons.warning_amber_rounded, color: Colors.white, size: 20.sp),
                       SizedBox(width: 8.w),
-                      Text("Emergency SOS",
-                          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold, color: Colors.white)),
+                      Text(
+                        "Emergency SOS",
+                        style: GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.bold, color: Colors.white)),
                     ],
                   ),
                 ),
               ),
             ),
-
             // 5. Flat White Bottom Sheet
             const Positioned(
               bottom: 0, left: 0, right: 0,

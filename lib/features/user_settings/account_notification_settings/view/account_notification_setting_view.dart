@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_notification_container.dart';
 import 'package:ride_sharing/core/components/custom_privacy_security_container.dart';
@@ -25,7 +26,7 @@ class ProfileSettingsScreen extends StatelessWidget {
             child: Center(
               child: Text(
                 "Profile Settings",
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   color: Colors.white,
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
@@ -121,7 +122,7 @@ class ProfileSettingsScreen extends StatelessWidget {
           SizedBox(width: 8.w),
           Text(
             title,
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/cash_payment/cash_payment_controller/cash_payment_controller.dart';
@@ -59,10 +60,10 @@ class CashPaymentScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Cash Payment", 
-                            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold)
+                            style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold)
                           ),
                           Text("Pay directly to driver", 
-                            style: TextStyle(color: Colors.grey, fontSize: 15.sp)
+                            style: GoogleFonts.inter(color: Colors.grey, fontSize: 15.sp)
                           ),
                         ],
                       ),
@@ -82,11 +83,11 @@ class CashPaymentScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Text("Amount to Pay in Cash", 
-                          style: TextStyle(color: const Color(0xFF166534), fontSize: 16.sp, fontWeight: FontWeight.w500)
+                          style: GoogleFonts.inter(color: const Color(0xFF166534), fontSize: 16.sp, fontWeight: FontWeight.w500)
                         ),
                         SizedBox(height: 8.h),
                         Text("\$42", 
-                          style: TextStyle(fontSize: 48.sp, fontWeight: FontWeight.bold, color: const Color(0xFF166534))
+                          style: GoogleFonts.inter(fontSize: 48.sp, fontWeight: FontWeight.bold, color: const Color(0xFF166534))
                         ),
                         SizedBox(height: 12.h),
                         Row(
@@ -95,7 +96,7 @@ class CashPaymentScreen extends StatelessWidget {
                             Icon(Icons.payments, color: const Color(0xFF22C55E), size: 18.r),
                             SizedBox(width: 6.w),
                             Text("Pay this amount to Jennifer Lee", 
-                              style: TextStyle(color: const Color(0xFF22C55E), fontSize: 14.sp, fontWeight: FontWeight.w500)
+                              style: GoogleFonts.inter(color: const Color(0xFF22C55E), fontSize: 14.sp, fontWeight: FontWeight.w500)
                             ),
                           ],
                         ),
@@ -117,7 +118,7 @@ class CashPaymentScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text("Please confirm:", 
-                          style: TextStyle(color: const Color(0xFF9A3412), fontSize: 16.sp, fontWeight: FontWeight.bold)
+                          style: GoogleFonts.inter(color: const Color(0xFF9A3412), fontSize: 16.sp, fontWeight: FontWeight.bold)
                         ),
                         SizedBox(height: 12.h),
                         _buildStepText("You have paid \$42 in cash to the driver"),
@@ -143,7 +144,7 @@ class CashPaymentScreen extends StatelessWidget {
                         Icon(Icons.check_circle_outline, color: Colors.white, size: 20.r),
                         SizedBox(width: 10.w),
                         Text("Confirm Cash Payment", 
-                          style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)
+                          style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)
                         ),
                       ],
                     ),
@@ -172,7 +173,7 @@ class CashPaymentScreen extends StatelessWidget {
         SizedBox(width: 12.w),
         Expanded(
           child: Text(text, 
-            style: TextStyle(color: const Color(0xFF9A3412), fontSize: 14.sp, height: 1.4)
+            style: GoogleFonts.inter(color: const Color(0xFF9A3412), fontSize: 14.sp, height: 1.4)
           )
         ),
       ],

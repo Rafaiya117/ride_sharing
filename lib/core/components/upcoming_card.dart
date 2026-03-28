@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ride_sharing/features/home/model/home_model.dart';
 
 
@@ -52,12 +53,12 @@ class UpcomingTripCard extends StatelessWidget {
                     children: [
                       Text(
                         trip.pickup,
-                        style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+                        style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w500),
                       ),
                       const Spacer(),
                       Text(
                         trip.dropoff,
-                        style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
+                        style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -68,11 +69,11 @@ class UpcomingTripCard extends StatelessWidget {
                   children: [
                     Text(
                       "\$${trip.pricePerSeat.toStringAsFixed(0)}", // pricePerSeat is dynamic double
-                      style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.bold),
+                      style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "per seat",
-                      style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+                      style: GoogleFonts.inter(fontSize: 12.sp, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -88,11 +89,11 @@ class UpcomingTripCard extends StatelessWidget {
             children: [
               SvgPicture.asset('assets/icons/calendar.svg', width: 16.w, colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn)),
               SizedBox(width: 8.w),
-              Text(trip.date, style: TextStyle(fontSize: 14.sp)),
+              Text(trip.date, style: GoogleFonts.inter(fontSize: 14.sp)),
               SizedBox(width: 25.w),
               SvgPicture.asset('assets/icons/clock.svg', width: 16.w, colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn)),
               SizedBox(width: 8.w),
-              Text(trip.time, style: TextStyle(fontSize: 14.sp)),
+              Text(trip.time, style: GoogleFonts.inter(fontSize: 14.sp)),
             ],
           ),
           SizedBox(height: 20.h),
@@ -106,16 +107,16 @@ class UpcomingTripCard extends StatelessWidget {
               CircleAvatar(
                 radius: 20.r,
                 backgroundColor: Colors.black12,
-                child: Text(trip.driverName.substring(0, 1), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)), // Simple Initial
+                child: Text(trip.driverName.substring(0, 1), style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)), // Simple Initial
               ),
               SizedBox(width: 12.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(trip.driverName, style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                    Text(trip.driverName, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
                     SizedBox(height: 2.h),
-                    Text(trip.carModel, style: TextStyle(fontSize: 14.sp, color: Colors.grey)),
+                    Text(trip.carModel, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey)),
                   ],
                 ),
               ),
@@ -128,7 +129,7 @@ class UpcomingTripCard extends StatelessWidget {
                     side: const BorderSide(color: Color(0xFFE0E0E0)),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
                   ),
-                  child: Text("Track", style: TextStyle(color: Colors.black, fontSize: 14.sp, fontWeight: FontWeight.w500)),
+                  child: Text("Track", style: GoogleFonts.inter(color: Colors.black, fontSize: 14.sp, fontWeight: FontWeight.w500)),
                 ),
               ),
             ],

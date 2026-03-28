@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
 import 'package:ride_sharing/core/components/custom_text_field.dart';
@@ -34,7 +35,7 @@ class SignUpScreen extends StatelessWidget {
           // Main Title
           Text(
             "Create account",
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 32.sp,
               fontWeight: FontWeight.bold,
               color: const Color(0xFF001524),
@@ -43,7 +44,7 @@ class SignUpScreen extends StatelessWidget {
           SizedBox(height: 8.h),
           Text(
             "Sign up to continue",
-            style: TextStyle(fontSize: 18.sp, color: const Color(0xFF757575)),
+            style: GoogleFonts.inter(fontSize: 18.sp, color: const Color(0xFF757575)),
           ),
           SizedBox(height: 20.h),
 
@@ -85,12 +86,12 @@ class SignUpScreen extends StatelessWidget {
           SizedBox(height: 20.h),
 
           // OR Divider
-          const Row(
+           Row(
             children: [
               Expanded(child: Divider(color: Color(0xFFE0E0E0), thickness: 1.5)),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text("OR", style: TextStyle(color: Color(0xFFE0E0E0), fontSize: 16, fontWeight: FontWeight.bold)),
+                child: Text("OR", style: GoogleFonts.inter(color: Color(0xFFE0E0E0), fontSize: 16, fontWeight: FontWeight.bold)),
               ),
               Expanded(child: Divider(color: Color(0xFFE0E0E0), thickness: 1.5)),
             ],
@@ -106,15 +107,15 @@ class SignUpScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "Already have an account? ",
-                style: TextStyle(color: Color(0xFF757575), fontSize: 16),
+                style: GoogleFonts.inter(color: Color(0xFF757575), fontSize: 16),
               ),
               GestureDetector(
                 onTap: () => controller.navigateToSignIn(context),
-                child: const Text(
+                child: Text(
                   "Sign In",
-                  style: TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.inter(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -133,7 +134,7 @@ class SignUpScreen extends StatelessWidget {
         padding: EdgeInsets.only(bottom: 5.h),
         child: Text(
           text,
-          style: TextStyle(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
+          style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
         ),
       ),
     );

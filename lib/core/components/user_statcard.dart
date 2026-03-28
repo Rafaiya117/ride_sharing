@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class UserStatsCard extends StatelessWidget {
   final String title;
@@ -53,7 +54,7 @@ class UserStatsCard extends StatelessWidget {
                   title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 12.sp,
                     color: Colors.grey,
                     fontWeight: FontWeight.w400,
@@ -65,7 +66,7 @@ class UserStatsCard extends StatelessWidget {
           SizedBox(height: 5.h),
           Text(
             value,
-            style: TextStyle(
+            style: GoogleFonts.inter(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
               color: Colors.black,

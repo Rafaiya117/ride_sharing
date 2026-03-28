@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_info_card.dart';
 import 'package:ride_sharing/core/components/journey_card.dart';
@@ -148,7 +149,7 @@ class RideDetailsScreen extends StatelessWidget {
                 children: [
                   Text(
                     "Safety & Support",
-                    style: TextStyle(
+                    style: GoogleFonts.inter(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF101010),
@@ -192,7 +193,7 @@ class RideDetailsScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 15.h),
       child: Text(
         title,
-        style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black),
+        style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black),
       ),
     );
   }
@@ -208,9 +209,9 @@ class RideDetailsScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: TextStyle(fontSize: 12.sp, color: Colors.grey)),
+          Text(label, style: GoogleFonts.inter(fontSize: 12.sp, color: Colors.grey)),
           SizedBox(height: 4.h),
-          Text(value, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+          Text(value, style: GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -254,7 +255,7 @@ class RideDetailsScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(14.r), 
               ),
-              textStyle: TextStyle(
+              textStyle: GoogleFonts.inter(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600, 
                 color: Colors.black,
@@ -276,7 +277,7 @@ class RideDetailsScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(14.r), // Rounded edges
               ),
-              textStyle: TextStyle(
+              textStyle: GoogleFonts.inter(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w700, // Bolder weight for dynamic pricing
                 color: Colors.white,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/rating_driver/rating_driver_controller/rating_driver_controller.dart';
 class RatingInputWidget extends StatelessWidget {
@@ -44,7 +45,7 @@ class RatingInputWidget extends StatelessWidget {
             ? const SizedBox.shrink()
             : Text(
                 controller.ratingLabels[controller.selectedRating]!,
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   fontSize: 16.sp, 
                   color: Colors.grey, 
                   fontWeight: FontWeight.w400,
