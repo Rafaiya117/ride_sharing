@@ -17,13 +17,30 @@ class WithdrawalView extends StatelessWidget {
     final dashboard = controller.data;
 
     return BaseScaffold(
-      title: "Withdraw",
-      titleAlign: TextAlign.center,
-      isCurved: true, // Matches the curved design in standard headers
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => controller.navigateBack(context),
+      title: Row(
+    children: [
+      // 1. Expanded takes up the middle space
+      Expanded(
+        child: Text(
+          "Withdraw",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
+      // 2. Invisible spacer to balance the back button (standard is 48px)
+      const SizedBox(width: 48), 
+    ],
+  ),
+  titleAlign: TextAlign.center,
+  isCurved: true,
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back, color: Colors.white),
+    onPressed: () => controller.navigateBack(context),
+  ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -82,7 +99,7 @@ class WithdrawalView extends StatelessWidget {
           // 4. Transaction List
           _buildSectionTitle("Recent Withdrawals"),
           SizedBox(height: 15.h),
-          ...dashboard.transactions.map((tx) => _buildTransactionTile(tx)).toList(),
+          ...dashboard.transactions.map((tx) => _buildTransactionTile(tx)),
           SizedBox(height: 20.h),
         ],
       ),

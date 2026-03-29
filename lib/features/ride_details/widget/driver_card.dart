@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DriverCardModular extends StatelessWidget {
@@ -37,11 +39,17 @@ class DriverCardModular extends StatelessWidget {
                 style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black)),
               Row(
                 children: [
-                  // Matches the circular outlined chat icon in the image
-                  _circularIcon(Icons.chat_bubble_outline_rounded),
+                  // _circularIcon('assets/icons/chat_outline.svg'),
+                  GestureDetector(
+                    onTap: () {
+                      context.push('/chat');
+                      //Navigator.pushNamed(context, '/chat');
+                    },
+                    child: _circularIcon('assets/icons/chat_outline.svg'),
+                  ),
                   SizedBox(width: 10.w),
                   // Matches the circular outlined phone icon in the image
-                  _circularIcon(Icons.phone_outlined),
+                  _circularIcon('assets/icons/phone_outline.svg'),
                 ],
               )
             ],
@@ -165,14 +173,19 @@ class DriverCardModular extends StatelessWidget {
     );
   }
 
-  Widget _circularIcon(IconData icon) {
+  Widget _circularIcon(String iconPath) {
     return Container(
       padding: EdgeInsets.all(10.w),
       decoration: const BoxDecoration(
         color: Color(0xFFF5F5F5), // Light grey circle
         shape: BoxShape.circle
       ),
-      child: Icon(icon, size: 22.r, color: Colors.black),
+      child: SvgPicture.asset(
+        iconPath, 
+        width: 22.r, 
+        height: 22.r, 
+        colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
+      ),
     );
   }
 }

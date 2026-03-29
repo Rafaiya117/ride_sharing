@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -13,19 +14,34 @@ class DriverRatingScreen extends StatelessWidget {
     final controller = context.watch<DriverRatingController>();
 
     return BaseScaffold(
-      title: "Rate Your Trip",
-      titleAlign: TextAlign.center,
-      isCurved: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
+      title: Row(
+    children: [
+      // 1. Expanded takes up the middle space
+      Expanded(
+        child: Text(
+          "Rate Your Trip",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
+      // 2. Invisible spacer to balance the back button's 48px width
+      const SizedBox(width: 48), 
+    ],
+  ),
+  titleAlign: TextAlign.center,
+  isCurved: true,
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back, color: Colors.white),
+    onPressed: () => Navigator.pop(context),
+  ),
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: Column(
           children: [
-            SizedBox(height: 20.h),
-            
             // 1. Passenger Avatar
             CircleAvatar(
               radius: 45.r,
@@ -124,27 +140,41 @@ class DriverRatingScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4)
+          ),
         ],
       ),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            // Generate 5 interactive stars
             children: List.generate(5, (index) {
               int starValue = index + 1;
-              return IconButton(
-                icon: Icon(
-                  controller.selectedRating >= starValue ? Icons.star : Icons.star_border,
-                  color: controller.selectedRating >= starValue ? Colors.amber : Colors.grey[300],
-                  size: 42.r,
+              bool isSelected = controller.selectedRating >= starValue;
+
+              return InkWell( // Use InkWell for better touch feedback with SVG
+                onTap: () => controller.updateRating(starValue),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w), // Adjust padding if needed
+                  child: SvgPicture.asset(
+                    isSelected ? 'assets/icons/star_filled.svg' : 'assets/icons/star_outline.svg', // SVG Paths
+                    width: 39.99.r,
+                    height: 38.13.r,
+                    colorFilter: ColorFilter.mode(
+                      isSelected ? Colors.amber : Colors.grey[300]!, // Color state
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
-                onPressed: () => controller.updateRating(starValue),
               );
             }),
           ),
           if (controller.selectedRating > 0) ...[
-            SizedBox(height: 8.h),
+            SizedBox(height: 16.h), // Increased spacing to match standard layout
             Text(
               controller.currentLabel,
               style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey[700], fontWeight: FontWeight.w500),
@@ -154,7 +184,7 @@ class DriverRatingScreen extends StatelessWidget {
       ),
     );
   }
-
+  
   Widget _buildTripSummaryFooter(DriverRatingController controller) {
     return Container(
       width: double.infinity,

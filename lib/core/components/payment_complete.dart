@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RatingSuccessPopUp extends StatelessWidget {
@@ -19,13 +20,19 @@ class RatingSuccessPopUp extends StatelessWidget {
               width: 100.r,
               height: 100.r,
               decoration: const BoxDecoration(
-                color: Color(0xFFE2FBE9), // Light green background
+                color: Color(0xFFE2FBE9), 
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                Icons.check_circle_outline,
-                color: const Color(0xFF00B14F), // Success green
-                size: 60.r,
+              child: Center(
+                child: SvgPicture.asset(
+                  'assets/icons/check.svg',
+                  width: 60.r,
+                  height: 60.r,
+                  colorFilter: const ColorFilter.mode(
+                    Color(0xFF00B14F),
+                    BlendMode.srcIn,
+                  ), // Success green
+                ),
               ),
             ),
             SizedBox(height: 30.h),

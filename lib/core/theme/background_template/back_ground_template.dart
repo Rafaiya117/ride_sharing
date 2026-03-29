@@ -42,7 +42,7 @@ class BaseScaffold extends StatelessWidget {
             ),
             child: Stack(
               children: [
-                if (headerBackground != null) headerBackground!,
+                ?headerBackground,
                 SafeArea(
                   child: Center(
                     child: Padding(
@@ -50,7 +50,7 @@ class BaseScaffold extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          if (leading != null) leading!,
+                          ?leading,
                           Flexible(
                             child: Padding(
                               padding: EdgeInsets.only(left: leading != null ? 12.w : 0),

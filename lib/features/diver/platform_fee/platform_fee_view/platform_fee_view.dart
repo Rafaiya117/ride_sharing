@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/diver/platform_fee/platform_fee_controller/platform_fee_controller.dart';
@@ -42,28 +43,88 @@ class FeeRequiredPopup extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(20.r),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF6FFF9),
+                  color: Colors.white, // Outer background is white
                   borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(color: const Color(0xFFD4EFDF)),
+                  border: Border.all(
+                    color: const Color(0xFFD4EFDF),
+                    width: 1.5,
+                  ), // Light green border
                 ),
                 child: Column(
                   children: [
-                    Text("You Earned", style: GoogleFonts.inter(color: const Color(0xFF27AE60), fontSize: 14.sp)),
-                    Text("\$${controller.tripEarnings.toStringAsFixed(2)}", 
-                      style: GoogleFonts.inter(color: const Color(0xFF27AE60), fontSize: 32.sp, fontWeight: FontWeight.bold)),
-                    Text("From this trip", style: GoogleFonts.inter(color: const Color(0xFF27AE60), fontSize: 12.sp)),
-                    SizedBox(height: 15.h),
-                    const Divider(color: Color(0xFFD4EFDF)),
-                    _buildFeeRow("Trip Earnings", "\$${controller.tripEarnings.toStringAsFixed(2)}", Colors.black),
-                    _buildFeeRow("Platform Fee (5%)", "-\$${controller.platformFee.toStringAsFixed(2)}", const Color(0xFFE67E22)),
-                    const Divider(color: Color(0xFFD4EFDF)),
-                    _buildFeeRow("Net Earnings", "\$${controller.netEarnings.toStringAsFixed(2)}", const Color(0xFF27AE60), isBold: true),
+                    Text(
+                      "You Earned",
+                      style: GoogleFonts.inter(
+                        color: const Color(0xFF27AE60),
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      "\$${controller.tripEarnings.toStringAsFixed(2)}",
+                      style: GoogleFonts.inter(
+                        color: const Color(0xFF27AE60),
+                        fontSize: 42.sp,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      "From this trip",
+                      style: GoogleFonts.inter(
+                        color: const Color(0xFF27AE60),
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 24.h),
+
+                    // Inner Breakdown Card
+                    Container(
+                      padding: EdgeInsets.all(16.r),
+                      decoration: BoxDecoration(
+                        color: const Color(
+                          0xFFF6FFF9,
+                        ), // Very light green solid background
+                        borderRadius: BorderRadius.circular(16.r),
+                      ),
+                      child: Column(
+                        children: [
+                          _buildFeeRow(
+                            null,
+                            "Trip Earnings",
+                            "\$${controller.tripEarnings.toStringAsFixed(2)}",
+                            Colors.black.withOpacity(0.7),
+                          ),
+                          SizedBox(height: 12.h),
+                          _buildFeeRow(
+                            'assets/icons/percent.svg',
+                            "Platform Fee (5%)",
+                            "-\$${controller.platformFee.toStringAsFixed(2)}",
+                            const Color(0xFFE67E22),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12.h),
+                            child: Divider(
+                              color: const Color(0xFFD4EFDF).withOpacity(0.5),
+                              thickness: 1,
+                            ),
+                          ),
+                          _buildFeeRow(
+                            null,
+                            "Net Earnings",
+                            "\$${controller.netEarnings.toStringAsFixed(2)}",
+                            const Color(0xFF27AE60),
+                            isBold: true,
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-
               SizedBox(height: 20.h),
-
               // Warning Box
               Container(
                 padding: EdgeInsets.all(15.r),
@@ -135,16 +196,42 @@ class FeeRequiredPopup extends StatelessWidget {
     );
   }
 
-  Widget _buildFeeRow(String label, String value, Color color, {bool isBold = false}) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: GoogleFonts.inter(color: isBold ? color : Colors.grey[700], fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
-          Text(value, style: GoogleFonts.inter(color: color, fontWeight: isBold ? FontWeight.bold : FontWeight.w600)),
+  Widget _buildFeeRow(
+    String? svgPath,
+    String label,
+    String value,
+    Color valueColor, {
+    bool isBold = false,
+  }) {
+    return Row(
+      children: [
+        if (svgPath != null) ...[
+          SvgPicture.asset(
+            svgPath,
+            width: 14.r,
+            height: 14.r,
+            colorFilter: ColorFilter.mode(valueColor, BlendMode.srcIn),
+          ),
+          SizedBox(width: 8.w),
         ],
-      ),
+        Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: isBold ? 16.sp : 14.sp,
+            fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
+            color: isBold ? Colors.black : Colors.grey.shade700,
+          ),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: GoogleFonts.inter(
+            fontSize: isBold ? 18.sp : 14.sp,
+            fontWeight: FontWeight.bold,
+            color: valueColor,
+          ),
+        ),
+      ],
     );
   }
 

@@ -26,8 +26,8 @@ class RatingInputWidget extends StatelessWidget {
                 child: SvgPicture.asset(
                   // Dynamic path based on state
                   isFilled ? 'assets/icons/star_filled.svg' : 'assets/icons/star_outline.svg',
-                  width: 44.r,
-                  height: 44.r,
+                  width: 39.99.w,
+                  height: 38.13.h,
                   // Apply dynamic color filter to the SVG
                   colorFilter: ColorFilter.mode(
                     isFilled ? const Color(0xFFFFC107) : const Color(0xFFD0D0D0),

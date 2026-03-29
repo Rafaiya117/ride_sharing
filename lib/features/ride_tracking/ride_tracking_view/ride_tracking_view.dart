@@ -21,7 +21,21 @@ class TrackRideScreen extends StatelessWidget {
     });
 
     return BaseScaffold(
-      title: "Track Ride",
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Track Ride",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
       titleAlign: TextAlign.center,
       isCurved: true,
       leading: IconButton(
@@ -30,12 +44,16 @@ class TrackRideScreen extends StatelessWidget {
       ),
       actions: [
         IconButton(
-          icon: SvgPicture.asset('assets/icons/share.svg',
-            width: 24.w,
-            colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn)),
-            onPressed: () => controller.shareTripWithFamily(context),
+          padding: EdgeInsets.only(right: 8.w),
+          icon: SvgPicture.asset(
+            'assets/icons/share_filled.svg',
+            width: 17.w,
+            height: 20.h,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           ),
-        ],
+          onPressed: () => controller.shareTripWithFamily(context),
+        ),
+      ],
         child: Container(
           color: const Color(0xFFF2F2F2), 
           height: MediaQuery.of(context).size.height,

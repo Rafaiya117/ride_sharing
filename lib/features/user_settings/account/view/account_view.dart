@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -33,8 +35,16 @@ class AccountScreen extends StatelessWidget {
               SizedBox(width: 15.w),
               CircleAvatar(
                 radius: 18.r,
-                backgroundColor: Colors.white24,
-                child: Icon(Icons.person_outline, color: Colors.white, size: 20.r),
+                //backgroundColor: Colors.white24,
+                child: SvgPicture.asset(
+                  'assets/icons/user_icon.svg', // Ensure this path matches your assets folder
+                  width: 20.r,
+                  height: 20.r,
+                  // colorFilter: const ColorFilter.mode(
+                  //   Colors.white,
+                  //   BlendMode.srcIn,
+                  // ),
+                ),
               ),
             ],
           ),
@@ -60,8 +70,8 @@ class AccountScreen extends StatelessWidget {
           
           _sectionLabel("ACCOUNT"),
           _buildGroupedCard([
-            _buildListTile(Icons.person_outline, "Profile Settings"),
-            _buildListTile(Icons.credit_card_outlined, "Payment Methods"),
+            _buildListTile(Icons.person_outline, "Profile Settings", ()=>context.push('/account_profile_settting')),
+            _buildListTile(Icons.credit_card_outlined, "Payment Methods", ()=>context.push('/payment_methods')),
           ]),
 
           _sectionLabel("NOTIFICATIONS"),
@@ -74,14 +84,14 @@ class AccountScreen extends StatelessWidget {
 
           _sectionLabel("SAFETY & SECURITY"),
           _buildGroupedCard([
-            _buildListTile(Icons.phone_outlined, "Emergency Contacts"),
+            _buildListTile(Icons.phone_outlined, "Emergency Contacts", ()=>context.push('/emergency_contacts')),
             _buildSwitchTile("Share Trip Automatically", controller.shareAutomatically, controller.toggleShare),
           ]),
 
           _sectionLabel("SUPPORT"),
           _buildGroupedCard([
-            _buildListTile(Icons.description_outlined, "Terms of Service"),
-            _buildListTile(Icons.lock_outline, "Privacy Policy"),
+            _buildListTile(Icons.description_outlined, "Terms of Service", ()=>context.push('/term')),
+            _buildListTile(Icons.lock_outline, "Privacy Policy", ()=>context.push('/privacy')),
           ]),
 
           SizedBox(height: 30.h),
@@ -96,6 +106,7 @@ class AccountScreen extends StatelessWidget {
 
   Widget _buildDriverModeBanner() {
     return Container(
+      height: 71.h,
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
@@ -152,13 +163,13 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildListTile(IconData icon, String title) {
+  Widget _buildListTile(IconData icon, String title, VoidCallback onTap) {
     return ListTile(
       leading: Icon(icon, color: Colors.black87, size: 22.r),
       title: Text(title, style: GoogleFonts.inter(fontSize: 15.sp, fontWeight: FontWeight.w500)),
       trailing: Icon(Icons.arrow_forward_ios, size: 14.r, color: Colors.grey.shade400),
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
-      onTap: () {},
+      onTap: onTap, // Now executes the specific route passed to it
     );
   }
 
@@ -172,8 +183,10 @@ class AccountScreen extends StatelessWidget {
       trailing: Switch(
         value: value, 
         onChanged: onChanged,
-        activeColor: Colors.black,
-        activeTrackColor: Colors.black12,
+        activeThumbColor: Colors.white, // Color of the thumb when ON
+        activeTrackColor: Colors.black, // Color of the track when ON
+        inactiveThumbColor: Colors.white,
+        inactiveTrackColor: Colors.grey.shade300,
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
     );

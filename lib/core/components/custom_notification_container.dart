@@ -48,7 +48,7 @@ class NotificationsGroupContainer extends StatelessWidget {
                     Switch(
                       value: items[index].isEnabled,
                       onChanged: items[index].onChanged,
-                      activeColor: Colors.white,
+                      activeThumbColor: Colors.white,
                       activeTrackColor: const Color(0xFF00D261), // Green from image
                       inactiveThumbColor: Colors.white,
                       inactiveTrackColor: const Color(0xFF4A4A4A), // Dark grey from image

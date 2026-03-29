@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/diver/post_new_ride/controller/post_new_ride_controller.dart';
 
 class PostRideView extends StatelessWidget {
-  PostRideView({super.key});
+  const PostRideView({super.key});
 
   @override
   Widget build(BuildContext context) {

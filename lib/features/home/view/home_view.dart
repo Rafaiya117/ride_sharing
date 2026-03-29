@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
 import 'package:ride_sharing/core/components/custom_text_field.dart';
@@ -41,6 +42,7 @@ class HomeScreen extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
+            SizedBox(height: 8.h),
           ],
         ),
       ),
@@ -100,64 +102,101 @@ class HomeScreen extends StatelessWidget {
           ),
           SizedBox(height: 40.h),
           // 2. --- Plan Your Journey Section ---
-          Text(
-            "Plan Your Journey",
-            style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
-          ),
-          SizedBox(height: 20.h),
-          
-          // Reusable input fields per image_3.png logic (rounded rect, prefix icon, hint)
-          _buildInputLabel("Pickup location"),
-          CustomTextField(
-            controller: controller.pickupController,
-            hintText: "Pickup location",
-            prefixIconPath: 'assets/icons/pickup_marker.svg',
-          ),
-          SizedBox(height: 15.h),
-
-          _buildInputLabel("Drop-off location"),
-          CustomTextField(
-            controller: controller.dropoffController,
-            hintText: "Drop-off location",
-            prefixIconPath: 'assets/icons/dropoff_marker.svg',
-          ),
-          SizedBox(height: 15.h),
-
-          // Date & Seats Row (Using slightly wider spacing for design)
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    _buildInputLabel("Date"),
-                    CustomTextField(
-                      controller: TextEditingController(text: "mm/dd/yyyy"), // Temporary controller for design, normally uses dynamic date state
-                      hintText: "mm/dd/yyyy",
-                      prefixIconPath: 'assets/icons/calendar.svg',
-                    ),
-                  ],
-                ),
+          Container(
+            decoration:BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: Colors.grey.shade200,width: 1.w),
+            ) ,
+            child: Padding(
+              padding: EdgeInsets.all(20.0.sp),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Plan Your Journey",
+                    style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
+                  ),
+                  SizedBox(height: 20.h),
+                  
+                  // Reusable input fields per image_3.png logic (rounded rect, prefix icon, hint)
+                  _buildInputLabel("Pickup location"),
+                  CustomTextField(
+                    controller: controller.pickupController,
+                    hintText: "Pickup location",
+                    prefixIconPath: 'assets/icons/pickup_marker.svg',
+                    showBorder: true,
+                  ),
+                  SizedBox(height: 15.h),
+                  
+                  _buildInputLabel("Drop-off location"),
+                  CustomTextField(
+                    controller: controller.dropoffController,
+                    hintText: "Drop-off location",
+                    prefixIconPath: 'assets/icons/dropoff_marker.svg',
+                    showBorder: true,
+                  ),
+                  SizedBox(height: 15.h),
+                  
+                  // Date & Seats Row (Using slightly wider spacing for design)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start, // Keeps label aligned
+                          children: [
+                            _buildInputLabel("Date"),
+                            GestureDetector(
+                              onTap: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime(2101),
+                                );
+                                if (pickedDate != null) {
+                                  // Update your controller or state here
+                                  //controller.dateController.text = DateFormat('MM/dd/yyyy').format(pickedDate);
+                                }
+                              },
+                              child: AbsorbPointer(
+                                // Prevents the keyboard from popping up
+                                child: CustomTextField(
+                                  controller: TextEditingController(text: ""),
+                                  hintText: "mm/dd/yyyy",
+                                  prefixIconPath: 'assets/icons/calendar.svg',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 20.w),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            _buildInputLabel("Seat"),
+                            CustomTextField(
+                              controller: TextEditingController(text: "1 Seat"), // Temporary controller for design, normally uses dynamic seat state
+                              hintText: "1 Seat",
+                              prefixIconPath: 'assets/icons/seats.svg',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 30.h),
+                  // Search Rides Button (Reusable primary button from image_3.png reference)
+                  CustomButton(
+                    text: "Search Rides",
+                    onTap: () => controller.searchRides(context),
+                    iconPath: 'assets/icons/search.svg', // Optional search icon for visual enhancement
+                  ),
+                ],
               ),
-              SizedBox(width: 20.w),
-              Expanded(
-                child: Column(
-                  children: [
-                    _buildInputLabel("Seat"),
-                    CustomTextField(
-                      controller: TextEditingController(text: "1 Seat"), // Temporary controller for design, normally uses dynamic seat state
-                      hintText: "1 Seat",
-                      prefixIconPath: 'assets/icons/seats.svg',
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 30.h),
-          // Search Rides Button (Reusable primary button from image_3.png reference)
-          CustomButton(
-            text: "Search Rides",
-            onTap: () => controller.searchRides(context),
+            ),
           ),
           SizedBox(height: 50.h),
 

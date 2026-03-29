@@ -28,6 +28,7 @@ import 'package:ride_sharing/features/diver/post_new_ride/controller/post_new_ri
 import 'package:ride_sharing/features/diver/withdrawal/withdrawal_controller/withdrawal_controller.dart';
 import 'package:ride_sharing/features/home/home_controller/home_controller.dart';
 import 'package:ride_sharing/features/my_trip/controller/my_trip_controller.dart';
+import 'package:ride_sharing/features/notification/notification_controller/notification_controller.dart';
 import 'package:ride_sharing/features/onboarding_screens/controller/onboarding_screen_controller.dart';
 import 'package:ride_sharing/features/payment/payment_controller/payment_controller.dart';
 import 'package:ride_sharing/features/rating_driver/rating_driver_controller/rating_driver_controller.dart';
@@ -127,6 +128,7 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(create: (_)=> DriverRatingController()),
             ChangeNotifierProvider(create: (_)=> RideCompletedController()),
             ChangeNotifierProvider(create: (_)=> DriverTripHistoryController()),
+            ChangeNotifierProvider(create: (_)=> NotificationsController()),
           ],
           child: Builder(
             builder: (context) {

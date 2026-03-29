@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/features/chat/chat_model/chat_model.dart';
 
 class ChatController extends ChangeNotifier {
@@ -50,6 +51,7 @@ class ChatController extends ChangeNotifier {
 
   void sendOffer(BuildContext context) {
     if (offerInputController.text.isNotEmpty) {
+      GoRouter.of(context).push('/payment');
       print("Offer Sent: ${offerInputController.text}");
       toggleOfferInput(false);
     }

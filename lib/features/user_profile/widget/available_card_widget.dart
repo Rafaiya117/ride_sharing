@@ -14,7 +14,7 @@ class AvailableCreditsCard extends StatelessWidget {
     final controller = context.watch<ProfileController>();
 
     // Colors per image_9.png reference
-    const cardBackgroundColor = const Color(0xFF1E1E1E); 
+    const cardBackgroundColor = Color(0xFF1E1E1E); 
     const textColorPrimary = Colors.white;
     const textColorSecondary = Colors.grey; 
 
@@ -35,7 +35,7 @@ class AvailableCreditsCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    SvgPicture.asset('assets/icons/credits.svg', width: 18.w, colorFilter: const ColorFilter.mode(textColorPrimary, BlendMode.srcIn)),
+                    SvgPicture.asset('assets/icons/credit.svg', width: 18.w, colorFilter: const ColorFilter.mode(textColorPrimary, BlendMode.srcIn)),
                     SizedBox(width: 10.w),
                     Text(
                       "Available Credits",

@@ -42,7 +42,9 @@ class DriverHomeScreen extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: Icon(Icons.notifications_outlined, color: Colors.white, size: 28.sp),
-                        onPressed: () {},
+                        onPressed: () {
+                          context.push('/notification');
+                        },
                       ),
                       Positioned(
                         right: 12, top: 12,
@@ -144,7 +146,7 @@ class DriverHomeScreen extends StatelessWidget {
             child: Switch(
               value: controller.isOnline,
               onChanged: (v) => controller.toggleOnlineStatus(v),
-              activeColor: Colors.white,
+              activeThumbColor: Colors.white,
               activeTrackColor: Colors.black,
             ),
           ),

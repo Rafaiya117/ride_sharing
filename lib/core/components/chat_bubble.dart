@@ -25,24 +25,26 @@ class ChatBubble extends StatelessWidget {
               if (isMe) _buildTime(message.time, isMe),
               if (isMe) SizedBox(width: 8.w),
               
-              Container(
-                constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7), 
-                padding: EdgeInsets.all(15.w), 
-                decoration: BoxDecoration(
-                  color: isMe ? const Color(0xFF1E1E1E) : const Color(0xFFF3F3F3), 
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(15.r),
-                    topRight: Radius.circular(15.r),
-                    bottomLeft: Radius.circular(isMe ? 15.r : 0),
-                    bottomRight: Radius.circular(isMe ? 0 : 15.r),
+              Flexible(
+                child: Container(
+                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7), 
+                  padding: EdgeInsets.all(15.w), 
+                  decoration: BoxDecoration(
+                    color: isMe ? const Color(0xFF1E1E1E) : const Color(0xFFF3F3F3), 
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15.r),
+                      topRight: Radius.circular(15.r),
+                      bottomLeft: Radius.circular(isMe ? 15.r : 0),
+                      bottomRight: Radius.circular(isMe ? 0 : 15.r),
+                    ),
                   ),
-                ),
-                child: Text(
-                  message.text,
-                  style: GoogleFonts.inter(
-                    fontSize: 16.sp,
-                    color: isMe ? Colors.white : Colors.black, 
-                    fontWeight: FontWeight.w400, 
+                  child: Text(
+                    message.text,
+                    style: GoogleFonts.inter(
+                      fontSize: 16.sp,
+                      color: isMe ? Colors.white : Colors.black, 
+                      fontWeight: FontWeight.w400, 
+                    ),
                   ),
                 ),
               ),

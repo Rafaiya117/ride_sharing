@@ -16,6 +16,7 @@ class ProfileSettingsScreen extends StatelessWidget {
 
     return BaseScaffold(
       // 1. --- Black Header with Back Button ---
+      isCurved: true,
       title: Row(
         children: [
           GestureDetector(

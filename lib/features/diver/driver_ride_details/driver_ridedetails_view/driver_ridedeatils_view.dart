@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -15,14 +16,32 @@ class DriverRideDetailsScreen extends StatelessWidget {
     final data = controller.ride;
 
     return BaseScaffold(
-      title: "Ride Details",
-      isCurved: true,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.share_outlined, color: Colors.white),
-          onPressed: controller.shareRide,
+      title: Row(
+    children: [
+      // 1. Invisible spacer to balance the share button's 48px width on the right
+      const SizedBox(width: 48), 
+      // 2. Expanded takes up the middle space
+      Expanded(
+        child: Text(
+          "Ride Details",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+          ),
         ),
-      ],
+      ),
+    ],
+  ),
+  titleAlign: TextAlign.center,
+  isCurved: true,
+  actions: [
+    IconButton(
+      icon: const Icon(Icons.share_outlined, color: Colors.white),
+      onPressed: controller.shareRide,
+    ),
+  ],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -46,31 +65,72 @@ class DriverRideDetailsScreen extends StatelessWidget {
           // 3. Passenger Card with Chat/Call
           _buildWhiteCard(
             title: "Passenger",
+            chatSvgPath: 'assets/icons/chat_outline.svg', // SVG from image
+            callSvgPath: 'assets/icons/phone_outline.svg', // SVG from image
             child: Row(
               children: [
-                _buildPassengerAvatar(data.passengerInitial),
-                SizedBox(width: 12.w),
+                // Avatar
+                Container(
+                  width: 60.r,
+                  height: 60.r,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(
+                      20.r,
+                    ), // Match image curve
+                  ),
+                  child: Center(
+                    child: Text(
+                      "L",
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 28.sp,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                // Name and Ratings
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(data.passengerName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
-                      Row(children: [
-                        _buildBadge(Icons.star, "${data.rating}"),
-                        SizedBox(width: 8.w),
-                        Text("• ${data.totalTrips} trips", style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
-                      ]),
+                      Text(
+                        "Lisa Martinez",
+                        style: GoogleFonts.inter(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      Row(
+                        children: [
+                          // Rating Badge
+                          _buildBadge(
+                            "4.9",
+                            Colors.black,
+                            Colors.white,
+                            'assets/icons/star_filled_white.svg',
+                          ),
+                          SizedBox(width: 12.w),
+                          // Trip Count
+                          Text(
+                            "• 54 trips",
+                            style: GoogleFonts.inter(
+                              fontSize: 14.sp,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
-                _buildRoundAction(Icons.chat_bubble_outline, controller.messagePassenger),
-                SizedBox(width: 10.w),
-                _buildRoundAction(Icons.phone_outlined, controller.callPassenger),
               ],
             ),
           ),
           SizedBox(height: 20.h),
-
           // 4. Safety & Support
           _buildWhiteCard(
             title: "Safety & Support",
@@ -143,24 +203,74 @@ class DriverRideDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWhiteCard({required String title, required Widget child}) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4))],
+  Widget _buildWhiteCard({
+  required String title,
+  required Widget child,
+  String? chatSvgPath, // Changed to optional
+  String? callSvgPath, // Changed to optional
+}) {
+  return Container(
+    padding: EdgeInsets.all(16.w),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16.r),
+      boxShadow: [
+        BoxShadow(
+          // ignore: deprecated_member_use
+          color: Colors.black.withOpacity(0.08), 
+          blurRadius: 15, 
+          offset: const Offset(0, 4),
+        )
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(title, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+            // Only show the row if at least one path is provided
+            if (chatSvgPath != null || callSvgPath != null)
+              Row(
+                children: [
+                  if (chatSvgPath != null) _buildActionButton(chatSvgPath, 20.r, () {}),
+                  if (chatSvgPath != null && callSvgPath != null) SizedBox(width: 8.w),
+                  if (callSvgPath != null) _buildActionButton(callSvgPath, 20.r, () {}),
+                ],
+              ),
+          ],
+        ),
+        SizedBox(height: 16.h),
+        child,
+      ],
+    ),
+  );
+}
+
+// Helper to keep code clean and use SVG
+Widget _buildActionButton(String svgPath, double size, VoidCallback onTap) {
+  return InkWell(
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(20.r), // Standard roundness
+    child: Container(
+      width: 48.r, // Diameter of the round button
+      height: 48.r,
+      decoration: const BoxDecoration(
+        color: Color(0xFFF5F5F5), // The grey background from image
+        shape: BoxShape.circle,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-          SizedBox(height: 16.h),
-          child,
-        ],
+      child: Center(
+        child: SvgPicture.asset(
+          svgPath,
+          width: size, 
+          height: size, 
+          colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn), // Black outlines
+        ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildRoutePoint(IconData icon, Color color, String label, String location, String time) {
     return Row(
@@ -187,24 +297,24 @@ class DriverRideDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPassengerAvatar(String initial) {
-    return Container(
-      width: 45.r, height: 45.r,
-      decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(12.r)),
-      child: Center(child: Text(initial, style:GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold))),
-    );
-  }
+  // Widget _buildPassengerAvatar(String initial) {
+  //   return Container(
+  //     width: 45.r, height: 45.r,
+  //     decoration: BoxDecoration(color: const Color(0xFF1A1A1A), borderRadius: BorderRadius.circular(12.r)),
+  //     child: Center(child: Text(initial, style:GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold))),
+  //   );
+  // }
 
-  Widget _buildRoundAction(IconData icon, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(10.r),
-        decoration: BoxDecoration(color: Colors.grey.shade50, shape: BoxShape.circle),
-        child: Icon(icon, size: 20.r, color: Colors.black87),
-      ),
-    );
-  }
+  // Widget _buildRoundAction(IconData icon, VoidCallback onTap) {
+  //   return InkWell(
+  //     onTap: onTap,
+  //     child: Container(
+  //       padding: EdgeInsets.all(10.r),
+  //       decoration: BoxDecoration(color: Colors.grey.shade50, shape: BoxShape.circle),
+  //       child: Icon(icon, size: 20.r, color: Colors.black87),
+  //     ),
+  //   );
+  // }
 
   Widget _buildSupportTile(IconData icon, Color color, String title, String sub) {
     return Row(
@@ -233,13 +343,13 @@ class DriverRideDetailsScreen extends StatelessWidget {
     ]);
   }
 
-  Widget _buildBadge(IconData icon, String label) {
+  Widget _buildBadge(String label, Color bgColor, Color textColor, String starIconPath) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-      decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(12.r)),
+      decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(12.r)),
       child: Row(children: [
-        Icon(icon, color: Colors.amber, size: 10.r),
-        Text(" $label", style: GoogleFonts.inter(color: Colors.white, fontSize: 10.sp, fontWeight: FontWeight.bold)),
+        Icon(Icons.star, color: Colors.amber, size: 10.r),
+        Text(" $label", style: GoogleFonts.inter(color: textColor, fontSize: 10.sp, fontWeight: FontWeight.bold)),
       ]),
     );
   }

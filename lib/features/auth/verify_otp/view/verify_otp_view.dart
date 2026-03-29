@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -15,37 +16,45 @@ class OtpVerificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = context.watch<OtpController>();
     final defaultPinTheme = PinTheme(
-      width: 60.w, 
-      height: 60.h, 
+      width: 56.w,
+      height: 56.h,
       textStyle: TextStyle(
-        fontSize: 24.sp, 
-        color: Colors.black, 
+        fontSize: 22.sp,
+        color: Colors.white,
         fontWeight: FontWeight.bold,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F3F3), 
-        borderRadius: BorderRadius.circular(15.r), 
+        color: const Color(0xFF4A4A4A), // Dark grey color from image_e03d7d.png
+        borderRadius: BorderRadius.circular(8.r), // Slightly rounded corners
       ),
     );
 
     return BaseScaffold(
       // --- HEADER ---
-      title: "OTP",
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          //SizedBox(width: 10.w),
+          Expanded(
+            child: Text(
+              "OTP",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          // Mirror the leading icon's width here
+          const SizedBox(width: 48),
+        ],
+      ),
       isCurved: true,
-      titleAlign: TextAlign.center, 
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => controller.navigateBack(context),
+        onPressed: () => Navigator.pop(context),
       ),
-      headerBackground: Opacity(
-        opacity: 0.1,
-        child: SvgPicture.asset(
-          'assets/icons/mesh_pattern.svg',
-          fit: BoxFit.cover,
-          width: double.infinity,
-        ),
-      ),
-      
       // --- BODY CONTENT ---
       child: Column(
         children: [
@@ -80,20 +89,27 @@ class OtpVerificationScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.w),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: List.generate(4, (index) {
-                return SizedBox(
-                  width: 60.w,
-                  height: 60.h,
-                  child: Pinput(
-                    length: 1, 
-                    controller: controller.pinControllers[index],
-                    focusNode: controller.focusNodes[index],
-                    defaultPinTheme: defaultPinTheme,
-                    obscureText: false, 
-                    keyboardType: TextInputType.number,
-                    // Auto-focus logic handled in controller
-                    onChanged: (value) => controller.onPinChanged(context, value, index),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(controller.pinControllers.length, (index,
+              ) {
+                // Use the actual list length to prevent RangeError
+                return Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    child: SizedBox(
+                      width: 50.w,
+                      height: 50.h,
+                      child: Pinput(
+                        length: 1,
+                        controller: controller.pinControllers[index],
+                        focusNode: controller.focusNodes[index],
+                        defaultPinTheme: defaultPinTheme,
+                        obscureText: false,
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) =>
+                            controller.onPinChanged(context, value, index),
+                      ),
+                    ),
                   ),
                 );
               }),

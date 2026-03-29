@@ -19,12 +19,30 @@ class ResetPasswordScreen extends StatelessWidget {
 
     return BaseScaffold(
       // --- HEADER ---
-      title: "Reset Password",
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // This empty box balances the space taken by the back button on the left
+          const SizedBox(width: 48),
+          Expanded(
+            child: Text(
+              "Reset Password",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          // Mirror the leading icon's width here
+          const SizedBox(width: 48),
+        ],
+      ),
       isCurved: true,
-      titleAlign: TextAlign.center, 
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => controller.navigateBackToSignIn(context),
+        onPressed: () => Navigator.pop(context),
       ),
       headerBackground: Opacity(
         opacity: 0.1,

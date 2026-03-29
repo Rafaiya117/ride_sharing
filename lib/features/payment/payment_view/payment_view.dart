@@ -17,29 +17,34 @@ class PaymentScreen extends StatelessWidget {
     final controller = context.watch<PaymentController>();
     return BaseScaffold(
       // --- HEADER ---
-      title: "Payment", 
-      titleAlign: TextAlign.center, 
-      isCurved: false, 
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => controller.navigateBack(context),
-      ),
-      // Header subtitle fits dynamic layout standard
-      headerBackground: SafeArea(
-        child: Container(
-          alignment: Alignment.bottomCenter,
-          padding: EdgeInsets.only(bottom: 20.h),
-          child: Text(
+      title: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "Payment",
+            style: GoogleFonts.inter(
+              color: Colors.white,
+              fontSize: 22.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
             "Secure checkout",
             style: GoogleFonts.inter(
-              color: Colors.white.withOpacity(0.8), // near-black readability standard
+              color: Colors.white.withOpacity(0.8),
               fontSize: 14.sp,
               fontWeight: FontWeight.w400,
             ),
           ),
-        ),
+        ],
       ),
-      
+      titleAlign: TextAlign.center,
+      isCurved: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => controller.navigateBack(context),
+      ),
+
       // --- BODY CONTENT ---
       child: Column(
         children: [

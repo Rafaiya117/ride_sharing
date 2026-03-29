@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ReusablePrimaryButton extends StatelessWidget {
   final String text;
@@ -35,30 +37,22 @@ class ReusablePrimaryButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
         ),
         onPressed: onTap,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              text,
-              // Use the passed textStyle if available, otherwise use default
-              style: textStyle ?? TextStyle(
-                fontSize: 18,
-                color: textColor,
-                fontWeight: FontWeight.w600,
+            Flexible(
+              child: Text(
+                text,
+                // Use the passed textStyle if available, otherwise use default
+                style: textStyle ?? GoogleFonts.inter(
+                  fontSize: 12.sp,
+                  color: textColor,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            SvgPicture.asset(
-              iconPath,
-              colorFilter: ColorFilter.mode(
-                textStyle?.color ?? textColor, 
-                BlendMode.srcIn
-              ),
-              width: 20,
-              height: 20,
             ),
           ],
         ),

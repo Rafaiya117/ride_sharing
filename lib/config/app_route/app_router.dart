@@ -22,6 +22,7 @@ import 'package:ride_sharing/features/diver/withdrawal/withdrawal_view/withdrawa
 import 'package:ride_sharing/features/diver/withdrawal/withdrawal_view/withdrawal_view.dart';
 import 'package:ride_sharing/features/home/view/home_view.dart';
 import 'package:ride_sharing/features/my_trip/view/my_trip_view.dart';
+import 'package:ride_sharing/features/notification/notification_view/notification_view.dart';
 import 'package:ride_sharing/features/onboarding_screens/onboarding_screen_one.dart';
 import 'package:ride_sharing/features/auth/reset_password/view/reset_password_view.dart';
 import 'package:ride_sharing/features/payment/payment_view/payment_view.dart';
@@ -218,5 +219,10 @@ final GoRouter appRouter = GoRouter(
       path: '/term',
       builder: (context, state) => TermsOfServicePage(),
     ),
+    GoRoute(
+      path: '/notification',
+      builder: (context, state) => NotificationsScreen(),
+    ),
+    
   ],
 );

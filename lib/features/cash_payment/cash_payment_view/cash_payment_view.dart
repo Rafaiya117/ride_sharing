@@ -13,7 +13,23 @@ class CashPaymentScreen extends StatelessWidget {
     final controller = context.watch<CashPaymentController>();
 
     return BaseScaffold(
-      title: "Cash Payment",
+      title: Row(
+        children: [
+          // 1. This Expanded block takes up all available middle space
+          Expanded(
+            child: Text(
+              "Cash Payment",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          const SizedBox(width: 18),
+        ],
+      ),
       titleAlign: TextAlign.center,
       isCurved: true,
       leading: IconButton(

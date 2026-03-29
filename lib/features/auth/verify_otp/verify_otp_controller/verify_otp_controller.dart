@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class OtpController extends ChangeNotifier {
-  final List<FocusNode> focusNodes = List.generate(4, (_) => FocusNode());
-  final List<TextEditingController> pinControllers = List.generate(4, (_) => TextEditingController());
+  final List<FocusNode> focusNodes = List.generate(6, (_) => FocusNode());
+  final List<TextEditingController> pinControllers = List.generate(6, (_) => TextEditingController());
   
   // Timer state for resending OTP
   Timer? _timer;

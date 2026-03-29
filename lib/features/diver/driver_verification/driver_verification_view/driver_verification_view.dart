@@ -14,13 +14,30 @@ class DriverVerificationScreen extends StatelessWidget {
     final controller = context.watch<DriverVerificationController>();
 
     return BaseScaffold(
-      title: "Driver Verification",
-      titleAlign: TextAlign.center,
-      isCurved: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
+      title: Row(
+    children: [
+      // 1. The Expanded text takes up all middle space
+      Expanded(
+        child: Text(
+          "Driver Verification",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
+      // 2. Invisible spacer to balance the back button's 48px width
+      const SizedBox(width: 48), 
+    ],
+  ),
+  titleAlign: TextAlign.center,
+  isCurved: true,
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back, color: Colors.white),
+    onPressed: () => Navigator.pop(context),
+  ),
       child: SingleChildScrollView(
         //padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: Column(

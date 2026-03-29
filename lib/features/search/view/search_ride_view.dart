@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/filterpill_card.dart';
@@ -62,7 +63,7 @@ class SearchResultsScreen extends StatelessWidget {
               }).toList(),
             ),
           ),
-          SizedBox(height: 30.h),
+          SizedBox(height: 20.h),
 
           // 2. --- Dynamic Rides Found Header ---
           Row(
@@ -70,17 +71,36 @@ class SearchResultsScreen extends StatelessWidget {
             children: [
               Text(
                 "${controller.results.length} rides found",
-                style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
+                style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey, fontWeight: FontWeight.w400),
               ),
               // Conditional dynamic filter text from image_7.png
-              Text(
-                controller.results.length > 3 ? " + 3 for results" : " + live results",
-                style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
+              Row(
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/thunder.svg', // Your SVG path
+                    width: 14.r,
+                    height: 14.r,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.grey,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  SizedBox(width: 4.w), // Space between icon and text
+                  Text(
+                    "Live results",
+                    style: GoogleFonts.inter(
+                      fontSize: 14.sp,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
           SizedBox(height: 20.h),
           ListView.builder(
+            padding: EdgeInsets.zero,
             shrinkWrap: true, 
             physics: const NeverScrollableScrollPhysics(), 
             itemCount: controller.results.length,

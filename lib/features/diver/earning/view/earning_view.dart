@@ -16,23 +16,38 @@ class EarningsView extends StatelessWidget {
     final earnings = controller.data;
 
     return BaseScaffold(
-      title: "Earnings",
-      titleAlign: TextAlign.center,
-      isCurved: true,
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp),
-        onPressed: () => Navigator.pop(context),
-      ),
-      actions: [
-        Padding(
-          padding: EdgeInsets.only(left: 180.w),
-          child: SvgPicture.asset(
-            'assets/icons/download.svg',
-            width: 20.sp,
-            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+      title: Row(
+    children: [
+      Expanded(
+        child: Text(
+          "Earnings",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
           ),
         ),
-      ],
+      ),
+    ],
+  ),
+  titleAlign: TextAlign.center,
+  isCurved: true,
+  leading: IconButton(
+    icon: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp),
+    onPressed: () => Navigator.pop(context),
+  ),
+  actions: [
+    // Removed the large 180.w padding to allow natural centering
+    IconButton(
+      onPressed: () {}, // Replace with your function
+      icon: SvgPicture.asset(
+        'assets/icons/download.svg',
+        width: 20.sp,
+        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+      ),
+    ),
+  ],
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +140,7 @@ class EarningsView extends StatelessWidget {
             // 3. Trip History List
             Text("Recent Trips", style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold)),
             SizedBox(height: 15.h),
-            ...earnings.trips.map((trip) => _buildTripTile(trip)).toList(),
+            ...earnings.trips.map((trip) => _buildTripTile(trip)),
           ],
         ),
       ),

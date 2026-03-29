@@ -24,6 +24,7 @@ class CustomBottomNavbar extends StatelessWidget {
       {'title': 'Home', 'icon': 'assets/icons/home_icon.svg'},
       {'title': 'My Trips', 'icon': 'assets/icons/my_trips.svg'},
       {'title': 'History', 'icon': 'assets/icons/history.svg'},
+      {'title': 'Message', 'icon': 'assets/icons/chat_outline.svg'},
       {'title': 'Account', 'icon': 'assets/icons/user_icon2.svg'},
     ];
 

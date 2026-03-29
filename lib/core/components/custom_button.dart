@@ -40,12 +40,14 @@ class CustomButton extends StatelessWidget {
               ),
               SizedBox(width: 10.w),
             ],
-            Text(
-              text,
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
+            Flexible(
+              child: Text(
+                text,
+                style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],

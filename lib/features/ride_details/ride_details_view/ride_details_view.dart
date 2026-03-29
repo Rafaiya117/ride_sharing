@@ -22,7 +22,21 @@ class RideDetailsScreen extends StatelessWidget {
     final controller = context.watch<RideDetailsController>();
     
     return BaseScaffold(
-      title: "Ride Details",
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Ride Details",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
       titleAlign: TextAlign.center,
       isCurved: true,
       leading: IconButton(
@@ -31,7 +45,13 @@ class RideDetailsScreen extends StatelessWidget {
       ),
       actions: [
         IconButton(
-          icon: SvgPicture.asset('assets/icons/share.svg', width: 24.w, colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)),
+          padding: EdgeInsets.only(right: 8.w),
+          icon: SvgPicture.asset(
+            'assets/icons/share_filled.svg',
+            width: 17.w,
+            height: 20.h,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          ),
           onPressed: () => controller.shareRideDetails(context),
         ),
       ],
@@ -48,11 +68,11 @@ class RideDetailsScreen extends StatelessWidget {
           ),
           SizedBox(height: 20.h,),
           DriverCardModular(
-            name: 'hhh', 
-            rating: 'ghfhfh', 
-            trips: 'ghfhg', 
-            carModel: 'hfgh', 
-            plateNumber: 'hgfhf',
+            name: 'Lisa Martinez', 
+            rating: '4.9', 
+            trips: '54', 
+            carModel: 'Audi A4 2023', 
+            plateNumber: 'AUD 8901',
           ),
           SizedBox(height: 20.h,),
           // 1. --- Driver Image Section ---
@@ -61,7 +81,7 @@ class RideDetailsScreen extends StatelessWidget {
             padding: EdgeInsets.zero,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15.r),
-              child: Image.asset('assets/images/driver_placeholder.png', fit: BoxFit.cover, height: 200.h),
+              child: Image.network('https://img.freepik.com/free-photo/man-car-driving_23-2148889981.jpg?semt=ais_incoming&w=740&q=80', fit: BoxFit.cover, height: 200.h),
             ),
           ),
           SizedBox(height: 10.h),

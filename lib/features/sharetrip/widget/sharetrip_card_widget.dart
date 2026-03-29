@@ -13,7 +13,7 @@ class ShareTripCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Provider.of<ShareTripController>(context);
 
-    const cardBackgroundColor = const Color(0xFF1E1E1E); 
+    const cardBackgroundColor = Color(0xFF1E1E1E); 
     const textColorPrimary = Colors.white;
     const textColorSecondary = Colors.grey; 
 

@@ -18,19 +18,39 @@ class ProfileScreen extends StatelessWidget {
     const iconColor = Colors.grey;
 
     return BaseScaffold(
-      title: "Profile", 
-      titleAlign: TextAlign.center, 
-      isCurved: true, 
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context), 
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.edit_outlined, color: Colors.white),
-          onPressed: () => controller.navigateToEditProfile(context),
+      title: Row(
+    children: [
+      Expanded(
+        child: Text(
+          "Profile",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+          ),
         ),
-      ],
+      ),
+    ],
+  ),
+  titleAlign: TextAlign.center,
+  isCurved: true,
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back, color: Colors.white),
+    onPressed: () => Navigator.pop(context),
+  ),
+  actions: [
+    IconButton(
+      padding: EdgeInsets.only(right: 8.w),
+      icon: SvgPicture.asset(
+        'assets/icons/edit.svg', // Ensure this path is correct
+        width: 22.w,
+        height: 22.w,
+        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+      ),
+      onPressed: () => controller.navigateToEditProfile(context),
+    ),
+  ],
       // Pass the navbar here to ensure it shows on the profile tab if needed
       // bottomNavigationBar: CustomBottomNavbar(
       //   currentIndex: 3, // Assuming Account is index 3
@@ -147,7 +167,7 @@ class ProfileScreen extends StatelessWidget {
             onTap: () => controller.navigateToReviews(context),
           ),
           QuickActionCard(
-            iconPath: 'assets/icons/card.svg',
+            iconPath: 'assets/icons/credit.svg',
             title: "Payment Methods",
             onTap: () => controller.navigateToPaymentMethods(context),
           ),
@@ -162,7 +182,7 @@ class ProfileScreen extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Text(
         title,
-        style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
+        style: GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
       ),
     );
   }

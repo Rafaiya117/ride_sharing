@@ -18,9 +18,25 @@ class RatingScreen extends StatelessWidget {
     const iconColor = Colors.grey;
 
     return BaseScaffold(
-      title: "Rate Your Trip", 
-      titleAlign: TextAlign.center, 
-      isCurved: true, 
+      title: Row(
+        children: [
+          Expanded(
+            child: Text(
+              "Rate Your Trip",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          // Balances the width of the back button on the left
+          const SizedBox(width: 18),
+        ],
+      ),
+      titleAlign: TextAlign.center,
+      isCurved: true,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () => controller.navigateBack(context),
@@ -41,7 +57,7 @@ class RatingScreen extends StatelessWidget {
           SizedBox(height: 25.h),
           Text(
             "How was your trip?",
-            style: GoogleFonts.inter(fontSize: 28.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
+            style: GoogleFonts.inter(fontSize: 24.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
           ),
           SizedBox(height: 10.h),
           Text(
@@ -111,7 +127,7 @@ class RatingScreen extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Text(
         title,
-        style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold, color: const Color(0xFFFFFFFF)),
+        style: GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.bold, color: const Color(0xFFFFFFFF)),
       ),
     );
   }
@@ -124,7 +140,7 @@ class RatingScreen extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.white, fontWeight: FontWeight.w400),
+            style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.white, fontWeight: FontWeight.w400),
           ),
         ),
       ],

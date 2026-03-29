@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -21,8 +22,12 @@ class RideCompletedScreen extends StatelessWidget {
         onPressed: () => Navigator.pop(context),
       ),
       child: Container(
+        decoration:BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(16.r),
+        ) ,
         padding: EdgeInsets.symmetric(horizontal: 20.w),
-        color: Colors.white,
         child: Column(
           children: [
             SizedBox(height: 30.h),
@@ -42,9 +47,7 @@ class RideCompletedScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
             SizedBox(height: 20.h),
-            
             // 2. Completion Text
             Text(
               "Ride Completed!",
@@ -56,19 +59,13 @@ class RideCompletedScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey[600]),
             ),
-
             SizedBox(height: 30.h),
-
             // 3. Passenger & Location Card
             _buildTripSummaryCard(controller),
-
             SizedBox(height: 20.h),
-
             // 4. Earnings Gradient Card
             _buildEarningsCard(controller.earningsAmount),
-
-            const Spacer(),
-
+           SizedBox(height: 20.h),
             // 5. Continue Button
             SizedBox(
               width: double.infinity,
@@ -165,11 +162,14 @@ class RideCompletedScreen extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20.r),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16.r),
-        gradient: const LinearGradient(
-          colors: [Color(0xFF27AE60), Color(0xFF2ECC71)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        borderRadius: BorderRadius.circular(24.r), // Slightly more rounded to match image
+        gradient: const RadialGradient(
+          center: Alignment(0.0, -0.2), // Moves the glow slightly up
+          radius: 1.2,
+          colors: [
+            Color(0xFF27AE60), // Lighter center
+            Color(0xFF1E8449), // Darker edges
+          ],
         ),
       ),
       child: Column(
@@ -177,19 +177,25 @@ class RideCompletedScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.trending_up, color: Colors.white, size: 18),
+              SvgPicture.asset(
+                'assets/icons/trips.svg', 
+                width: 20.r, height: 20.r, 
+                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+              ),
               SizedBox(width: 8.w),
-              Text("Earnings", style: GoogleFonts.inter(color: Colors.white, fontSize: 14.sp)),
+              Text("Earnings", 
+                style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w500)),
             ],
+          ),
+          SizedBox(height: 12.h), // Increased spacing to match image
+          Text(
+            "\$$amount",
+            style: GoogleFonts.inter(color: Colors.white, fontSize: 48.sp, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 4.h),
           Text(
-            "\$$amount",
-            style: GoogleFonts.inter(color: Colors.white, fontSize: 32.sp, fontWeight: FontWeight.bold),
-          ),
-          Text(
             "Added to your balance",
-            style: GoogleFonts.inter(color: Colors.white.withOpacity(0.8), fontSize: 12.sp),
+            style: GoogleFonts.inter(color: Colors.white.withOpacity(0.9), fontSize: 15.sp),
           ),
         ],
       ),

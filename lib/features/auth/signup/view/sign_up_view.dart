@@ -17,9 +17,27 @@ class SignUpScreen extends StatelessWidget {
     final controller = context.watch<SignUpController>();
 
     return BaseScaffold(
-      title: "Sign Up",
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // This empty box balances the space taken by the back button on the left
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Text(
+              "Sign Up",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          // Mirror the leading icon's width here
+          SizedBox(width: 48.w),
+        ],
+      ),
       isCurved: true,
-      titleAlign: TextAlign.center, 
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () => Navigator.pop(context),

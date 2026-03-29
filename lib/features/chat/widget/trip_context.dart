@@ -17,15 +17,14 @@ class TripContextWidget extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(bottom: 30.h), 
-      padding: EdgeInsets.all(20.w), 
+      margin: EdgeInsets.only(bottom: 30.h),
+      padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15.r), 
+        borderRadius: BorderRadius.circular(15.r),
         boxShadow: [
           BoxShadow(
-            // ignore: deprecated_member_use
-            color: Colors.black.withOpacity(0.05), 
+            color: Colors.black.withOpacity(0.05),
             spreadRadius: 2,
             blurRadius: 10,
             offset: const Offset(0, 4),
@@ -34,32 +33,58 @@ class TripContextWidget extends StatelessWidget {
       ),
       child: Row(
         children: [
-          SvgPicture.asset('assets/icons/location_marker.svg', width: 20.w, colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn)),
+          SvgPicture.asset(
+            'assets/icons/location_marker.svg',
+            width: 20.w,
+            colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
+            placeholderBuilder: (context) => const Icon(Icons.location_on, color: iconColor, size: 20),
+          ),
           SizedBox(width: 15.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // FIX: Added Expanded/Flexible to children to prevent horizontal overflow
                 Row(
                   children: [
-                    Text(controller.pickup, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w400)),
+                    Flexible(
+                      child: Text(
+                        controller.pickup,
+                        style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w400),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 6.w),
-                      child: SvgPicture.asset('assets/icons/arrow_right.svg', width: 14.w, colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn)),
+                      child: SvgPicture.asset(
+                        'assets/icons/arrow_right.svg',
+                        width: 14.w,
+                        colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
+                        placeholderBuilder: (context) => const Icon(Icons.arrow_forward, size: 14, color: iconColor),
+                      ),
                     ),
-                    Text(controller.dropoff, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w400)),
+                    Flexible(
+                      child: Text(
+                        controller.dropoff,
+                        style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w400),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
           ),
+          SizedBox(width: 10.w), // Added small gap before price
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(controller.date, style: GoogleFonts.inter(fontSize: 14.sp, color: iconColor)),
               Text(
-                "\$${controller.pricePerSeat.toStringAsFixed(0)}/seat", 
+                "\$${controller.pricePerSeat.toStringAsFixed(0)}/seat",
                 style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black),
               ),
             ],

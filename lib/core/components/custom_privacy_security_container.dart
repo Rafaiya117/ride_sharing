@@ -52,7 +52,7 @@ class PrivacySecurityContainer extends StatelessWidget {
             value: value,
             onChanged: onChanged,
             activeTrackColor: const Color(0xFF00D261),
-            activeColor: Colors.white,
+            activeThumbColor: Colors.white,
           ),
         ],
       ),

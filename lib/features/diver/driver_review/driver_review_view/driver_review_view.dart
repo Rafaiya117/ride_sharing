@@ -16,13 +16,30 @@ class DriverReviewView extends StatelessWidget {
     const iconColor = Colors.white;
 
     return BaseScaffold(
-      title: "Reviews", 
-      titleAlign: TextAlign.center,
-      isCurved: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: iconColor),
-        onPressed: () => controller.navigateBack(context),
+      title: Row(
+    children: [
+      // 1. Expanded takes up the middle space
+      Expanded(
+        child: Text(
+          "Reviews",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
+      // 2. Invisible spacer to balance the back button's 48px width
+      const SizedBox(width: 48), 
+    ],
+  ),
+  titleAlign: TextAlign.center,
+  isCurved: true,
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back, color: Colors.white), // Standardized color
+    onPressed: () => controller.navigateBack(context),
+  ),
       child: Column(
         children: [
           const ReviewsSummaryCard(),

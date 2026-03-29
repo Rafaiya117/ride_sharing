@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -15,21 +16,36 @@ class DriverTrackScreen extends StatelessWidget {
     final trip = controller.trip;
 
     return BaseScaffold(
-      title: "Track Ride",
-      isCurved: true,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.share_outlined, color: Colors.white),
-          onPressed: controller.shareTrip,
+      title: Row(
+    children: [
+      Expanded(
+        child: Text(
+          "Track Ride",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+          ),
         ),
-      ],
-      child: Container(
+      ),
+    ],
+  ),
+  titleAlign: TextAlign.center,
+  isCurved: true,
+  actions: [
+    IconButton(
+      icon: const Icon(Icons.share_outlined, color: Colors.white),
+      onPressed: controller.shareTrip,
+    ),
+  ],
+      child: SizedBox(
         height: 1.sh - 100.h, // Adjust based on BaseScaffold header height
         child: Stack(
           children: [
             // 1. Map Background
             Positioned.fill(
-              child: Image.asset('assets/images/map_bg.png', fit: BoxFit.cover),
+              child: Image.asset('assets/images/map_placeholder.png', fit: BoxFit.cover),
             ),
 
             // 2. Floating Arrival Card
@@ -50,7 +66,7 @@ class DriverTrackScreen extends StatelessWidget {
 
             // 4. Emergency SOS Button
             Positioned(
-              bottom: 240.h, left: 60.w, right: 60.w,
+              bottom: 280.h, left: 60.w, right: 60.w,
               child: _buildSOSButton(controller.triggerSOS),
             ),
 
@@ -89,11 +105,16 @@ class DriverTrackScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12.h),
-          LinearProgressIndicator(
-            value: trip.progress,
-            backgroundColor: Colors.grey.shade200,
-            color: Colors.black,
-            minHeight: 4.h,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10.r),
+            child: LinearProgressIndicator(
+              value: 0.63, // trip.progress
+              backgroundColor: const Color(0xFFE0E0E0),
+              color: Colors.black,
+              minHeight: 5.h,
+              // This property specifically rounds the "inner" black bar's head
+              borderRadius: BorderRadius.circular(10.r),
+            ),
           ),
           SizedBox(height: 8.h),
           Row(
@@ -130,69 +151,78 @@ class DriverTrackScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailsSheet(DriverTrackModel trip, DriverTrackController controller,BuildContext context) {
+  Widget _buildDetailsSheet(DriverTrackModel trip, DriverTrackController controller, BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 25.r, backgroundColor: const Color(0xFF131D33),
-                child: Text(trip.initials, style: GoogleFonts.inter(color: Colors.white)),
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(trip.passengerName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
-                  Text("${trip.carModel} • ${trip.carPlate}", style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
-                ]),
-              ),
-              _roundIconBtn(Icons.phone_outlined, controller.callPassenger),
-              SizedBox(width: 10.w),
-              _roundIconBtn(Icons.chat_bubble_outline, controller.messagePassenger),
-            ],
-          ),
-          Divider(height: 32.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _statItem("Distance", trip.distance),
-              _statItem("Duration", trip.duration),
-              _statItem("Price", "\$${trip.price}"),
-            ],
-          ),
-          SizedBox(height: 20.h),
-          _actionOutlineBtn("Share Trip with Family", controller.shareTrip),
-          SizedBox(height: 12.h),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => controller.endRide(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                padding: EdgeInsets.symmetric(vertical: 16.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-              ),
-              child:Text("End Ride", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+      decoration: const BoxDecoration(color: Colors.white),
+      child: Padding(
+        padding: EdgeInsets.all(12.w), // Slightly increased for better spacing
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 25.r, backgroundColor: const Color(0xFF131D33),
+                  child: Text(trip.initials, style: GoogleFonts.inter(color: Colors.white)),
+                ),
+                SizedBox(width: 12.w),
+                Expanded(
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    Text(trip.passengerName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+                    Text("${trip.carModel} • ${trip.carPlate}", style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
+                  ]),
+                ),
+                // Updated to use SVG paths
+                _roundIconBtn('assets/icons/phone_outline.svg', controller.callPassenger),
+                SizedBox(width: 10.w),
+                _roundIconBtn('assets/icons/chat_outline.svg', controller.messagePassenger),
+              ],
             ),
-          ),
-        ],
+            Divider(height: 32.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _statItem("Distance", trip.distance),
+                _statItem("Duration", trip.duration),
+                _statItem("Price", "\$${trip.price}"),
+              ],
+            ),
+            SizedBox(height: 20.h),
+            _actionOutlineBtn("Share Trip with Family", controller.shareTrip),
+            SizedBox(height: 12.h),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => controller.endRide(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  padding: EdgeInsets.symmetric(vertical: 16.h),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                ),
+                child: Text("End Ride", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _roundIconBtn(IconData i, VoidCallback onTap) => InkWell(
+// Ensure your _roundIconBtn is updated to handle the SVG String
+Widget _roundIconBtn(String svgPath, VoidCallback onTap) => InkWell(
     onTap: onTap,
     child: Container(
       padding: EdgeInsets.all(10.r),
-      decoration: BoxDecoration(color: Colors.grey.shade100, shape: BoxShape.circle),
-      child: Icon(i, size: 20.r),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5F5F5),
+        shape: BoxShape.circle,
+      ),
+      child: SvgPicture.asset(
+        svgPath,
+        width: 20.r,
+        height: 20.r,
+        colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
+      ),
     ),
   );
 

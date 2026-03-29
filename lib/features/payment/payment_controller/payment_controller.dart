@@ -17,7 +17,7 @@ class PaymentController extends ChangeNotifier {
       title: "Card Payment",
       subtitle: "Pay with Stripe",
       subSubtitle: "Secure & Instant", 
-      iconPath: 'assets/icons/card.svg',
+      iconPath: 'assets/icons/credit.svg',
       isSecure: true,
       type: PaymentMethodType.card,
     ),
@@ -31,7 +31,7 @@ class PaymentController extends ChangeNotifier {
     PaymentMethodData(
       title: "My Credits",
       subtitle: "Available Credits",
-      iconPath: 'assets/icons/credits.svg',
+      iconPath: 'assets/icons/wallet2.svg',
       type: PaymentMethodType.credits,
     ),
   ];

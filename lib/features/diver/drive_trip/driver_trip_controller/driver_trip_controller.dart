@@ -6,6 +6,7 @@ class DriverTripController extends ChangeNotifier {
   int get currentNavbarIndex => _currentNavbarIndex;
 
   PostedRideModel? postedRide = PostedRideModel(
+    id: '123',
     from: "Dhaka",
     to: "Khulna",
     date: "Mar 10, 2026",
@@ -16,6 +17,7 @@ class DriverTripController extends ChangeNotifier {
   );
 
   ActiveTripModel? activeTrip = ActiveTripModel(
+    id: '456',
     date: "Mar 6, 2026",
     pickup: "New York, NY",
     destination: "Boston, MA",

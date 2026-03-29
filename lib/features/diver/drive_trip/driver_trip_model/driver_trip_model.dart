@@ -1,4 +1,5 @@
 class PostedRideModel {
+  final String id;
   final String from;
   final String to;
   final String date;
@@ -8,6 +9,7 @@ class PostedRideModel {
   final String postedDate;
 
   PostedRideModel({
+    required this.id,
     required this.from,
     required this.to,
     required this.date,
@@ -19,6 +21,7 @@ class PostedRideModel {
 }
 
 class ActiveTripModel {
+  final String id;
   final String date;
   final String pickup;
   final String destination;
@@ -28,6 +31,7 @@ class ActiveTripModel {
   final String duration;
 
   ActiveTripModel({
+    required this.id,
     required this.date,
     required this.pickup,
     required this.destination,

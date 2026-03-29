@@ -16,13 +16,30 @@ class ConfirmWithdrawalView extends StatelessWidget {
     final data = controller.data;
 
     return BaseScaffold(
-      title: "Confirm Withdrawal",
-      titleAlign: TextAlign.center,
-      isCurved: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => controller.goBack(context),
+      title: Row(
+    children: [
+      // 1. Expanded takes up the middle space
+      Expanded(
+        child: Text(
+          "Confirm Withdrawal",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
+      // 2. Invisible spacer to balance the back button's width (approx 48)
+      const SizedBox(width: 48), 
+    ],
+  ),
+  titleAlign: TextAlign.center,
+  isCurved: true,
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back, color: Colors.white),
+    onPressed: () => controller.goBack(context),
+  ),
       child: Column(
         children: [
           SizedBox(height: 10.h),

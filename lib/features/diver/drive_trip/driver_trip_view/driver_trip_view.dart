@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -53,10 +55,9 @@ class DriverTripScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTitle("My Posted Rides"),
-          if (controller.postedRide != null) _buildPostedRideCard(controller.postedRide!),
-          
+          if (controller.postedRide != null) _buildPostedRideCard(context,controller.postedRide!),
           _buildTitle("Active Trip"),
-          if (controller.activeTrip != null) _buildActiveTripCard(controller.activeTrip!),
+          if (controller.activeTrip != null) _buildActiveTripCard(context,controller.activeTrip!),
           SizedBox(height: 20.h),
         ],
       ),
@@ -72,8 +73,10 @@ class DriverTripScreen extends StatelessWidget {
 
   // --- Specific Card UI Components ---
 
-  Widget _buildPostedRideCard(PostedRideModel ride) {
-    return Container(
+  Widget _buildPostedRideCard(BuildContext context, PostedRideModel ride) { // Added context
+  return GestureDetector(
+    onTap: () => context.push('/drive_ridedetails_screen', extra: ride.id), // Change route name as needed
+    child: Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -85,39 +88,44 @@ class DriverTripScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildBadge("Active", const Color(0xFFE8F5E9), Colors.green, Icons.check_circle_outline),
+              _buildBadge("Active", const Color(0xFFE8F5E9), Colors.green, 'assets/icons/check.svg'),
               Text("Posted ${ride.postedDate}", style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
             ],
           ),
           SizedBox(height: 16.h),
-          _buildLocationItem(Colors.green, "From", ride.from),
+          _buildLocationItem('assets/icons/pick_location.svg', "From", ride.from, Colors.green),
           _buildLine(),
-          _buildLocationItem(Colors.red, "To", ride.to),
+          _buildLocationItem('assets/icons/drop_location.svg', "To", ride.to, Colors.red),
           SizedBox(height: 16.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _iconText(Icons.calendar_today, ride.date),
-              _iconText(Icons.access_time, ride.time),
+              _iconText('assets/icons/calender.svg', ride.date),
+              _iconText('assets/icons/clock.svg', ride.time),
             ],
           ),
           SizedBox(height: 12.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _iconText(Icons.attach_money, "\$${ride.pricePerSeat}/seat"),
-              _iconText(Icons.people_outline, "${ride.seats} seats"),
+              _iconText('assets/icons/dollar.svg', "\$${ride.pricePerSeat}/seat"),
+              _iconText('assets/icons/seats.svg', "${ride.seats} seats"),
             ],
           ),
           SizedBox(height: 16.h),
-          _actionBtn("Cancel Ride", Colors.red, const Color(0xFFFFF1F0), Icons.cancel_outlined),
+          // IMPORTANT: Wrap the button in a GestureDetector/InkWell to catch its own tap
+          // OR leave as is if clicking "Cancel" should only trigger cancellation logic.
+          _actionBtn("Cancel Ride", Colors.red, const Color(0xFFFFF1F0), 'assets/icons/cancel.svg'),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget _buildActiveTripCard(ActiveTripModel trip) {
-    return Container(
+  Widget _buildActiveTripCard(BuildContext context, ActiveTripModel trip) { // Added BuildContext
+  return GestureDetector(
+    onTap: () => context.push('/drive_ridedetails_screen', extra: trip.id), // Redirect by ID
+    child: Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -130,14 +138,14 @@ class DriverTripScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(children: [
-                Icon(Icons.calendar_today_outlined, size: 16.r, color: Colors.grey),
+                SvgPicture.asset('assets/icons/calender.svg', height: 16.r, width: 16.r, colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn)),
                 SizedBox(width: 8.w),
                 Text(trip.date, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 14.sp)),
               ]),
               Row(children: [
-                _buildBadge("Active", const Color(0xFFE3F2FD), Colors.blue, null),
+                _buildBadge("Active", const Color(0xFFE3F2FD), Colors.blue, 'assets/icons/check.svg'),
                 SizedBox(width: 8.w),
-                _trackBtn(),
+                _trackBtn(context),
               ]),
             ],
           ),
@@ -149,7 +157,7 @@ class DriverTripScreen extends StatelessWidget {
               Container(
                 width: 40.r, height: 40.r,
                 decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(8.r)),
-                child: Center(child: Text(trip.initials, style:GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold))),
+                child: Center(child: Text(trip.initials, style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold))),
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -158,7 +166,7 @@ class DriverTripScreen extends StatelessWidget {
                   children: [
                     Text(trip.passengerName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 15.sp)),
                     Row(children: [
-                      Icon(Icons.star, color: Colors.amber, size: 14.r),
+                      SvgPicture.asset('assets/icons/star.svg', width: 14.r, height: 14.r, colorFilter: const ColorFilter.mode(Colors.amber, BlendMode.srcIn)),
                       Text(" ${trip.rating}", style: GoogleFonts.inter(fontSize: 12.sp, color: Colors.grey)),
                     ]),
                   ],
@@ -175,23 +183,23 @@ class DriverTripScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
+    ),
+  );
+}
   // --- Helper Widgets ---
 
-  Widget _buildBadge(String t, Color b, Color tc, IconData? i) => Container(
+  Widget _buildBadge(String t, Color b, Color tc, String? i) => Container(
     padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
     decoration: BoxDecoration(color: b, borderRadius: BorderRadius.circular(20.r)),
     child: Row(mainAxisSize: MainAxisSize.min, children: [
-      if (i != null) Icon(i, size: 14.r, color: tc),
+      if (i != null) SvgPicture.asset(i, height: 14.h, width: 14.w, colorFilter: ColorFilter.mode(tc, BlendMode.srcIn)),
       if (i != null) SizedBox(width: 4.w),
       Text(t, style: GoogleFonts.inter(color: tc, fontSize: 12.sp, fontWeight: FontWeight.bold)),
     ]),
   );
 
-  Widget _buildLocationItem(Color c, String l, String v) => Row(children: [
-    Icon(Icons.location_on_outlined, color: c, size: 20.r),
+  Widget _buildLocationItem(String s, String l, String v, Color c) => Row(children: [
+    SvgPicture.asset(s, width: 20.r, height: 20.r, colorFilter: ColorFilter.mode(c, BlendMode.srcIn)),
     SizedBox(width: 12.w),
     Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(l, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
@@ -204,17 +212,18 @@ class DriverTripScreen extends StatelessWidget {
     child: Align(alignment: Alignment.centerLeft, child: Container(width: 1, height: 15.h, color: Colors.grey.shade200)),
   );
 
-  Widget _iconText(IconData i, String t) => Row(children: [
-    Icon(i, size: 16.r, color: Colors.grey),
+  Widget _iconText(String i, String t) => Row(children: [
+    SvgPicture.asset(i, width: 16.r, height: 16.r, colorFilter: ColorFilter.mode(Colors.grey, BlendMode.srcIn)),
     SizedBox(width: 8.w),
     Text(t, style: GoogleFonts.inter(color: Colors.grey.shade700, fontSize: 13.sp)),
   ]);
 
-  Widget _actionBtn(String l, Color tc, Color bc, IconData i) => Container(
+  Widget _actionBtn(String l, Color tc, Color bc, String i) => Container(
     width: double.infinity, padding: EdgeInsets.symmetric(vertical: 12.h),
     decoration: BoxDecoration(color: bc, borderRadius: BorderRadius.circular(12.r)),
     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Icon(i, color: tc, size: 18.r), SizedBox(width: 8.w),
+      SvgPicture.asset(i, width: 18.r, height: 18.r, colorFilter: ColorFilter.mode(tc, BlendMode.srcIn)),
+      SizedBox(width: 8.w),
       Text(l, style: GoogleFonts.inter(color: tc, fontWeight: FontWeight.bold)),
     ]),
   );
@@ -225,9 +234,15 @@ class DriverTripScreen extends StatelessWidget {
     Row(children: [Icon(Icons.circle, size: 10.r, color: Colors.black), SizedBox(width: 12.w), Text(e)]),
   ]);
 
-  Widget _trackBtn() => Container(
-    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
-    decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(10.r)),
-    child: Text("Track", style: GoogleFonts.inter(fontSize: 12.sp, fontWeight: FontWeight.w500)),
+  Widget _trackBtn(BuildContext context) => GestureDetector(
+    onTap: () => context.push('/drive_trackride_screen'), // Navigate to track page
+    child: Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300), 
+        borderRadius: BorderRadius.circular(10.r)
+      ),
+      child: Text("Track", style: GoogleFonts.inter(fontSize: 12.sp, fontWeight: FontWeight.w500)),
+    ),
   );
 }

@@ -35,8 +35,11 @@ class WithdrawalFlowView extends StatelessWidget {
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () {
-          if (isAmountStep) Navigator.pop(context);
-          else controller.currentWithdrawalStep = 0;
+          if (isAmountStep) {
+            Navigator.pop(context);
+          } else {
+            controller.currentWithdrawalStep = 0;
+          }
         },
       ),
       child: Column(

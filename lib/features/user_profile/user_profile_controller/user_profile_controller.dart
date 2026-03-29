@@ -52,12 +52,12 @@ class ProfileController extends ChangeNotifier {
 
   void viewCreditHistory(BuildContext context) {
     print("Navigating dynamically to credit history...");
-    // GoRouter.of(context).push('/creditHistory');
+    GoRouter.of(context).push('/creditHistory');
   }
 
   void navigateToTripHistory(BuildContext context) {
     print("Navigating dynamically to trip history...");
-    // GoRouter.of(context).push('/tripHistory');
+    GoRouter.of(context).push('/my_trip_history');
   }
 
   void navigateToReviews(BuildContext context) {
@@ -67,7 +67,7 @@ class ProfileController extends ChangeNotifier {
 
   void navigateToPaymentMethods(BuildContext context) {
     print("Navigating dynamically to payment methods...");
-    // GoRouter.of(context).push('/paymentMethods');
+    GoRouter.of(context).push('/payment');
   }
 
   @override

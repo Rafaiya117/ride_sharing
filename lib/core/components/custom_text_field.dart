@@ -10,7 +10,8 @@ class CustomTextField extends StatelessWidget {
   final bool isPassword;
   final TextInputType keyboardType;
   final TextEditingController controller;
-  final Widget? suffixIcon; // 1. Added this line
+  final Widget? suffixIcon;
+  final bool showBorder; // 1. Added this
 
   const CustomTextField({
     super.key,
@@ -19,7 +20,8 @@ class CustomTextField extends StatelessWidget {
     this.isPassword = false,
     this.keyboardType = TextInputType.text,
     required this.controller,
-    this.suffixIcon, // 2. Added this line
+    this.suffixIcon,
+    this.showBorder = false, // 2. Default to false
   });
 
   @override
@@ -33,6 +35,8 @@ class CustomTextField extends StatelessWidget {
       decoration: BoxDecoration(
         color: inputColor,
         borderRadius: BorderRadius.circular(15.r),
+        // 3. Conditional border logic
+        border: showBorder ? Border.all(color: const Color(0xFFE0E0E0), width: 1) : null,
       ),
       child: TextField(
         controller: controller,
@@ -49,12 +53,11 @@ class CustomTextField extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             child: SvgPicture.asset(
               prefixIconPath,
-              //colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
               width: 18.w,
               fit: BoxFit.scaleDown,
             ),
           ),
-          suffixIcon: suffixIcon, 
+          suffixIcon: suffixIcon,
         ),
       ),
     );

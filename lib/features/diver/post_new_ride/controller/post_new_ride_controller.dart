@@ -25,7 +25,8 @@ class PostRideController extends ChangeNotifier {
     // Logic to save the ride
     debugPrint("Posting Ride: ${ride.pickupLocation} to ${ride.dropoffLocation}");
     Navigator.pop(context);
-    context.push('/drive_earning_screen');
+    //context.push('/drive_earning_screen');
+    context.push('/drive_home_screen');
   }
 
   @override

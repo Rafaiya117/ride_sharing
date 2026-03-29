@@ -17,6 +17,7 @@ class LegalContentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseScaffold(
       // --- Black Header with Back Button ---
+      isCurved: true,
       title: Row(
         children: [
           GestureDetector(

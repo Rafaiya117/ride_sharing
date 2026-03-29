@@ -15,19 +15,33 @@ class DriverProfileView extends StatelessWidget {
     final profile = controller.profile;
 
     return BaseScaffold(
-      title: "Profile",
-      titleAlign: TextAlign.center,
-      isCurved: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.edit_outlined, color: Colors.white),
-          onPressed: () => controller.navigateToEdit(context),
+      title: Row(
+    children: [
+      Expanded(
+        child: Text(
+          "Profile",
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+          ),
         ),
-      ],
+      ),
+    ],
+  ),
+  titleAlign: TextAlign.center,
+  isCurved: true,
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back, color: Colors.white),
+    onPressed: () => Navigator.pop(context),
+  ),
+  actions: [
+    IconButton(
+      icon: const Icon(Icons.edit_outlined, color: Colors.white),
+      onPressed: () => controller.navigateToEdit(context),
+    ),
+  ],
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: Column(

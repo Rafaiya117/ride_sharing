@@ -16,9 +16,27 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = context.watch<SignInController>();
     return BaseScaffold(
-      title: "Sign In", 
-      titleAlign: TextAlign.center,
-      isCurved: true, 
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // This empty box balances the space taken by the back button on the left
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Text(
+              "Sign In",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          // Mirror the leading icon's width here
+          const SizedBox(width: 48),
+        ],
+      ),
+      isCurved: true,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
         onPressed: () => Navigator.pop(context),

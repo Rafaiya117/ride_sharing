@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/trip_card_container.dart';
@@ -29,6 +30,7 @@ class TripHistoryScreen extends StatelessWidget {
         children: [
           _sectionTitle("${controller.completedTrips.length} trips completed"),
           ListView.builder(
+            padding: EdgeInsets.zero,
             shrinkWrap: true, 
             physics: const NeverScrollableScrollPhysics(), 
             itemCount: controller.completedTrips.length,
@@ -63,11 +65,16 @@ class TripHistoryScreen extends StatelessWidget {
               Positioned(right: 2, top: 2, child: Container(width: 8.r, height: 8.r, decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle))),
             ]),
             SizedBox(width: 15.w),
-            CircleAvatar(
-              radius: 18.r,
-              backgroundColor: Colors.white24,
-              child: Icon(Icons.person_outline, color: Colors.white, size: 20.r),
-            ),
+            SvgPicture.asset(
+                'assets/icons/user_icon.svg',
+                width: 24.w,
+                //colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              ),
+            // CircleAvatar(
+            //   radius: 18.r,
+            //   backgroundColor: Colors.black,
+            //   child: 
+            // ),
           ],
         ),
       ],

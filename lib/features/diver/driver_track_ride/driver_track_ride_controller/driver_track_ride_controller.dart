@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/features/diver/driver_track_ride/driver_track_ride_model/driver_track_ride_model.dart';
 
 class DriverTrackController extends ChangeNotifier {
@@ -17,6 +18,7 @@ class DriverTrackController extends ChangeNotifier {
   );
 
   void endRide(BuildContext context) {
+    GoRouter.of(context).push('/drive_complateride_screen');
     print("Ride ended. Navigating to summary...");
   }
 
