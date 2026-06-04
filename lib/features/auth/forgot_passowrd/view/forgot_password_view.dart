@@ -97,7 +97,7 @@ class ForgotPasswordScreen extends StatelessWidget {
           // 4. REUSABLE PRIMARY BLACK BUTTON
           CustomButton(
             text: "Request OTP",
-            onTap: () => context.push('/otp_verification'),
+            onTap: () => controller.requestOTP(context),
           ),
           SizedBox(height: 20.h),
           // 5. Footer Navigation Link

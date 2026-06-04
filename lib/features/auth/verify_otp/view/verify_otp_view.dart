@@ -119,8 +119,8 @@ class OtpVerificationScreen extends StatelessWidget {
           // 4. REUSABLE PRIMARY BLACK BUTTON
           CustomButton(
             text: "Send OTP",
-            onTap: () => context.push('/reset_password'),
-            //controller.verifyOtp(context),
+            onTap: () => controller.verifyOtp(context),
+            
           ),
           SizedBox(height: 30.h),
           // 5. --- DYNAMIC RESEND TIMER/LINK ---

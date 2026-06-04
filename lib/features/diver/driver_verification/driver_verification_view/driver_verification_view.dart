@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/features/diver/driver_verification/driver_verification_controller/driver_verification_controller.dart';
@@ -83,39 +84,38 @@ class DriverVerificationScreen extends StatelessWidget {
             // Document Items
             _buildDocItem(
               title: "Selfie Verification",
-              subtitle: controller.isSelfieCaptured ? "1/1 photos Captured" : "Take a live selfie (no uploads)",
+              subtitle: controller.isSelfieCaptured? "1/1 photos Captured": "Take a live selfie (no uploads)",
               iconPath: 'assets/icons/selfie_icon.svg',
               iconColor: Colors.blue,
               isCaptured: controller.isSelfieCaptured,
-              onTap: () => controller.toggleVerification('selfie'),
+              onTap: (path) =>controller.toggleVerification('selfie', filePath: path),
             ),
             _buildDocItem(
               title: "Car Photo",
-              subtitle: controller.isCarPhotoCaptured ? "4/4 photos Captured" : "Capture car photo (no uploads)",
+              subtitle: controller.isCarPhotoCaptured? "4/4 photos Captured": "Capture car photo (no uploads)",
               iconPath: 'assets/icons/car_icon.svg',
               iconColor: Colors.green,
               isCaptured: controller.isCarPhotoCaptured,
               multiPhotoCount: 4,
-              onTap: () => controller.toggleVerification('car'),
+              onTap: (path) => controller.toggleVerification('car', filePath: path),
             ),
             _buildDocItem(
               title: "Number Plate",
-              subtitle: controller.isNumberPlateCaptured ? "1/1 photos Captured" : "Capture plate photo (no uploads)",
+              subtitle: controller.isNumberPlateCaptured? "1/1 photos Captured": "Capture plate photo (no uploads)",
               iconPath: "assets/icons/number_plate_icon.svg",
               iconColor: Colors.orange,
               isCaptured: controller.isNumberPlateCaptured,
-              onTap: () => controller.toggleVerification('plate'),
+              onTap: (path) => controller.toggleVerification('plate', filePath: path),
             ),
             _buildDocItem(
               title: "Driving License",
-              subtitle: controller.isLicenseCaptured ? "1/1 photos Captured" : "Capture or upload license",
+              subtitle: controller.isLicenseCaptured? "1/1 photos Captured": "Capture or upload license",
               iconPath: 'assets/icons/license_icon.svg',
               iconColor: Colors.purple,
               isCaptured: controller.isLicenseCaptured,
-              showUpload: true,
-              onTap: () => controller.toggleVerification('license'),
+              showUpload:true, // Triggers both custom action selection buttons inside row
+              onTap: (path) =>controller.toggleVerification('license', filePath: path),
             ),
-
             // Security Box
             if (!controller.isAllVerified) ...[
               SizedBox(height: 20.h),
@@ -135,7 +135,8 @@ class DriverVerificationScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Strong Security Verification", 
+                          Text(
+                            "Strong Security Verification", 
                             style: GoogleFonts.inter(fontWeight: FontWeight.bold, color: const Color(0xFF873600), fontSize: 14.sp)),
                           SizedBox(height: 4.h),
                           Text(
@@ -149,9 +150,7 @@ class DriverVerificationScreen extends StatelessWidget {
                 ),
               ),
             ],
-
             SizedBox(height: 30.h),
-
             // Main Action Button
             SizedBox(
               width: double.infinity,
@@ -198,118 +197,142 @@ class DriverVerificationScreen extends StatelessWidget {
   }
 
   Widget _buildDocItem({
-    required String title,
-    required String subtitle,
-    required String iconPath,
-    required Color iconColor,
-    required bool isCaptured,
-    int multiPhotoCount = 1,
-    bool showUpload = false,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 15.h),
-      padding: EdgeInsets.all(15.r),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: Colors.grey.shade100),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(10.r),
-                decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                // Replaced Icon with SvgPicture.asset
-                child: SvgPicture.asset(
-                  iconPath,
-                  colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
-                  width: 24.r,
-                  height: 24.r,
-                ),
-              ),
-              SizedBox(width: 15.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15.sp,
-                      ),
+  required String title,
+  required String subtitle,
+  required String iconPath,
+  required Color iconColor,
+  required bool isCaptured,
+  bool showUpload = false,
+  int multiPhotoCount = 1,
+  required Function(String filePath) onTap,
+}) {
+  final ImagePicker picker = ImagePicker();
+
+  Future<void> pickImage(ImageSource source) async {
+    final XFile? image = await picker.pickImage(
+      source: source,
+      imageQuality: 80,
+    );
+    if (image != null) {
+      onTap(image.path);
+    }
+  }
+
+  return Container(
+    margin: EdgeInsets.only(bottom: 12.h),
+    padding: EdgeInsets.all(14.r),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(12.r),
+      border: Border.all(color: Colors.grey.shade200),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // --- TOP ROW: Always displays icon, text details, and action states ---
+        Row(
+          children: [
+            SvgPicture.asset(
+              iconPath,
+              color: iconColor,
+              width: 24.w,
+              height: 24.h,
+            ),
+            SizedBox(width: 14.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
                     ),
-                    Text(
-                      subtitle,
-                      style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp),
-                    ),
-                  ],
-                ),
-              ),
-              if (!isCaptured)
-                IconButton(
-                  onPressed: onTap,
-                  icon: const Icon(
-                    Icons.camera_alt_outlined,
-                    color: Colors.redAccent,
                   ),
-                )
-              else
-                ElevatedButton(
-                  onPressed: onTap,
+                  Text(
+                    subtitle,
+                    style: GoogleFonts.inter(fontSize: 12.sp, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            
+            // --- ACTION TRIGGER LAYOUTS ---
+            if (isCaptured) ...[
+              // State 2: Show Gray "Change" button on the right when items are captured
+              SizedBox(
+                height: 32.h,
+                child: ElevatedButton(
+                  onPressed: () => showUpload ? pickImage(ImageSource.camera) : pickImage(ImageSource.camera), 
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[600],
-                    fixedSize: Size(100.09.w, 36.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.r),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 10.w,), 
+                    backgroundColor: Colors.grey.shade600,
+                    elevation: 0,
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
                   ),
                   child: Text(
                     "Change",
-                    style: GoogleFonts.inter(
-                      color: Colors.white,
-                      fontSize: 12.sp,
-                    ), 
-                  ),
-                ),
-            ],
-          ),
-          if (isCaptured) ...[
-            SizedBox(height: 10.h),
-            Row(
-              children: List.generate(
-                multiPhotoCount,
-                (index) => Container(
-                  width: 45.r,
-                  height: 45.r,
-                  margin: EdgeInsets.only(right: 8.w),
-                  padding: EdgeInsets.all(10.r),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF0FDF4),
-                    borderRadius: BorderRadius.circular(8.r),
-                    border: Border.all(color: Colors.green),
-                  ),
-                  child: SvgPicture.asset(
-                    'assets/icons/check_circle.svg', 
-                    colorFilter: const ColorFilter.mode(
-                      Colors.green,
-                      BlendMode.srcIn,
-                    ),
+                    style: GoogleFonts.inter(color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.w500),
                   ),
                 ),
               ),
-            ),
+            ] else if (showUpload) ...[
+              // State 1 (License): Upload and Camera stack icons matching Image 1
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.file_upload_outlined, color: Colors.grey.shade400),
+                    onPressed: () => pickImage(ImageSource.gallery),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.camera_alt_outlined, color: Colors.red.shade300),
+                    onPressed: () => pickImage(ImageSource.camera),
+                  ),
+                ],
+              ),
+            ] else ...[
+              // State 1 (Default): Single Red Circle Camera Action matching Image 1
+              IconButton(
+                icon: Container(
+                  padding: EdgeInsets.all(6.r),
+                  decoration: BoxDecoration(
+                    color: Colors.red.shade50,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.camera_alt_outlined, color: Colors.red.shade400, size: 18.sp),
+                ),
+                onPressed: () => pickImage(ImageSource.camera),
+              ),
+            ],
           ],
+        ),
+
+        // --- BOTTOM ROW: Conditionally rendered only when documents are Captured (Image 2) ---
+        if (isCaptured) ...[
+          SizedBox(height: 12.h),
+          Row(
+            children: List.generate(
+              multiPhotoCount,
+              (index) => Container(
+                margin: EdgeInsets.only(right: 8.w),
+                width: 44.w,
+                height: 44.h,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF4FAF7),
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(color: const Color(0xFF2ECC71)),
+                ),
+                child: const Icon(
+                  Icons.check_circle_outline,
+                  color: Color(0xFF2ECC71),
+                ),
+              ),
+            ),
+          ),
         ],
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
 }

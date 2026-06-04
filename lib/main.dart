@@ -1,5 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/config/app_route/app_router.dart';
@@ -45,7 +46,13 @@ import 'package:ride_sharing/features/user_profile/user_profile_controller/user_
 import 'package:ride_sharing/features/user_settings/account/controller/account_controller.dart';
 import 'package:ride_sharing/features/user_settings/account_notification_settings/account_notification_setting_controller.dart/account_notification_controller.dart';
 
-void main() {
+// void main() {
+//   runApp(const MyApp());
+// }
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 

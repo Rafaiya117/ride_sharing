@@ -95,6 +95,16 @@ class SignUpScreen extends StatelessWidget {
 
           SizedBox(height: 20.h),
 
+          _buildLabel("Password"),
+          CustomTextField(
+            controller: controller.passwordController,
+            hintText: "Enter your password",
+            prefixIconPath: 'assets/icons/lock.svg',
+            keyboardType: TextInputType.phone,
+          ),
+
+          SizedBox(height: 20.h),
+
           // --- CREATE ACCOUNT BUTTON ---
           CustomButton(
             text: "Create account",

@@ -72,13 +72,13 @@ class SignInScreen extends StatelessWidget {
             prefixIconPath: 'assets/icons/email.svg',
           ),
           
-          SizedBox(height: 10.h),
-          _buildLabel("Phone Number"),
-          CustomTextField(
-            controller: controller.phoneController,
-            hintText: "+1 (555) 000-0000",
-            prefixIconPath: 'assets/icons/phone.svg',
-          ),
+          // SizedBox(height: 10.h),
+          // _buildLabel("Phone Number"),
+          // CustomTextField(
+          //   controller: controller.phoneController,
+          //   hintText: "+1 (555) 000-0000",
+          //   prefixIconPath: 'assets/icons/phone.svg',
+          // ),
 
           SizedBox(height: 10.h),
           _buildLabel("Password"),

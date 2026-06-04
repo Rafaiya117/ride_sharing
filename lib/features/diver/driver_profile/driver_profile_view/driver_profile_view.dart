@@ -42,7 +42,9 @@ class DriverProfileView extends StatelessWidget {
       onPressed: () => controller.navigateToEdit(context),
     ),
   ],
-      child: SingleChildScrollView(
+      child: controller.isLoading
+    ? const Center(child: CircularProgressIndicator(color: Colors.black))
+    : SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         child: Column(
           children: [
@@ -51,23 +53,37 @@ class DriverProfileView extends StatelessWidget {
             CircleAvatar(
               radius: 45.r,
               backgroundColor: const Color(0xFF1E283A),
-              child: Text(profile.initials, style: GoogleFonts.inter(color: Colors.white, fontSize: 32.sp, fontWeight: FontWeight.bold)),
+              child: Text(controller.profile.initials, style: GoogleFonts.inter(color: Colors.white, fontSize: 32.sp, fontWeight: FontWeight.bold)),
             ),
             SizedBox(height: 15.h),
-            Text(profile.name, style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold)),
-            Text(profile.email, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey)),
+            Text(controller.profile.name, style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold)),
+            Text(controller.profile.email, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey)),
             SizedBox(height: 12.h),
 
             // Verification Badge
             Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-              decoration: BoxDecoration(color: const Color(0xFFF3F8F3), borderRadius: BorderRadius.circular(20.r)),
+              decoration: BoxDecoration(
+                color: controller.profile.isVerified ? const Color(0xFFF3F8F3) : const Color(0xFFFFF5F0), 
+                borderRadius: BorderRadius.circular(20.r),
+              ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.shield_outlined, color: Colors.green, size: 16.sp),
+                  Icon(
+                    controller.profile.isVerified ? Icons.shield_outlined : Icons.error_outline, 
+                    color: controller.profile.isVerified ? Colors.green : Colors.orange, 
+                    size: 16.sp,
+                  ),
                   SizedBox(width: 6.w),
-                  Text("Verified Passenger", style: GoogleFonts.inter(color: Colors.green, fontSize: 12.sp, fontWeight: FontWeight.bold)),
+                  Text(
+                    controller.profile.isVerified ? "Verified Driver" : "Verification Pending", 
+                    style: GoogleFonts.inter(
+                      color: controller.profile.isVerified ? Colors.green : Colors.orange, 
+                      fontSize: 12.sp, 
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -77,13 +93,13 @@ class DriverProfileView extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildStatItem(Icons.location_on_outlined, "${profile.totalTrips}", "Trips"),
-                _buildStatItem(Icons.star_outline, "${profile.rating}", "Rating"),
+                _buildStatItem(Icons.location_on_outlined, "${controller.profile.totalTrips}", "Trips"),
+                _buildStatItem(Icons.star_outline, "${controller.profile.rating}", "Rating"),
               ],
             ),
             SizedBox(height: 30.h),
 
-            // Vehicle Information Card
+            // Vehicle Information Card (Now safely rendered from the separate API result)
             Container(
               padding: EdgeInsets.all(16.r),
               decoration: BoxDecoration(
@@ -108,8 +124,8 @@ class DriverProfileView extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(profile.carModel, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-                          Text(profile.plateNumber, style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.grey)),
+                          Text(controller.profile.carModel, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                          Text(controller.profile.plateNumber, style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.grey)),
                         ],
                       ),
                     ],
@@ -118,8 +134,8 @@ class DriverProfileView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildVehicleDetail("Color", profile.color),
-                      _buildVehicleDetail("Seats", "${profile.availableSeats} available"),
+                      _buildVehicleDetail("Color", controller.profile.color),
+                      _buildVehicleDetail("Seats", "${controller.profile.availableSeats} available"),
                     ],
                   ),
                 ],
