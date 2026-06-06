@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -88,8 +89,7 @@ class WithdrawalFlowView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [50, 100, 200, 'All'].map((val) {
-              bool isSelected = (val is int && controller.withdrawalAmount == val.toDouble()) || 
-                               (val == 'All' && controller.withdrawalAmount == 441);
+              bool isSelected = (val is int && controller.withdrawalAmount == val.toDouble()) || (val == 'All' && controller.withdrawalAmount == 441);
               return GestureDetector(
                 onTap: () => controller.setAmount(val == 'All' ? 441 : (val as int).toDouble()),
                 child: Container(
@@ -161,7 +161,7 @@ class WithdrawalFlowView extends StatelessWidget {
                       decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
                     ),
                   )
-                : null,
+              : null,
             )
           ],
         ),
@@ -169,21 +169,35 @@ class WithdrawalFlowView extends StatelessWidget {
     );
   }
 
-  Widget _buildContinueButton(EarningsController controller,BuildContext context) {
+  Widget _buildContinueButton(EarningsController controller,BuildContext context,) {
     bool canContinue = controller.withdrawalAmount > 0;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: SizedBox(
         width: double.infinity,
         height: 55.h,
         child: ElevatedButton(
-          onPressed: canContinue ? () => controller.nextStep(context) : null,
+          onPressed: canContinue
+            ? () {
+              final String targetAmountStr = controller.withdrawalAmount.toStringAsFixed(2);
+                context.push('/drive_confirmwithdrawal_screen',extra: targetAmountStr,);
+              }
+            : null,
           style: ElevatedButton.styleFrom(
             backgroundColor: canContinue ? Colors.black : Colors.grey,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.r),
+            ),
             elevation: 0,
           ),
-          child: Text("Continue", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+          child: Text(
+            "Continue",
+            style: GoogleFonts.inter(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
     );

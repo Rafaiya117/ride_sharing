@@ -48,7 +48,7 @@ class SignInController extends ChangeNotifier {
       if (responseData != null && responseData['success'] == true) {
         // Save token to your central store, completely bypassing SignUpController
         TokenStorage.accessToken = responseData['data']['access'];
-
+        TokenStorage.userData = responseData['data']['user'];
         _showSnackBar(context, "Signed in successfully!");
 
         if (role == 'driver') {

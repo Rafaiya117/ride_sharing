@@ -66,7 +66,7 @@ class DriverHomeScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10.h),
-          _buildOnlineToggle(controller),
+          _buildOnlineToggle(context, controller),
           SizedBox(height: 10.h), 
         ],
       ),
@@ -103,7 +103,7 @@ class DriverHomeScreen extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: controller.rideRequests.length,
-            itemBuilder: (context, index) => _buildRequestCard(controller.rideRequests[index]),
+            itemBuilder: (context, index) => _buildRequestCard(controller.rideRequests[index], index, controller),
           ),
         ],
       ),
@@ -112,18 +112,29 @@ class DriverHomeScreen extends StatelessWidget {
 
   // --- Refined Helper Widgets for Exact Match ---
 
-  Widget _buildOnlineToggle(DriverHomeController controller) {
+  Widget _buildOnlineToggle(BuildContext context, DriverHomeController controller) {
+    // Dynamic color variations depending on online status properties
+    final isOnline = controller.isOnline;
+    final containerColor = isOnline ? const Color(0xFFE8F9F1) : const Color(0xFFF2F4F7);
+    final iconBgColor = isOnline ? const Color(0xFF00C853) : Colors.grey.shade400;
+    final statusTitle = isOnline ? "You are Online" : "You are Offline";
+    final statusSubtitle = isOnline ? "Accepting ride requests" : "Go online to receive requests";
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFE8F9F1), 
+        color: containerColor, 
         borderRadius: BorderRadius.circular(15.r),
       ),
       child: Row(
         children: [
           Container(
             padding: EdgeInsets.all(8.r),
-            decoration:BoxDecoration(color: Color(0xFF00C853), shape: BoxShape.rectangle,borderRadius: BorderRadius.circular(12.r) ),
+            decoration: BoxDecoration(
+              color: iconBgColor, 
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(12.r)
+            ),
             child: SvgPicture.asset(
               'assets/icons/near_me.svg', 
               width: 18.sp,
@@ -136,18 +147,26 @@ class DriverHomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("You are Online", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
-                Text("Accepting ride requests", style: GoogleFonts.inter(color: Colors.black54, fontSize: 12.sp)),
+                Text(statusTitle, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+                Text(statusSubtitle, style: GoogleFonts.inter(color: Colors.black54, fontSize: 12.sp)),
               ],
             ),
           ),
           Transform.scale(
-            scale: 0.8, // Smaller switch
-            child: Switch(
-              value: controller.isOnline,
-              onChanged: (v) => controller.toggleOnlineStatus(v),
+            scale: 0.8, 
+            child: controller.isToggleLoading
+            ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black),
+            )
+            : Switch(
+              value: isOnline,
+              onChanged: (v) => controller.toggleOnlineStatus(context, v),
               activeThumbColor: Colors.white,
               activeTrackColor: Colors.black,
+              inactiveThumbColor: Colors.grey.shade200,
+              inactiveTrackColor: Colors.grey.shade400,
             ),
           ),
         ],
@@ -158,9 +177,9 @@ class DriverHomeScreen extends StatelessWidget {
   Widget _buildStatsSection(DriverHomeController controller) {
     return Row(
       children: [
-        _buildStatBox("4.9", "Rating", 'assets/icons/rating.svg'),
+        _buildStatBox(controller.driverRating.toStringAsFixed(1), "Rating", 'assets/icons/rating.svg'),
         SizedBox(width: 10.w),
-        _buildStatBox("156", "Trips", 'assets/icons/map_pin.svg'),
+        _buildStatBox(controller.totalTrips.toString(), "Trips", 'assets/icons/map_pin.svg'),
         SizedBox(width: 10.w),
         // The darker blue gradient box
         Expanded(
@@ -198,7 +217,7 @@ class DriverHomeScreen extends StatelessWidget {
                     ),
                     SizedBox(width: 8.w,), 
                     Text(
-                      "\$2.0k",
+                      "\$ ${controller.monthlyEarnings.toStringAsFixed(2)}",
                       style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize:32.sp, 
@@ -309,14 +328,13 @@ class DriverHomeScreen extends StatelessWidget {
   );
 }
 
-  Widget _buildRequestCard(dynamic request) {
+  Widget _buildRequestCard(dynamic request, int index, dynamic controller) {
     return Container(
       margin: EdgeInsets.only(bottom: 15.h),
       padding: EdgeInsets.all(15.r),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15.r),
-        // Increased opacity from 0.03 to 0.08 and blur from 10 to 15
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.08), 
@@ -356,17 +374,45 @@ class DriverHomeScreen extends StatelessWidget {
             ],
           ),
           _buildLocationTimeline(request.pickupLocation, request.dropoffLocation),
-          Row(
+          request.status == "pending"
+          ? Row(
             children: [
               Expanded(
-                child: _buildBtn("Accept", Colors.black, Colors.white,'assets/icons/accept_icon.svg')
+                child: GestureDetector(
+                  onTap: () => controller.acceptRequest(index),
+                  child: _buildBtn("Accept", Colors.black, Colors.white, 'assets/icons/accept_icon.svg'),
+                ),
               ),
               SizedBox(width: 10.w),
               Expanded(
-                child: _buildBtn("Decline", Colors.white, Colors.black, 'assets/icons/decline_icon.svg', hasBorder: true)
+                child: GestureDetector(
+                  onTap: () => controller.declineRequest(index),
+                  child: _buildBtn("Decline", Colors.white, Colors.black, 'assets/icons/decline_icon.svg', hasBorder: true),
+                ),
               ),
             ],
           )
+          : Container(
+            width: double.infinity,
+            height: 45.h, // Matches height constraints of _buildBtn
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: request.status == "accepted" ? const Color(0xFFE8F5E9) : const Color(0xFFFFEBEE), // Soft Red background tint
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(
+                color: request.status == "accepted" ? Colors.green : Colors.red,
+                width: 1.5,
+              ),
+            ),
+            child: Text(
+              request.status == "accepted" ? "Ride Accepted" : "Ride Declined",
+              style: GoogleFonts.inter(
+                color: request.status == "accepted" ? Colors.green[800] : Colors.red[800],
+                fontWeight: FontWeight.bold,
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -384,11 +430,11 @@ class DriverHomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SvgPicture.asset(
-          icon,
-          width: 18.sp,
-          height: 18.sp,
-          colorFilter: ColorFilter.mode(text, BlendMode.srcIn),
-        ),
+            icon,
+            width: 18.sp,
+            height: 18.sp,
+            colorFilter: ColorFilter.mode(text, BlendMode.srcIn),
+          ),
           SizedBox(width: 8.w),
           Text(label, style: GoogleFonts.inter(color: text, fontWeight: FontWeight.bold, fontSize: 14.sp)),
         ],

@@ -5,6 +5,8 @@ class EarningsModel {
   final double weeklyProgress; 
   final List<double> weeklyData; 
   final List<TripHistory> trips;
+  final String avgPerTripText;
+  final String totalTripsText;
 
   EarningsModel({
     required this.totalEarnings,
@@ -13,6 +15,8 @@ class EarningsModel {
     required this.weeklyProgress,
     required this.weeklyData,
     required this.trips,
+    required this.avgPerTripText,
+    required this.totalTripsText,
   });
 }
 

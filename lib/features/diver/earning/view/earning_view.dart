@@ -17,64 +17,54 @@ class EarningsView extends StatelessWidget {
 
     return BaseScaffold(
       title: Row(
-    children: [
-      Expanded(
-        child: Text(
-          "Earnings",
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w700,
+        children: [
+          Expanded(
+            child: Text(
+              "Earnings",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+      titleAlign: TextAlign.center,
+      isCurved: true,
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp),
+        onPressed: () => Navigator.pop(context),
+      ),
+      actions: [
+        // Removed the large 180.w padding to allow natural centering
+        IconButton(
+          onPressed: () {}, // Replace with your function
+          icon: SvgPicture.asset(
+            'assets/icons/download.svg',
+            width: 20.sp,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           ),
         ),
-      ),
-    ],
-  ),
-  titleAlign: TextAlign.center,
-  isCurved: true,
-  leading: IconButton(
-    icon: Icon(Icons.arrow_back, color: Colors.white, size: 24.sp),
-    onPressed: () => Navigator.pop(context),
-  ),
-  actions: [
-    // Removed the large 180.w padding to allow natural centering
-    IconButton(
-      onPressed: () {}, // Replace with your function
-      icon: SvgPicture.asset(
-        'assets/icons/download.svg',
-        width: 20.sp,
-        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-      ),
-    ),
-  ],
+      ],
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. Weekly Overview Card
+            // 1. Overview Card Container Map
             Container(
-              padding: EdgeInsets.all(24.r,), 
+              padding: EdgeInsets.all(24.r),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFF161D27),
-                    Color(0xFF000000),
-                  ], // Darker navy to black
+                  colors: [Color(0xFF161D27), Color(0xFF000000)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(24.r),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
               ),
               child: Column(
-                crossAxisAlignment:CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
@@ -96,11 +86,22 @@ class EarningsView extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
+                      const Spacer(),
+                      // Optional: Lightweight activity spinner view indicator element
+                      if (controller.isLoading)
+                        const SizedBox(
+                          width: 14,
+                          height: 14,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        ),
                     ],
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    "\$${earnings.totalEarnings.toInt()}",
+                    "\$${controller.data.totalEarnings.toStringAsFixed(2)}", // FIXED: Pulls dynamic double formatted text
                     style: GoogleFonts.inter(
                       color: Colors.white,
                       fontSize: 42.sp,
@@ -112,35 +113,60 @@ class EarningsView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildTimeButton("Week", isActive: false),
-                      _buildTimeButton("Month", isActive: true),
-                      _buildTimeButton("Year", isActive: false),
+                      _buildTimeButton(
+                        "Week",
+                        isActive: controller.selectedPeriod == "Week",
+                        onTap: () => controller.changePeriod("Week"),
+                      ),
+                      _buildTimeButton(
+                        "Month",
+                        isActive: controller.selectedPeriod == "Month",
+                        onTap: () => controller.changePeriod("Month"),
+                      ),
+                      _buildTimeButton(
+                        "Year",
+                        isActive: controller.selectedPeriod == "Year",
+                        onTap: () => controller.changePeriod("Year"),
+                      ),
                     ],
                   ),
                   SizedBox(height: 20.h),
                   // Bottom Metrics Row
                   Row(
                     children: [
-                      _buildMetricBox("Avg per trip", "\$108"),
+                      // FIXED: Reads dynamic calculated values cleanly from payload mapping variables
+                      _buildMetricBox(
+                        "Avg per trip",
+                        controller.data.avgPerTripText,
+                      ),
                       SizedBox(width: 15.w),
-                      _buildMetricBox("Total trips", "5"),
+                      _buildMetricBox(
+                        "Total trips",
+                        controller.data.totalTripsText,
+                      ),
                     ],
                   ),
                 ],
               ),
             ),
             SizedBox(height: 25.h),
-            // 2. Withdrawal Shortcut
+            // 2. Withdrawal Shortcut Display Configuration Block
             _buildEarningsActionSection(
-              pendingValue: "\$98.00", 
-              availableValue: "\$441.00",
+              pendingValue:"\$${controller.data.pendingEarnings.toStringAsFixed(2)}", // FIXED: Link to model properties
+              availableValue:"\$${controller.data.availableEarnings.toStringAsFixed(2)}", // FIXED: Link to model properties
               onWithdraw: () => controller.navigateToWithdraw(context),
             ),
             SizedBox(height: 30.h),
             // 3. Trip History List
-            Text("Recent Trips", style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+            Text(
+              "Recent Trips",
+              style: GoogleFonts.inter(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             SizedBox(height: 15.h),
-            ...earnings.trips.map((trip) => _buildTripTile(trip)),
+            ...controller.data.trips.map((trip) => _buildTripTile(trip)),
           ],
         ),
       ),
@@ -158,230 +184,324 @@ class EarningsView extends StatelessWidget {
   //   );
   // }
 
-  Widget _buildTimeButton(String label, {required bool isActive}) {
-  return Expanded(
-    child: Container(
-      margin: EdgeInsets.symmetric(horizontal: 4.w),
-      padding: EdgeInsets.symmetric(vertical: 12.h),
-      decoration: BoxDecoration(
-        color: isActive ? Colors.white : const Color(0xFF1F2630), // White for active
+  Widget _buildTimeButton(
+    String label, {
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: InkWell(
+        onTap: onTap, // Click Listener added
         borderRadius: BorderRadius.circular(12.r),
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 4.w),
+          padding: EdgeInsets.symmetric(vertical: 12.h),
+          decoration: BoxDecoration(
+            color: isActive ? Colors.white : const Color(0xFF1F2630),
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: GoogleFonts.inter(
+                color: isActive ? Colors.black : Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 13.sp,
+              ),
+            ),
+          ),
+        ),
       ),
-      child: Center(
-        child: Text(label, 
-          style: GoogleFonts.inter(
-            color: isActive ? Colors.black : Colors.white, 
-            fontWeight: FontWeight.w600,
-            fontSize: 13.sp
-          )),
-      ),
-    ),
-  );
-}
+    );
+  }
 
-Widget _buildMetricBox(String label, String value) {
-  return Expanded(
-    child: Container(
+  Widget _buildMetricBox(String label, String value) {
+    return Expanded(
+      child: Container(
+        padding: EdgeInsets.all(16.r),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1F2630), // Dark grey-blue boxes
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: GoogleFonts.inter(color: Colors.white60, fontSize: 12.sp),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              value,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEarningsActionSection({
+    required String pendingValue,
+    required String availableValue,
+    required VoidCallback onWithdraw,
+  }) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            // Left Card: Pending
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(16.r),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: Colors.grey.shade100),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/clock.svg',
+                          width: 14.sp,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.grey,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        SizedBox(width: 6.w),
+                        Text(
+                          "Pending",
+                          style: GoogleFonts.inter(
+                            color: Colors.grey,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      pendingValue,
+                      style: GoogleFonts.inter(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.deepOrange,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(width: 12.w),
+            // Right Card: Available (Gradient)
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(16.r),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Color(0xFF1E4597), Color(0xFF0C1C3E)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/wallet.svg',
+                          width: 14.sp,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.white70,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        SizedBox(width: 6.w),
+                        Text(
+                          "Available",
+                          style: GoogleFonts.inter(
+                            color: Colors.white70,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      availableValue,
+                      style: GoogleFonts.inter(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 15.h),
+        // Full Width Withdraw Button
+        SizedBox(
+          width: double.infinity,
+          height: 50.h,
+          child: ElevatedButton(
+            onPressed: onWithdraw,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              elevation: 0,
+            ),
+            child: Text(
+              "Withdraw Earnings",
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 15.sp,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTripTile(TripHistory trip) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F2630), // Dark grey-blue boxes
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: GoogleFonts.inter(color: Colors.white60, fontSize: 12.sp)),
-          SizedBox(height: 8.h),
-          Text(value, style: GoogleFonts.inter(color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold)),
-        ],
-      ),
-    ),
-  );
-}
-
-  Widget _buildEarningsActionSection({
-  required String pendingValue,
-  required String availableValue,
-  required VoidCallback onWithdraw,
-}) {
-  return Column(
-    children: [
-      Row(
-        children: [
-          // Left Card: Pending
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(16.r),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: Colors.grey.shade100),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset('assets/icons/clock.svg', 
-                        width: 14.sp, colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn)),
-                      SizedBox(width: 6.w),
-                      Text("Pending", style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
-                    ],
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    pendingValue, 
-                    style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold, color: Colors.deepOrange)),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(width: 12.w),
-          // Right Card: Available (Gradient)
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(16.r),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF1E4597), Color(0xFF0C1C3E)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset('assets/icons/wallet.svg', 
-                        width: 14.sp, colorFilter: const ColorFilter.mode(Colors.white70, BlendMode.srcIn)),
-                      SizedBox(width: 6.w),
-                      Text("Available", style: GoogleFonts.inter(color: Colors.white70, fontSize: 12.sp)),
-                    ],
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(availableValue, 
-                    style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold, color: Colors.white)),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-      SizedBox(height: 15.h),
-      // Full Width Withdraw Button
-      SizedBox(
-        width: double.infinity,
-        height: 50.h,
-        child: ElevatedButton(
-          onPressed: onWithdraw,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.black,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-            elevation: 0,
-          ),
-          child: Text("Withdraw Earnings", 
-            style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15.sp)),
-        ),
-      ),
-    ],
-  );
-}
-
-  Widget _buildTripTile(TripHistory trip) {
-  return Container(
-    margin: EdgeInsets.only(bottom: 12.h),
-    padding: EdgeInsets.all(16.r),
-    decoration: BoxDecoration(
-      color: Colors.white, 
-      borderRadius: BorderRadius.circular(16.r),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Route text
-                Text(
-                  "${trip.pickup} → ${trip.dropoff}", 
-                  style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp, color: const Color(0xFF1A1D21))
-                ),
-                SizedBox(height: 6.h),
-                // Date with Calendar SVG
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/calendar.svg', 
-                      width: 14.sp, 
-                      colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn)
-                    ),
-                    SizedBox(width: 6.w),
-                    Text(trip.date, style: GoogleFonts.inter(color: Colors.grey, fontSize: 13.sp)),
-                  ],
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                // Main Price
-                Text(
-                  "\$${trip.amount.toInt()}", 
-                  style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 20.sp, color: const Color(0xFF1A1D21))
-                ),
-                // Paid Status
-                Text(
-                  "Paid", 
-                  style: GoogleFonts.inter(color: Colors.green, fontSize: 12.sp, fontWeight: FontWeight.w600)
-                ),
-              ],
-            )
-          ],
-        ),
-        SizedBox(height: 16.h),
-        // Gray Summary Box
-        Container(
-          padding: EdgeInsets.all(12.r),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF8F9FB),
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          child: Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text.rich(
-                TextSpan(
-                  text: "Fare: ",
-                  style: GoogleFonts.inter(color: Colors.grey, fontSize: 13.sp),
-                  children: [
-                    TextSpan(
-                      text: "\$${trip.amount.toInt()}",
-                      style: GoogleFonts.inter(color: Colors.black, fontWeight: FontWeight.bold)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Route text
+                  Text(
+                    "${trip.pickup} → ${trip.dropoff}",
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.sp,
+                      color: const Color(0xFF1A1D21),
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 6.h),
+                  // Date with Calendar SVG
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/calendar.svg',
+                        width: 14.sp,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.grey,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      SizedBox(width: 6.w),
+                      Text(
+                        trip.date,
+                        style: GoogleFonts.inter(
+                          color: Colors.grey,
+                          fontSize: 13.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              // Unpaid Fee Label
-              Text(
-                "P-fee unpaid", 
-                style: GoogleFonts.inter(color: Colors.red, fontSize: 13.sp, fontWeight: FontWeight.w500)
-              ),
-              // Passenger Count
-              Text(
-                "${trip.passengers} passenger(s)", 
-                style: GoogleFonts.inter(color: Colors.grey, fontSize: 13.sp)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  // Main Price
+                  Text(
+                    "\$${trip.amount.toInt()}",
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.sp,
+                      color: const Color(0xFF1A1D21),
+                    ),
+                  ),
+                  // Paid Status
+                  Text(
+                    "Paid",
+                    style: GoogleFonts.inter(
+                      color: Colors.green,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-        ),
-      ],
-    ),
-  );
-}
+          SizedBox(height: 16.h),
+          // Gray Summary Box
+          Container(
+            padding: EdgeInsets.all(12.r),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8F9FB),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text.rich(
+                  TextSpan(
+                    text: "Fare: ",
+                    style: GoogleFonts.inter(
+                      color: Colors.grey,
+                      fontSize: 13.sp,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: "\$${trip.amount.toInt()}",
+                        style: GoogleFonts.inter(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Unpaid Fee Label
+                Text(
+                  "P-fee unpaid",
+                  style: GoogleFonts.inter(
+                    color: Colors.red,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                // Passenger Count
+                Text(
+                  "${trip.passengers} passenger(s)",
+                  style: GoogleFonts.inter(color: Colors.grey, fontSize: 13.sp),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

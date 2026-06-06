@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/chat_bubble.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
-import 'package:ride_sharing/features/chat/chat_controller/chat_controller.dart';
-import 'package:ride_sharing/features/chat/chat_model/chat_model.dart';
 import 'package:ride_sharing/features/chat/widget/trip_context.dart';
+import 'package:ride_sharing/features/diver/driver_chat_screen/driver_chat_controller/driver_chat_controller.dart';
+import 'package:ride_sharing/features/diver/driver_chat_screen/driver_chat_model/driver_chat_model.dart';
 
-class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
+class DriverChatScreen extends StatelessWidget {
+  const DriverChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<ChatController>();
+    final controller = context.watch<DriverChatController>();
 
     return BaseScaffold(
-  isCurved: true,
-      // 1. Title Section: Driver Name
+      isCurved: true,
+      
+      // 1. Title Section: Rider Name
       title: Padding(
-        padding: EdgeInsets.only(
-          bottom: 10.h,
-        ), // Consistent space below the name
+        padding: EdgeInsets.only(bottom: 10.h),
         child: Text(
-          controller.driverName,
+          controller.riderName,
           style: TextStyle(
             color: Colors.white,
             fontSize: 20.sp,
@@ -34,15 +33,13 @@ class ChatScreen extends StatelessWidget {
 
       // 2. Leading Section: Back Arrow + Avatar
       leading: Padding(
-        padding: EdgeInsets.only(
-          bottom: 10.h,
-        ), // Consistent space below arrow & avatar
+        padding: EdgeInsets.only(bottom: 10.h),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             IconButton(
-              constraints: const BoxConstraints(), // Removes default padding
+              constraints: const BoxConstraints(),
               padding: EdgeInsets.zero,
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () => controller.navigateBack(context),
@@ -52,8 +49,8 @@ class ChatScreen extends StatelessWidget {
               radius: 18.r,
               backgroundColor: Colors.white,
               child: Text(
-                controller.driverName.isNotEmpty
-                    ? controller.driverName[0].toUpperCase()
+                controller.riderName.isNotEmpty
+                    ? controller.riderName[0].toUpperCase()
                     : "L",
                 style: TextStyle(
                   color: Colors.black,
@@ -69,30 +66,26 @@ class ChatScreen extends StatelessWidget {
       // 3. Actions Section: Phone Icon
       actions: [
         Padding(
-          padding: EdgeInsets.only(
-            bottom: 10.h,
-            left: 80.w,
-          ), // Space below phone icon
+          padding: EdgeInsets.only(bottom: 10.h, left: 80.w),
           child: IconButton(
             constraints: const BoxConstraints(),
             padding: EdgeInsets.zero,
             icon: SvgPicture.asset(
-              'assets/icons/call.svg', // Ensure path is correct
+              'assets/icons/call.svg',
               width: 16.56.w,
               height: 16.6.w,
-              colorFilter: const ColorFilter.mode(
-                Colors.white,
-                BlendMode.srcIn,
-              ),
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
             ),
-            onPressed: () => controller.callDriver(),
+            onPressed: () => controller.callRider(),
           ),
         ),
       ],
+
+      // 4. Bottom Navigation Bar: Dynamic Offer Layout + Message input Layout
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // White Offer Section
+          // White Dynamic Offer Section Matching Image Spec Elements Exactly
           Container(
             width: double.infinity,
             padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 16.h),
@@ -111,7 +104,8 @@ class ChatScreen extends StatelessWidget {
               ],
             ),
           ),
-          // Black Message Section
+          
+          // Black Message Input Area Container
           Container(
             width: double.infinity,
             padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, MediaQuery.of(context).padding.bottom + 10.h),
@@ -159,25 +153,29 @@ class ChatScreen extends StatelessWidget {
           ),
         ],
       ),
+
+      // 5. Chat Stream Layout Block
       child: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.only(bottom: 20.h),
         itemCount: controller.messages.length + 1,
         itemBuilder: (context, index) {
-          if (index == 0) return const TripContextWidget();
+          if (index == 0) return const TripContextWidget(); // Keep custom structural layout context unchanged
+          
           final message = controller.messages[index - 1];
           return ChatBubble(
             text: message.text,
             time: message.time,
-            isMe: message.sender == MessageSender.me,
+            isMe: message.sender == DriverMessageSender.me,
           );
         },
       ),
     );
   }
 
-  Widget _buildMakeOfferButton(ChatController controller) {
+  // --- Dynamic Layout Component Builders ---
+  Widget _buildMakeOfferButton(DriverChatController controller) {
     return InkWell(
       onTap: () => controller.toggleOfferInput(true),
       child: Container(
@@ -190,10 +188,10 @@ class ChatScreen extends StatelessWidget {
         ),
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center, // Centering the content horizontally
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(Icons.attach_money, color: Colors.black, size: 20),
+            const Icon(Icons.attach_money, color: Colors.black, size: 20),
             SizedBox(width: 8.w),
             Text(
               "Make a Price Offer", 
@@ -205,7 +203,7 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDynamicOfferInputRow(ChatController controller, BuildContext context) {
+  Widget _buildDynamicOfferInputRow(DriverChatController controller, BuildContext context) {
     return Row(
       children: [
         Expanded(

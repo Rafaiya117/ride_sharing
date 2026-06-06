@@ -12,145 +12,225 @@ class DriverProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<DriverProfileController>();
-    final profile = controller.profile;
+    
 
     return BaseScaffold(
       title: Row(
-    children: [
-      Expanded(
-        child: Text(
-          "Profile",
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
-    ],
-  ),
-  titleAlign: TextAlign.center,
-  isCurved: true,
-  leading: IconButton(
-    icon: const Icon(Icons.arrow_back, color: Colors.white),
-    onPressed: () => Navigator.pop(context),
-  ),
-  actions: [
-    IconButton(
-      icon: const Icon(Icons.edit_outlined, color: Colors.white),
-      onPressed: () => controller.navigateToEdit(context),
-    ),
-  ],
-      child: controller.isLoading
-    ? const Center(child: CircularProgressIndicator(color: Colors.black))
-    : SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Column(
-          children: [
-            SizedBox(height: 20.h),
-            // Avatar
-            CircleAvatar(
-              radius: 45.r,
-              backgroundColor: const Color(0xFF1E283A),
-              child: Text(controller.profile.initials, style: GoogleFonts.inter(color: Colors.white, fontSize: 32.sp, fontWeight: FontWeight.bold)),
-            ),
-            SizedBox(height: 15.h),
-            Text(controller.profile.name, style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold)),
-            Text(controller.profile.email, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey)),
-            SizedBox(height: 12.h),
-
-            // Verification Badge
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-              decoration: BoxDecoration(
-                color: controller.profile.isVerified ? const Color(0xFFF3F8F3) : const Color(0xFFFFF5F0), 
-                borderRadius: BorderRadius.circular(20.r),
+        children: [
+          Expanded(
+            child: Text(
+              "Profile",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+            ),
+          ),
+        ],
+      ),
+      titleAlign: TextAlign.center,
+      isCurved: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.pop(context),
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.edit_outlined, color: Colors.white),
+          onPressed: () => controller.navigateToEdit(context),
+        ),
+      ],
+      child: controller.isLoading
+          ? const Center(child: CircularProgressIndicator(color: Colors.black))
+          : SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: Column(
                 children: [
-                  Icon(
-                    controller.profile.isVerified ? Icons.shield_outlined : Icons.error_outline, 
-                    color: controller.profile.isVerified ? Colors.green : Colors.orange, 
-                    size: 16.sp,
+                  SizedBox(height: 20.h),
+                  // Avatar
+                  CircleAvatar(
+                    radius: 45.r,
+                    backgroundColor: const Color(0xFF1E283A),
+                    child: Text(
+                      controller.profile.initials,
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 32.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  SizedBox(width: 6.w),
+                  SizedBox(height: 15.h),
                   Text(
-                    controller.profile.isVerified ? "Verified Driver" : "Verification Pending", 
+                    controller.profile.name,
                     style: GoogleFonts.inter(
-                      color: controller.profile.isVerified ? Colors.green : Colors.orange, 
-                      fontSize: 12.sp, 
+                      fontSize: 22.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              ),
-            ),
-            SizedBox(height: 30.h),
+                  Text(
+                    controller.profile.email,
+                    style: GoogleFonts.inter(
+                      fontSize: 14.sp,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
 
-            // Stat Row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildStatItem(Icons.location_on_outlined, "${controller.profile.totalTrips}", "Trips"),
-                _buildStatItem(Icons.star_outline, "${controller.profile.rating}", "Rating"),
-              ],
-            ),
-            SizedBox(height: 30.h),
-
-            // Vehicle Information Card (Now safely rendered from the separate API result)
-            Container(
-              padding: EdgeInsets.all(16.r),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade200),
-                borderRadius: BorderRadius.circular(15.r),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/car.svg',
-                        width: 24.sp,
-                        height: 24.sp,
-                        colorFilter: ColorFilter.mode(
-                          Colors.grey[700]!,
-                          BlendMode.srcIn,
+                  // Verification Badge
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 6.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: controller.profile.isVerified
+                          ? const Color(0xFFF3F8F3)
+                          : const Color(0xFFFFF5F0),
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          controller.profile.isVerified
+                              ? Icons.shield_outlined
+                              : Icons.error_outline,
+                          color: controller.profile.isVerified
+                              ? Colors.green
+                              : Colors.orange,
+                          size: 16.sp,
                         ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(controller.profile.carModel, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-                          Text(controller.profile.plateNumber, style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.grey)),
-                        ],
-                      ),
-                    ],
+                        SizedBox(width: 6.w),
+                        Text(
+                          controller.profile.isVerified ? "Verified Driver": "Verification Pending",
+                          style: GoogleFonts.inter(
+                            color: controller.profile.isVerified
+                                ? Colors.green
+                                : Colors.orange,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  const Divider(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildVehicleDetail("Color", controller.profile.color),
-                      _buildVehicleDetail("Seats", "${controller.profile.availableSeats} available"),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            
-            SizedBox(height: 30.h),
-            Align(alignment: Alignment.centerLeft, child: Text("Quick Actions", style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold))),
-            SizedBox(height: 15.h),
+                  SizedBox(height: 30.h),
 
-            // Quick Actions List
-            _buildActionTile(Icons.access_time, "Trip History", () => controller.navigateToHistory(context)),
-            _buildActionTile(Icons.star_outline, "Reviews", () => controller.navigateToReviews(context)),
-            _buildActionTile(Icons.trending_up, "Earnings", () => controller.navigateToEarnings(context)),
-            _buildActionTile(Icons.credit_card_outlined, "Payment Methods", () => controller.navigateToPayments(context)),
+                  // Stat Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildStatItem(
+                        Icons.location_on_outlined,
+                        "${controller.profile.totalTrips}",
+                        "Trips",
+                      ),
+                      _buildStatItem(
+                        Icons.star_outline,
+                        "${controller.profile.rating}",
+                        "Rating",
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 30.h),
+
+                  // Vehicle Information Card
+                  Container(
+                    padding: EdgeInsets.all(16.r),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade200),
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              'assets/icons/car.svg',
+                              width: 24.sp,
+                              height: 24.sp,
+                              colorFilter: ColorFilter.mode(
+                                Colors.grey[700]!,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  controller.profile.carModel,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  controller.profile.plateNumber,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 13.sp,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const Divider(height: 30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildVehicleDetail(
+                              "Color",
+                              controller.profile.color,
+                            ),
+                            _buildVehicleDetail(
+                              "Seats",
+                              "${controller.profile.availableSeats} available",
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 30.h),
+                  Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Quick Actions",
+                    style: GoogleFonts.inter(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 15.h),
+                  // Quick Actions List
+              _buildActionTile(
+                Icons.access_time,
+                "Trip History",
+                () => controller.navigateToHistory(context),
+              ),
+              _buildActionTile(
+                Icons.star_outline,
+                "Reviews",
+                () => controller.navigateToReviews(context),
+              ),
+              _buildActionTile(
+                Icons.trending_up,
+                "Earnings",
+                () => controller.navigateToEarnings(context),
+              ),
+            _buildActionTile(
+              Icons.credit_card_outlined,
+                "Payment Methods",
+                () => controller.navigateToPayments(context),
+              ),
             SizedBox(height: 20.h),
           ],
         ),

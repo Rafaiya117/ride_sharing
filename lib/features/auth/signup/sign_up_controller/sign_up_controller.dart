@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ride_sharing/core/token/token_storage.dart';
 import 'package:ride_sharing/features/role_selection/controller/role_selection_controller.dart';
 
 // class SignUpController extends ChangeNotifier {
@@ -43,8 +44,7 @@ class SignUpController extends ChangeNotifier {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  static String? accessToken;
-  
+ 
   // Initialize Dio
   final Dio _dio = Dio();
 
@@ -95,7 +95,8 @@ class SignUpController extends ChangeNotifier {
       final responseData = response.data;
 
       if (responseData != null && responseData['success'] == true) {
-        SignUpController.accessToken = responseData['data']['access'];
+        TokenStorage.accessToken = responseData['data']['access'];
+        TokenStorage.userData = responseData['data']['user'];
         _showSnackBar(context, "Account created successfully!");
 
         // Navigate based on role

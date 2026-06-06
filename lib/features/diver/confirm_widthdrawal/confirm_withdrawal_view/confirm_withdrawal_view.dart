@@ -17,29 +17,27 @@ class ConfirmWithdrawalView extends StatelessWidget {
 
     return BaseScaffold(
       title: Row(
-    children: [
-      // 1. Expanded takes up the middle space
-      Expanded(
-        child: Text(
-          "Confirm Withdrawal",
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w700,
+        children: [
+          Expanded(
+            child: Text(
+              "Confirm Withdrawal",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
-        ),
+          const SizedBox(width: 48), 
+        ],
       ),
-      // 2. Invisible spacer to balance the back button's width (approx 48)
-      const SizedBox(width: 48), 
-    ],
-  ),
-  titleAlign: TextAlign.center,
-  isCurved: true,
-  leading: IconButton(
-    icon: const Icon(Icons.arrow_back, color: Colors.white),
-    onPressed: () => controller.goBack(context),
-  ),
+      titleAlign: TextAlign.center,
+      isCurved: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => controller.goBack(context),
+      ),
       child: Column(
         children: [
           SizedBox(height: 10.h),
@@ -126,7 +124,7 @@ class ConfirmWithdrawalView extends StatelessWidget {
               border: Border.all(color: const Color(0xFFE0E7FF)),
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start, // Left aligned
+              crossAxisAlignment: CrossAxisAlignment.start, 
               children: [
                 Row(
                   children: [
@@ -144,16 +142,18 @@ class ConfirmWithdrawalView extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 40.h), // Replaced Spacer to fix unbounded height crash
+          SizedBox(height: 40.h), 
 
           // 4. Action Buttons
-          CustomButton(text: "Withdraw Earnings", onTap: () => controller.confirmAndWithdraw(context)),
+          controller.isLoading
+          ? const Center(child: CircularProgressIndicator(color: Colors.black))
+          : CustomButton(text: "Withdraw Earnings", onTap: () => controller.confirmAndWithdraw(context)),
           SizedBox(height: 15.h),
           SizedBox(
             width: double.infinity,
             height: 56.h,
             child: OutlinedButton(
-              onPressed: () => controller.goBack(context),
+              onPressed: controller.isLoading ? null : () => controller.goBack(context),
               style: OutlinedButton.styleFrom(
                 side: const BorderSide(color: Colors.black12),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),

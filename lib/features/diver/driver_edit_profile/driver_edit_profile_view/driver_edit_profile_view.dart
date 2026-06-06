@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -50,7 +52,19 @@ class DriverEditView extends StatelessWidget {
                       CircleAvatar(
                         radius: 60.r,
                         backgroundColor: const Color(0xFF4B5563),
-                        child: Text("J", style: GoogleFonts.inter(fontSize: 40.sp, color: Colors.white, fontWeight: FontWeight.bold)),
+                        // Dynamically checks for locally picked image file reference
+                        backgroundImage: controller.pickedImage != null
+                        ? FileImage(File(controller.pickedImage!.path)) : null,
+                        child: controller.pickedImage == null
+                          ? Text(
+                            controller.initials, // Renders calculated letter from text input
+                          style: GoogleFonts.inter(
+                            fontSize: 40.sp,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                        : null,
                       ),
                       Positioned(
                         bottom: 0,
@@ -59,19 +73,35 @@ class DriverEditView extends StatelessWidget {
                           onTap: controller.pickImage,
                           child: Container(
                             padding: EdgeInsets.all(8.r),
-                            decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(blurRadius: 5, color: Colors.black26)]),
-                            child: Icon(Icons.camera_alt_outlined, size: 20.sp, color: Colors.black),
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(blurRadius: 5, color: Colors.black26),
+                              ],
+                            ),
+                            child: Icon(
+                              Icons.camera_alt_outlined,
+                              size: 20.sp,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: 10.h),
-                  Text("Tap to change photo", style: GoogleFonts.inter(color: Colors.grey[600], fontSize: 14.sp)),
+                  Text(
+                    "Tap to change photo",
+                    style: GoogleFonts.inter(
+                      color: Colors.grey[600],
+                      fontSize: 14.sp,
+                    ),
+                  ),
                 ],
               ),
             ),
-            
+
             SizedBox(height: 30.h),
             Align(alignment: Alignment.centerLeft, child: Text("Basic Information", style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold))),
             SizedBox(height: 20.h),
@@ -89,17 +119,28 @@ class DriverEditView extends StatelessWidget {
               width: double.infinity,
               height: 56.h,
               child: ElevatedButton(
-                onPressed: () => controller.saveChanges(context),
+                onPressed: controller.isLoading
+                ? null: () => controller.saveChanges(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
                 ),
-                child: Row(
+                child: controller.isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                  : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(Icons.save_outlined, color: Colors.white),
                     SizedBox(width: 10.w),
-                    Text("Save Changes", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+                      Text(
+                        "Save Changes",
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ),

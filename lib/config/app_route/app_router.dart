@@ -1,14 +1,17 @@
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/auth/forgot_passowrd/view/forgot_password_view.dart';
 import 'package:ride_sharing/features/auth/login/view/login.dart';
 import 'package:ride_sharing/features/auth/signup/view/sign_up_view.dart';
 import 'package:ride_sharing/features/cash_payment/cash_payment_view/cash_payment_view.dart';
 import 'package:ride_sharing/features/chat/chat_view/chat_view.dart';
+import 'package:ride_sharing/features/diver/confirm_widthdrawal/confirm_withdrawal_controller/confirm_withdrawal_controller.dart';
 import 'package:ride_sharing/features/diver/confirm_widthdrawal/confirm_withdrawal_view/confirm_withdrawal_view.dart';
 import 'package:ride_sharing/features/diver/drive_trip/driver_trip_view/driver_trip_view.dart';
 import 'package:ride_sharing/features/diver/driver_booking_confirm/driver_bookingconfirm_view/driver_bookingconfirm_view.dart';
 import 'package:ride_sharing/features/diver/driver_edit_profile/driver_edit_profile_view/driver_edit_profile_view.dart';
 import 'package:ride_sharing/features/diver/driver_homepage/view/driver-homepage_view.dart';
+import 'package:ride_sharing/features/diver/driver_message/view/message.dart';
 import 'package:ride_sharing/features/diver/driver_profile/driver_profile_view/driver_profile_view.dart';
 import 'package:ride_sharing/features/diver/driver_rating/driver_rating_view/driver_rating_view.dart';
 import 'package:ride_sharing/features/diver/driver_review/driver_review_view/driver_review_view.dart';
@@ -157,9 +160,20 @@ final GoRouter appRouter = GoRouter(
       path: '/drive_withdrawalflow_screen',
       builder: (context, state) => WithdrawalFlowView(),
     ),
+    // GoRoute(
+    //   path: '/drive_confirmwithdrawal_screen',
+    //   builder: (context, state) => ConfirmWithdrawalView(),
+    // ),
     GoRoute(
       path: '/drive_confirmwithdrawal_screen',
-      builder: (context, state) => ConfirmWithdrawalView(),
+      builder: (context, state) {
+        final String passedAmount = (state.extra as String?) ?? "0.00";
+        final double parsedValue = double.tryParse(passedAmount) ?? 0.00;
+        context.read<ConfirmWithdrawalController>().updateWithdrawalAmount(
+          parsedValue,
+        );
+        return const ConfirmWithdrawalView();
+      },
     ),
     GoRoute(
       path: '/drive_bookingconfirm_screen',
@@ -201,7 +215,10 @@ final GoRouter appRouter = GoRouter(
       path: '/drive_triphistory',
       builder: (context, state) => DriverTripHistoryScreen(),
     ),
-
+    GoRoute(
+      path: '/driver_message_screen',
+      builder: (context, state) => Message(),
+    ),
     //!-------------- Shared -------------!
     GoRoute(
       path: '/my_account',
@@ -222,7 +239,6 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/notification',
       builder: (context, state) => NotificationsScreen(),
-    ),
-    
+    ),    
   ],
 );

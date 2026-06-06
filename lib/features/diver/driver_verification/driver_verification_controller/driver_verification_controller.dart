@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path/path.dart' as p;
-import 'package:ride_sharing/features/auth/signup/sign_up_controller/sign_up_controller.dart';
+import 'package:ride_sharing/core/token/token_storage.dart';
 // class DriverVerificationController extends ChangeNotifier {
 //   // Car Details Controllers
 //   final TextEditingController modelController = TextEditingController();
@@ -111,7 +111,7 @@ class DriverVerificationController extends ChangeNotifier {
     }
 
     // Retrieve the saved access token
-    final token = SignUpController.accessToken;
+    final token = TokenStorage.accessToken;
     if (token == null) {
       _showSnackBar(context, "Authentication session missing. Please sign up again.", isError: true);
       return;

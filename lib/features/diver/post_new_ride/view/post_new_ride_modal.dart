@@ -29,11 +29,21 @@ class PostRideView extends StatelessWidget {
 
             _buildLabel("Pickup Location"),
             // Asset path instead of Icons.circle
-            _buildTextField(hint: "Starting location", iconPath: 'assets/icons/pickup_marker.svg', iconColor: Colors.grey),
+           _buildTextField(
+              hint: "Starting location", 
+              iconPath: 'assets/icons/pickup_marker.svg', 
+              iconColor: Colors.grey,
+              controller: controller.pickupLocationController, 
+            ),
             SizedBox(height: 15.h),
             
             _buildLabel("Drop-off Location"),
-            _buildTextField(hint: "Destination", iconPath: 'assets/icons/dropoff_marker.svg', iconColor: Colors.black),
+            _buildTextField(
+              hint: "Destination", 
+              iconPath: 'assets/icons/dropoff_marker.svg', 
+              iconColor: Colors.black,
+              controller: controller.dropoffLocationController, 
+            ),
             SizedBox(height: 15.h),
 
             _buildDateTimeRow(),
@@ -183,17 +193,38 @@ class PostRideView extends StatelessWidget {
   }
 
   // Rest of original submit/label/toggle logic remains the same...
+  // Widget _buildSubmitButton(BuildContext context, PostRideController controller) {
+  //   return SizedBox(
+  //     width: double.infinity,
+  //     height: 55.h,
+  //     child: ElevatedButton(
+  //       onPressed: () => controller.submitRide(context),
+  //       style: ElevatedButton.styleFrom(
+  //         backgroundColor: const Color(0xFF1A1A1A),
+  //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+  //       ),
+  //       child: Text("Post Ride", style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
+  //     ),
+  //   );
+  // }
+
   Widget _buildSubmitButton(BuildContext context, PostRideController controller) {
     return SizedBox(
       width: double.infinity,
       height: 55.h,
       child: ElevatedButton(
-        onPressed: () => controller.submitRide(context),
+        onPressed: controller.isLoading ? null : () => controller.submitRide(context),
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF1A1A1A),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
         ),
-        child: Text("Post Ride", style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
+        child: controller.isLoading
+          ? const SizedBox(
+            width: 24,
+            height: 24,
+            child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white),
+          )
+        : Text("Post Ride", style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
       ),
     );
   }

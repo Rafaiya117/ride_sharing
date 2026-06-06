@@ -18,6 +18,11 @@ class DriverTrackScreen extends StatelessWidget {
     return BaseScaffold(
       title: Row(
     children: [
+      IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.pop(context),
+      ),
+      SizedBox(width: 8.w),
       Expanded(
         child: Text(
           "Track Ride",

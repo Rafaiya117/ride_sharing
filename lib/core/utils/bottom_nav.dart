@@ -48,7 +48,8 @@ class CustomBottomNavbar extends StatelessWidget {
                   '/drive_home_screen',
                   '/drive_trip_screen',
                   '/drive_triphistory',
-                  '/drive_profile_screen',
+                  '/driver_message_screen',
+                  '/my_account',
                 ];
                 context.go(routes[index]);
               } else {
@@ -56,6 +57,7 @@ class CustomBottomNavbar extends StatelessWidget {
                   '/user_home_screen',
                   '/my_trip',
                   '/my_trip_history',
+                  '/chat',
                   '/my_account',
                 ];
                 context.go(routes[index]);

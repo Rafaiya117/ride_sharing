@@ -14,8 +14,10 @@ import 'package:ride_sharing/features/chat/chat_controller/chat_controller.dart'
 import 'package:ride_sharing/features/diver/confirm_widthdrawal/confirm_withdrawal_controller/confirm_withdrawal_controller.dart';
 import 'package:ride_sharing/features/diver/drive_trip/driver_trip_controller/driver_trip_controller.dart';
 import 'package:ride_sharing/features/diver/driver_booking_confirm/driver_bookingconfirm_controller/driver_bookingconfirm_controller.dart';
+import 'package:ride_sharing/features/diver/driver_chat_screen/driver_chat_controller/driver_chat_controller.dart';
 import 'package:ride_sharing/features/diver/driver_edit_profile/driver_edit_profile_controller/driver_edit_profile_controller.dart';
 import 'package:ride_sharing/features/diver/driver_homepage/controller/driver_homepage_controller.dart';
+import 'package:ride_sharing/features/diver/driver_message/controller/driver_message_controller.dart';
 import 'package:ride_sharing/features/diver/driver_profile/driver_profile_controller/driver_profile_controller.dart';
 import 'package:ride_sharing/features/diver/driver_rating/driver_rating_controller/driver_rating_controller.dart';
 import 'package:ride_sharing/features/diver/driver_review/driver_review_controller/driver_review_controller.dart';
@@ -136,6 +138,8 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(create: (_)=> RideCompletedController()),
             ChangeNotifierProvider(create: (_)=> DriverTripHistoryController()),
             ChangeNotifierProvider(create: (_)=> NotificationsController()),
+            ChangeNotifierProvider(create: (_)=> MessageController()),
+            ChangeNotifierProvider(create: (_)=> DriverChatController()),
           ],
           child: Builder(
             builder: (context) {
