@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/features/auth/forgot_passowrd/view/forgot_password_view.dart';
@@ -31,9 +32,11 @@ import 'package:ride_sharing/features/auth/reset_password/view/reset_password_vi
 import 'package:ride_sharing/features/payment/payment_view/payment_view.dart';
 import 'package:ride_sharing/features/rating_driver/rating_driver_view/rating_driver_view.dart';
 import 'package:ride_sharing/features/review_user/review_user_view/review_user_view.dart';
+import 'package:ride_sharing/features/ride_details/ride_details_controller/ride_details_controller.dart';
 import 'package:ride_sharing/features/ride_details/ride_details_view/ride_details_view.dart';
 import 'package:ride_sharing/features/ride_tracking/ride_tracking_view/ride_tracking_view.dart';
 import 'package:ride_sharing/features/role_selection/view/role_screen.dart';
+import 'package:ride_sharing/features/search/controller/search_ride_controller.dart';
 import 'package:ride_sharing/features/search/view/search_ride_view.dart';
 import 'package:ride_sharing/features/sharetrip/sharetrip_view/share_trip_view.dart';
 import 'package:ride_sharing/features/splash_screen.dart';
@@ -87,14 +90,50 @@ final GoRouter appRouter = GoRouter(
       path: '/user_home_screen',
       builder: (context, state) => HomeScreen(),
     ),
+    // GoRoute(
+    //   path: '/search_ride_screen',
+    //   builder: (context, state) => SearchResultsScreen(),
+    // ),
     GoRoute(
       path: '/search_ride_screen',
-      builder: (context, state) => SearchResultsScreen(),
+      builder: (context, state) {
+        final pickup = state.uri.queryParameters['pickup_location'] ?? '';
+        final drop = state.uri.queryParameters['drop_location'] ?? '';
+        final date = state.uri.queryParameters['date'] ?? '';
+        final seats = int.tryParse(state.uri.queryParameters['seats'] ?? '1') ?? 1;
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.read<SearchResultsController>().fetchAvailableRides(
+            pickup: pickup,
+            drop: drop,
+            date: date,
+            seats: seats,
+          );
+        });
+
+        return const SearchResultsScreen();
+      },
     ),
-    GoRoute(
-      path: '/ride_details',
-      builder: (context, state) => RideDetailsScreen(),
-    ),
+    // GoRoute(
+    //   path: '/ride_details',
+    //   builder: (context, state) => RideDetailsScreen(),
+    // ),
+    // In your GoRouter Configuration file:
+GoRoute(
+  path: '/ride_details',
+  builder: (context, state) {
+    // 1. Intercept the dynamic argument parameter from extra or query string
+    final dynamic extraData = state.extra;
+    final int rideId = extraData is int ? extraData : (int.tryParse(extraData.toString()) ?? 0);
+
+    // 2. Fetch controller instance and initialize network task
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<RideDetailsController>().fetchRideDetails(rideId);
+    });
+
+    return const RideDetailsScreen(); // Return your standard view page configuration
+  },
+),
     GoRoute(
       path: '/chat',
       builder: (context, state) => ChatScreen(),

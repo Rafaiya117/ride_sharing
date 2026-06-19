@@ -34,11 +34,22 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
+  // void searchRides(BuildContext context) {
+  //   String from = pickupController.text.trim();
+  //   String to = dropoffController.text.trim();
+  //   print("Searching rides from $from to $to...");
+  //   GoRouter.of(context).push('/search_ride_screen');
+  // }
+
   void searchRides(BuildContext context) {
     String from = pickupController.text.trim();
     String to = dropoffController.text.trim();
+    String date = "2026-06-19"; 
+    int seats = 1;
+
+    if (from.isEmpty || to.isEmpty) return;
     print("Searching rides from $from to $to...");
-    GoRouter.of(context).push('/search_ride_screen');
+    context.push('/search_ride_screen?pickup_location=$from&drop_location=$to&date=$date&seats=$seats');
   }
 
   void trackTrip(BuildContext context, UpcomingTrip trip) {

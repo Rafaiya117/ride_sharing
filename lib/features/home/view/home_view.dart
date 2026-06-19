@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
 import 'package:ride_sharing/core/components/custom_text_field.dart';
@@ -143,8 +142,7 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start, // Keeps label aligned
+                          crossAxisAlignment:CrossAxisAlignment.start, 
                           children: [
                             _buildInputLabel("Date"),
                             GestureDetector(

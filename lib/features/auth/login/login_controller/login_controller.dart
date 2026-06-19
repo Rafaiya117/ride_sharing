@@ -2,9 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/token/token_storage.dart';
-import 'package:ride_sharing/features/role_selection/controller/role_selection_controller.dart';
 
 class SignInController extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
@@ -21,9 +19,6 @@ class SignInController extends ChangeNotifier {
   }
 
   Future<void> signIn(BuildContext context) async {
-    final roleController = Provider.of<RoleController>(context, listen: false);
-    final role = roleController.selectedRole;
-
     if (emailController.text.isEmpty || passwordController.text.isEmpty) {
       _showSnackBar(context, "Please enter your email and password", isError: true);
       return;
@@ -46,12 +41,13 @@ class SignInController extends ChangeNotifier {
       final responseData = response.data;
 
       if (responseData != null && responseData['success'] == true) {
-        // Save token to your central store, completely bypassing SignUpController
         TokenStorage.accessToken = responseData['data']['access'];
         TokenStorage.userData = responseData['data']['user'];
         _showSnackBar(context, "Signed in successfully!");
 
-        if (role == 'driver') {
+
+        final bool isDriverProfile = responseData['data']['user']['is_driver'] ?? false;
+        if (isDriverProfile) {
           context.push('/drive_home_screen');
         } else {
           context.push('/user_home_screen');

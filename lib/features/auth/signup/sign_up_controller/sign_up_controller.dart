@@ -6,38 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/core/token/token_storage.dart';
 import 'package:ride_sharing/features/role_selection/controller/role_selection_controller.dart';
 
-// class SignUpController extends ChangeNotifier {
-//   final TextEditingController nameController = TextEditingController();
-//   final TextEditingController emailController = TextEditingController();
-//   final TextEditingController phoneController = TextEditingController();
-//   final TextEditingController passwordController = TextEditingController();
-//   void createAccount(BuildContext context) {
-//     final roleController = Provider.of<RoleController>(context, listen: false);
-//     final role = roleController.selectedRole;
-
-//     print("Creating account for: ${nameController.text} as $role");
-//     if (role == 'driver') {
-//       context.push('/drive_verification_screen'); 
-//     } else {
-//       context.go('/user_home_screen');
-//     }
-//   }
-
-//   void signUpWithGoogle(BuildContext context) {}
-
-//   void navigateToSignIn(BuildContext context) {
-//     context.go('/sign_in');
-//   }
-
-//   @override
-//   void dispose() {
-//     nameController.dispose();
-//     emailController.dispose();
-//     phoneController.dispose();
-//     super.dispose();
-//   }
-// }
-
 class SignUpController extends ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -56,6 +24,71 @@ class SignUpController extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Future<void> createAccount(BuildContext context) async {
+  //   final roleController = Provider.of<RoleController>(context, listen: false);
+  //   final role = roleController.selectedRole;
+
+  //   // Validation check
+  //   if (nameController.text.isEmpty || emailController.text.isEmpty || 
+  //       phoneController.text.isEmpty || passwordController.text.isEmpty) {
+  //     _showSnackBar(context, "Please fill in all fields", isError: true);
+  //     return;
+  //   }
+
+  //   _setLoading(true);
+
+  //   try {
+  //     // Pulling the base URL from your .env file
+  //     final baseUrl = dotenv.env['API_BASE_URL'];
+  //     final url = '$baseUrl/api/v1/auth/signup/'; 
+
+  //     // Sending request with Dio
+  //     final response = await _dio.post(
+  //       url,
+  //       data: {
+  //         "name": nameController.text.trim(),
+  //         "email": emailController.text.trim(),
+  //         "phone": phoneController.text.trim(),
+  //         "password": passwordController.text,
+  //       },
+  //       options: Options(
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           'Accept': 'application/json',
+  //         },
+  //       ),
+  //     );
+
+  //     // Dio automatically parses JSON responses into a Map
+  //     final responseData = response.data;
+
+  //     if (responseData != null && responseData['success'] == true) {
+  //       TokenStorage.accessToken = responseData['data']['access'];
+  //       TokenStorage.userData = responseData['data']['user'];
+  //       _showSnackBar(context, "Account created successfully!");
+
+  //       // Navigate based on role
+  //       if (role == 'driver') {
+  //         context.push('/drive_verification_screen'); 
+  //       } else {
+  //         context.go('/user_home_screen');
+  //       }
+  //     } else {
+  //       String errorMsg = responseData?['message'] ?? "Sign up failed";
+  //       _showSnackBar(context, errorMsg, isError: true);
+  //     }
+
+  //   } on DioException catch (e) {
+  //     // Catch network, timeout, or bad status code errors cleanly
+  //     String errorMsg = e.response?.data?['message'] ?? "Server error occurred";
+  //     _showSnackBar(context, errorMsg, isError: true);
+  //   } catch (e) {
+  //     _showSnackBar(context, "An unexpected error occurred", isError: true);
+  //   } finally {
+  //     _setLoading(false);
+  //   }
+  // }
+
   Future<void> createAccount(BuildContext context) async {
     final roleController = Provider.of<RoleController>(context, listen: false);
     final role = roleController.selectedRole;
@@ -70,11 +103,10 @@ class SignUpController extends ChangeNotifier {
     _setLoading(true);
 
     try {
-      // Pulling the base URL from your .env file
       final baseUrl = dotenv.env['API_BASE_URL'];
       final url = '$baseUrl/api/v1/auth/signup/'; 
 
-      // Sending request with Dio
+      final bool isDriverRole = (role == 'driver');
       final response = await _dio.post(
         url,
         data: {
@@ -82,6 +114,7 @@ class SignUpController extends ChangeNotifier {
           "email": emailController.text.trim(),
           "phone": phoneController.text.trim(),
           "password": passwordController.text,
+          "is_driver": isDriverRole, 
         },
         options: Options(
           headers: {
@@ -91,16 +124,13 @@ class SignUpController extends ChangeNotifier {
         ),
       );
 
-      // Dio automatically parses JSON responses into a Map
       final responseData = response.data;
 
       if (responseData != null && responseData['success'] == true) {
         TokenStorage.accessToken = responseData['data']['access'];
         TokenStorage.userData = responseData['data']['user'];
         _showSnackBar(context, "Account created successfully!");
-
-        // Navigate based on role
-        if (role == 'driver') {
+        if (isDriverRole) {
           context.push('/drive_verification_screen'); 
         } else {
           context.go('/user_home_screen');
