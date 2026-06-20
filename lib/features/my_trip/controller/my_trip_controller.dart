@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:ride_sharing/features/my_trip/model/my_trip_model.dart';
 
 class MyTripsController extends ChangeNotifier {
+  int _currentNavbarIndex = 1;
+  int get currentNavbarIndex => _currentNavbarIndex;
+
+  void setNavbarIndex(int index) {
+    _currentNavbarIndex = index;
+    notifyListeners();
+  }
   // Mock Data
   final TripModel bookingTrip = TripModel(
     driverName: "Sarah Johnson",

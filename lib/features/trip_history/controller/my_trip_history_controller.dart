@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:ride_sharing/features/trip_history/model/my_trip_history_model.dart';
 
 class TripHistoryController extends ChangeNotifier {
+  int _currentNavbarIndex = 0;
+  int get currentNavbarIndex => _currentNavbarIndex;
+
+  void setNavbarIndex(int index) {
+    _currentNavbarIndex = index;
+    notifyListeners();
+  }
+
   final List<TripHistoryModel> completedTrips = [
     TripHistoryModel(
       date: "Feb 28, 2026",

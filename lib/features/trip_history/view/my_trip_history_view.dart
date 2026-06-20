@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/trip_card_container.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
+import 'package:ride_sharing/core/utils/bottom_nav.dart';
 import 'package:ride_sharing/features/trip_history/controller/my_trip_history_controller.dart';
 
 class TripHistoryScreen extends StatelessWidget {
@@ -25,6 +25,11 @@ class TripHistoryScreen extends StatelessWidget {
           width: double.infinity,
         ),
       ),
+      // FIXED: Added the global custom navigation bar widget instance tracking state
+      bottomNavigationBar: CustomBottomNavbar(
+        currentIndex: controller.currentNavbarIndex,
+        onTap: (index) => controller.setNavbarIndex(index),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -39,52 +44,41 @@ class TripHistoryScreen extends StatelessWidget {
               return HistoryTripCard(trip: trip);
             },
           ),
-          SizedBox(height: 10.h), 
+          SizedBox(height: 20.h), 
         ],
       ),
     );
   }
 
-  // --- Header/Nav replicated precisely from image ---
+  // --- Header Redesigned Precisely from Image ---
+  // FIXED: Removed profile tiles to render the clean standalone bold "History" title
   Widget _buildHeaderTitle() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Welcome back", style: GoogleFonts.inter(color: Colors.white70, fontSize: 14.sp)),
-            Text("Safi", style: GoogleFonts.inter(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold)),
-          ],
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 8.h),
+      child: Text(
+        "History",
+        style: GoogleFonts.inter(
+          color: Colors.white,
+          fontSize: 24.sp,
+          fontWeight: FontWeight.bold,
         ),
-        Row(
-          children: [
-            Stack(children: [
-              Icon(Icons.notifications_none, color: Colors.white, size: 28.r),
-              Positioned(right: 2, top: 2, child: Container(width: 8.r, height: 8.r, decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle))),
-            ]),
-            SizedBox(width: 15.w),
-            SvgPicture.asset(
-                'assets/icons/user_icon.svg',
-                width: 24.w,
-                //colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-              ),
-            // CircleAvatar(
-            //   radius: 18.r,
-            //   backgroundColor: Colors.black,
-            //   child: 
-            // ),
-          ],
-        ),
-      ],
+      ),
     );
   }
 
+  // FIXED: Configured font styling configurations matching layout frame guidelines
   Widget _sectionTitle(String title) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 20.h),
-      child: Text(title, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey.shade700)),
+      padding: EdgeInsets.only(top: 8.h, bottom: 20.h),
+      child: Text(
+        title, 
+        style: GoogleFonts.inter(
+          fontSize: 14.sp, 
+          fontWeight: FontWeight.w400,
+          color: Colors.grey.shade600,
+        ),
+      ),
     );
   }
 }

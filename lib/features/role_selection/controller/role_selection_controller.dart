@@ -28,7 +28,7 @@ class RoleController extends ChangeNotifier {
 
     // Both roles now go to sign_in
     Timer(const Duration(milliseconds: 300), () {
-      context.go('/sign_in');
+      context.push('/sign_in');
     });
   }
 }

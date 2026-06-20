@@ -71,7 +71,7 @@ class SignUpController extends ChangeNotifier {
   //       if (role == 'driver') {
   //         context.push('/drive_verification_screen'); 
   //       } else {
-  //         context.go('/user_home_screen');
+  //         context.push('/user_home_screen');
   //       }
   //     } else {
   //       String errorMsg = responseData?['message'] ?? "Sign up failed";
@@ -133,7 +133,7 @@ class SignUpController extends ChangeNotifier {
         if (isDriverRole) {
           context.push('/drive_verification_screen'); 
         } else {
-          context.go('/user_home_screen');
+          context.push('/user_home_screen');
         }
       } else {
         String errorMsg = responseData?['message'] ?? "Sign up failed";
@@ -164,7 +164,7 @@ class SignUpController extends ChangeNotifier {
   void signUpWithGoogle(BuildContext context) {}
 
   void navigateToSignIn(BuildContext context) {
-    context.go('/sign_in');
+    context.push('/sign_in');
   }
 
   @override

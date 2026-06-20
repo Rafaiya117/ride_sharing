@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
 import 'package:ride_sharing/core/utils/bottom_nav.dart';
-import 'package:ride_sharing/features/diver/driver_chat_screen/driver_chat_screen/driver_chat_screen.dart';
-import 'package:ride_sharing/features/diver/driver_message/controller/driver_message_controller.dart';
-import 'package:ride_sharing/features/diver/driver_message/model/driver_message.dart';
+import 'package:ride_sharing/features/chat/chat_view/chat_view.dart';
+import 'package:ride_sharing/features/message_screen/controller/message_screen_controller.dart';
+import 'package:ride_sharing/features/message_screen/model/message_screen_model.dart';
 
 
 class Message extends StatelessWidget {
@@ -33,31 +34,53 @@ class Message extends StatelessWidget {
           ),
           isCurved: false,
           bottomNavigationBar: CustomBottomNavbar(
-        currentIndex: controller.currentNavbarIndex,
-        onTap: (index) => controller.setNavbarIndex(index), 
-      ),
+            currentIndex: controller.currentNavbarIndex,
+            onTap: (index) => controller.setNavbarIndex(index), 
+          ),
           
           // --- Body Implementation ---
-          child: ListView.builder(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: controller.messages.length,
-            itemBuilder: (context, index) {
-              final item = controller.messages[index];
-              return MessageTile(
-                messageData: item,
-                onTap: () {
-                  // --- Updated Navigation ---
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DriverChatScreen(), // Target your new separate driver chat screen
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
+                child: TextField(
+                  // FIXED: Hooked query inputs to request tracking logic execution pipelines
+                  onChanged: (value) => controller.searchMessages(value),
+                  decoration: InputDecoration(
+                    hintText: 'Search message...',
+                    hintStyle: GoogleFonts.inter(color: Colors.grey.shade400, fontSize: 14.sp),
+                    prefixIcon: Icon(Icons.search, color: Colors.grey.shade400, size: 22.r),
+                    filled: true,
+                    fillColor: const Color(0xFFF8F9FA),
+                    contentPadding: EdgeInsets.symmetric(vertical: 12.h),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                      borderSide: BorderSide.none,
                     ),
+                  ),
+                ),
+              ),
+              // Optional: Render loading spinner if fetching results
+              if (controller.isLoading)
+                const Center(child: Padding(padding: EdgeInsets.all(16.0), child: CircularProgressIndicator()))
+              else
+              ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: controller.messages.length,
+                itemBuilder: (context, index) {
+                  final item = controller.messages[index];
+                  return MessageTile(
+                    messageData: item,
+                    onTap: () {
+                      GoRouter.of(context).push('/chat', extra: item.id);
+                    },
                   );
                 },
-              );
-            },
+              ),
+            ],
           ),
         );
       },

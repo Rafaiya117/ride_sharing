@@ -17,7 +17,7 @@ import 'package:ride_sharing/features/diver/driver_booking_confirm/driver_bookin
 import 'package:ride_sharing/features/diver/driver_chat_screen/driver_chat_controller/driver_chat_controller.dart';
 import 'package:ride_sharing/features/diver/driver_edit_profile/driver_edit_profile_controller/driver_edit_profile_controller.dart';
 import 'package:ride_sharing/features/diver/driver_homepage/controller/driver_homepage_controller.dart';
-import 'package:ride_sharing/features/diver/driver_message/controller/driver_message_controller.dart';
+import 'package:ride_sharing/features/message_screen/controller/message_screen_controller.dart';
 import 'package:ride_sharing/features/diver/driver_profile/driver_profile_controller/driver_profile_controller.dart';
 import 'package:ride_sharing/features/diver/driver_rating/driver_rating_controller/driver_rating_controller.dart';
 import 'package:ride_sharing/features/diver/driver_review/driver_review_controller/driver_review_controller.dart';
@@ -106,7 +106,7 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(create: (_)=> HomeController()),
             ChangeNotifierProvider(create: (_)=> SearchResultsController()),
             ChangeNotifierProvider(create: (_)=> RideDetailsController()),
-            ChangeNotifierProvider(create: (_)=> ChatController()),
+            ChangeNotifierProvider(create: (_)=> ChatController(conversationId: 0)),
             ChangeNotifierProvider(create: (_)=> PaymentController()),
             ChangeNotifierProvider(create: (_)=> TrackRideController()),
             ChangeNotifierProvider(create: (_)=> CashPaymentController()),

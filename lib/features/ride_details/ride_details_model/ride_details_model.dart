@@ -71,6 +71,13 @@ class RideDetailsModel {
     final driver = json['driver_verification'] ?? {};
     final rawDateTime = json['date_time'] ?? '';
     
+    // FIXED: Extracted and trimmed driver_name to safely check for empty strings
+    final String parsedDriverName = (json['driver_name'] as String? ?? '').trim();
+    final String driverNameDisplay = parsedDriverName.isNotEmpty ? parsedDriverName : 'Driver';
+    final String initials = parsedDriverName.isNotEmpty 
+        ? parsedDriverName.substring(0, 1).toUpperCase() 
+        : 'D';
+
     return RideDetailsModel(
       totalPrice: double.tryParse(json['price_per_seat'] ?? '0') ?? 0.0,
       date: rawDateTime.isNotEmpty ? rawDateTime.substring(0, 10) : 'N/A',
@@ -82,8 +89,8 @@ class RideDetailsModel {
       pickupTime: rawDateTime.isNotEmpty ? rawDateTime.substring(11, 16) : '--:--',
       dropoff: json['drop_location'] ?? 'Unknown',
       estArrival: 'Est. arrival time',
-      driverName: json['driver_name'] ?? 'Driver',
-      driverInitials: (json['driver_name'] as String? ?? 'D').substring(0, 1).toUpperCase(),
+      driverName: driverNameDisplay, // FIXED
+      driverInitials: initials, // FIXED
       driverRating: double.tryParse(json['driver_rating'] ?? '0.0') ?? 0.0,
       driverTrips: 0, 
       carModel: driver['car_model'] ?? 'Standard Vehicle',

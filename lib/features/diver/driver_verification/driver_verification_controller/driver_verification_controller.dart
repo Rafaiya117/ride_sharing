@@ -32,7 +32,7 @@ import 'package:ride_sharing/core/token/token_storage.dart';
 //   void submitVerification(BuildContext context) {
 //     if (isAllVerified) {
 //       //debugPrint("Verification Submitted");
-//       context.go('/drive_home_screen');
+//       context.push('/drive_home_screen');
 //     }
 //   }
 
@@ -163,7 +163,7 @@ class DriverVerificationController extends ChangeNotifier {
 
       if (responseData != null && responseData['success'] == true) {
         _showSnackBar(context, "Verification submitted successfully!");
-        context.go('/drive_home_screen');
+        context.push('/drive_home_screen');
       } else {
         String errorMsg = responseData?['message'] ?? "Submission failed";
         _showSnackBar(context, errorMsg, isError: true);

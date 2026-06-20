@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _navigateToOnboarding() {
     Timer(const Duration(seconds: 3), () {
       if (mounted) {
-        context.go('/onboarding');
+        context.push('/onboarding');
       }
     });
   }

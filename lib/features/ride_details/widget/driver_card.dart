@@ -21,7 +21,11 @@ class DriverCardModular extends StatelessWidget {
   });
 
   @override
+@override
   Widget build(BuildContext context) {
+    // FIXED: Safely verify name is not empty to eliminate the out-of-bounds index check crash
+    final String avatarInitial = name.trim().isNotEmpty ? name.trim()[0].toUpperCase() : 'D';
+
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -39,16 +43,13 @@ class DriverCardModular extends StatelessWidget {
                 style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black)),
               Row(
                 children: [
-                  // _circularIcon('assets/icons/chat_outline.svg'),
                   GestureDetector(
                     onTap: () {
                       context.push('/chat');
-                      //Navigator.pushNamed(context, '/chat');
                     },
                     child: _circularIcon('assets/icons/chat_outline.svg'),
                   ),
                   SizedBox(width: 10.w),
-                  // Matches the circular outlined phone icon in the image
                   _circularIcon('assets/icons/phone_outline.svg'),
                 ],
               )
@@ -57,7 +58,8 @@ class DriverCardModular extends StatelessWidget {
           SizedBox(height: 16.h),
           Row(
             children: [
-              _avatarPlaceholder(name[0]),
+              // FIXED: Uses the safe variable string fallback evaluated above
+              _avatarPlaceholder(avatarInitial),
               SizedBox(width: 12.w),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,7 +69,6 @@ class DriverCardModular extends StatelessWidget {
                   SizedBox(height: 4.h),
                   Row(
                     children: [
-                      // Black rating badge
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
                         decoration: BoxDecoration(
@@ -83,7 +84,7 @@ class DriverCardModular extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Text("  •  $trips trips", 
+                      Text("   •  $trips trips", 
                         style: GoogleFonts.inter(color: Colors.grey.shade600, fontSize: 13.sp)),
                     ],
                   )
@@ -97,7 +98,7 @@ class DriverCardModular extends StatelessWidget {
       ),
     );
   }
-
+  
   Widget _vehicleSubCard() {
     return Container(
       padding: EdgeInsets.all(12.w),

@@ -72,7 +72,7 @@ class ForgotPasswordController extends ChangeNotifier {
   }
 
   void navigateBackToSignIn(BuildContext context) {
-    context.go('/sign_in');
+    context.push('/sign_in');
   }
 
   @override

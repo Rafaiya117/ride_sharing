@@ -93,7 +93,7 @@ class ResetPasswordController extends ChangeNotifier {
         _showSnackBar(context, successMsg);
 
         // 6. Navigate back to Sign-In screen cleanly on success
-        context.go('/sign_in');
+        context.push('/sign_in');
       } else {
         String errorMsg = responseData?['message'] ?? "Failed to reset password";
         _showSnackBar(context, errorMsg, isError: true);
@@ -120,7 +120,7 @@ class ResetPasswordController extends ChangeNotifier {
   }
 
   void navigateBackToSignIn(BuildContext context) {
-    context.go('/sign_in');
+    context.push('/sign_in');
   }
 
   @override

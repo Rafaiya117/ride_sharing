@@ -32,7 +32,7 @@ class OnboardingController extends ChangeNotifier {
   }
 
   void navigateToLogin(BuildContext context) {
-    context.go('/role'); // Using your go_router requirement
+    context.push('/role'); // Using your go_router requirement
   }
 
   @override

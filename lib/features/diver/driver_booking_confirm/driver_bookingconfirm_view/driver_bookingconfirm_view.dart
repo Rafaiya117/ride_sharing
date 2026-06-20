@@ -15,7 +15,7 @@ class BookingConfirmScreen extends StatelessWidget {
     context.watch<BookingConfirmController>(); 
     Future.delayed(const Duration(seconds: 3), () {
       if (context.mounted) {
-        context.go('/drive_home_screen'); 
+        context.push('/drive_home_screen'); 
       }
     });
     

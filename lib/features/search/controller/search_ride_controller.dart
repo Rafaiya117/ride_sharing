@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ride_sharing/core/token/token_storage.dart';
 import 'package:ride_sharing/features/search/model/search_ride_model.dart';
 
 // class SearchResultsController extends ChangeNotifier {
@@ -111,6 +112,8 @@ class SearchResultsController extends ChangeNotifier {
     try {
       final baseUrl = dotenv.env['API_BASE_URL'];
       final url = '$baseUrl/api/v1/passenger/rides/search/'; 
+      
+      final String? token = TokenStorage.accessToken;
 
       final response = await _dio.get(
         url,
@@ -118,9 +121,17 @@ class SearchResultsController extends ChangeNotifier {
           ..._lastSearchParams,
           'sort_by': sortBy,
         },
+
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            if (token != null) 'Authorization': 'Bearer $token',
+          },
+        ),
       );
 
       if (response.data != null && response.data['success'] == true) {
+        debugPrint('!-------$response-------!');
         final List rawResults = response.data['data']['results'] ?? [];
         _results = rawResults.map((json) => RideResult.fromJson(json)).toList();
       }
@@ -131,7 +142,6 @@ class SearchResultsController extends ChangeNotifier {
       notifyListeners();
     }
   }
-
   // FIXED: Consolidated function working in both list configurations safely
   void setFilter(String filter) {
     _selectedFilter = filter;

@@ -67,14 +67,18 @@ class RideDetailsController extends ChangeNotifier {
   List<String> _vehicleImages = [];
   List<String> get vehicleImages => _vehicleImages;
 
-  // Initialize with an empty/default model structure
-  late RideDetailsModel _ride;
+  // FIXED: Initialized _ride with a default model configuration instance to eliminate late errors
+  RideDetailsModel _ride = RideDetailsModel(
+    totalPrice: 0.0, date: '', time: '', duration: '', distance: '', totalSeats: 0,
+    pickup: '', pickupTime: '', dropoff: '', estArrival: '', driverName: '',
+    driverInitials: '', driverRating: 0.0, driverTrips: 0, carModel: '',
+    carLicense: '', vehicleColor: '',
+  );
   RideDetailsModel get ride => _ride;
 
   int _selectedPickupIndex = 0;
   int get selectedPickupIndex => _selectedPickupIndex;
 
-  // FIXED: Implemented API get request tracking logic
   Future<void> fetchRideDetails(int rideId) async {
     _isLoading = true;
     notifyListeners();
@@ -88,10 +92,8 @@ class RideDetailsController extends ChangeNotifier {
       if (response.data != null && response.data['success'] == true) {
         final serverData = response.data['data'];
         
-        // 1. Build the structural dynamic UI model
         _ride = RideDetailsModel.fromJson(serverData);
 
-        // 2. Extract specific image array from the nested validation fields safely
         final driverVer = serverData['driver_verification'] ?? {};
         _vehicleImages = [
           if (driverVer['car_photo'] != null) driverVer['car_photo'].toString(),

@@ -5,6 +5,7 @@ import 'package:ride_sharing/features/auth/forgot_passowrd/view/forgot_password_
 import 'package:ride_sharing/features/auth/login/view/login.dart';
 import 'package:ride_sharing/features/auth/signup/view/sign_up_view.dart';
 import 'package:ride_sharing/features/cash_payment/cash_payment_view/cash_payment_view.dart';
+import 'package:ride_sharing/features/chat/chat_controller/chat_controller.dart';
 import 'package:ride_sharing/features/chat/chat_view/chat_view.dart';
 import 'package:ride_sharing/features/diver/confirm_widthdrawal/confirm_withdrawal_controller/confirm_withdrawal_controller.dart';
 import 'package:ride_sharing/features/diver/confirm_widthdrawal/confirm_withdrawal_view/confirm_withdrawal_view.dart';
@@ -12,7 +13,7 @@ import 'package:ride_sharing/features/diver/drive_trip/driver_trip_view/driver_t
 import 'package:ride_sharing/features/diver/driver_booking_confirm/driver_bookingconfirm_view/driver_bookingconfirm_view.dart';
 import 'package:ride_sharing/features/diver/driver_edit_profile/driver_edit_profile_view/driver_edit_profile_view.dart';
 import 'package:ride_sharing/features/diver/driver_homepage/view/driver-homepage_view.dart';
-import 'package:ride_sharing/features/diver/driver_message/view/message.dart';
+import 'package:ride_sharing/features/message_screen/view/message.dart';
 import 'package:ride_sharing/features/diver/driver_profile/driver_profile_view/driver_profile_view.dart';
 import 'package:ride_sharing/features/diver/driver_rating/driver_rating_view/driver_rating_view.dart';
 import 'package:ride_sharing/features/diver/driver_review/driver_review_view/driver_review_view.dart';
@@ -119,24 +120,36 @@ final GoRouter appRouter = GoRouter(
     //   builder: (context, state) => RideDetailsScreen(),
     // ),
     // In your GoRouter Configuration file:
-GoRoute(
-  path: '/ride_details',
-  builder: (context, state) {
-    // 1. Intercept the dynamic argument parameter from extra or query string
-    final dynamic extraData = state.extra;
-    final int rideId = extraData is int ? extraData : (int.tryParse(extraData.toString()) ?? 0);
+    GoRoute(
+      path: '/ride_details',
+      builder: (context, state) {
+        // 1. Intercept the dynamic argument parameter from extra or query string
+        final dynamic extraData = state.extra;
+        final int rideId = extraData is int
+            ? extraData
+            : (int.tryParse(extraData.toString()) ?? 0);
 
-    // 2. Fetch controller instance and initialize network task
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<RideDetailsController>().fetchRideDetails(rideId);
-    });
+        // 2. Fetch controller instance and initialize network task
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.read<RideDetailsController>().fetchRideDetails(rideId);
+        });
 
-    return const RideDetailsScreen(); // Return your standard view page configuration
-  },
-),
+        return const RideDetailsScreen(); // Return your standard view page configuration
+      },
+    ),
+    // GoRoute(
+    //   path: '/chat',
+    //   builder: (context, state) => ChatScreen(),
+    // ),
     GoRoute(
       path: '/chat',
-      builder: (context, state) => ChatScreen(),
+      builder: (context, state) {
+        final int convId = state.extra as int? ?? 0;
+        return ChangeNotifierProvider(
+          create: (_) => ChatController(conversationId: convId),
+          child: const ChatScreen(),
+        );
+      },
     ),
     GoRoute(
       path: '/payment',
@@ -255,7 +268,7 @@ GoRoute(
       builder: (context, state) => DriverTripHistoryScreen(),
     ),
     GoRoute(
-      path: '/driver_message_screen',
+      path: '/message_screen',
       builder: (context, state) => Message(),
     ),
     //!-------------- Shared -------------!

@@ -34,7 +34,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             Text(
-              "Safi",
+              controller.userName,
               style: GoogleFonts.inter(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,

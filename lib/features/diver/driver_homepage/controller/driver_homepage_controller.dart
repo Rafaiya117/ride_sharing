@@ -12,9 +12,9 @@ class DriverHomeController extends ChangeNotifier {
   String get userRole => _userRole; 
 
   // FIXED: Changed from absolute fields to dynamic getters pointing to TokenStorage
-  String get driverName => TokenStorage.userData?['name'] ?? "Driver";
-  double get driverRating => (TokenStorage.userData?['avg_rating'] ?? 0.0).toDouble();
-  int get totalTrips => TokenStorage.userData?['total_trips'] ?? 0;
+  String get driverName => TokenStorage.userName;
+  double get driverRating => TokenStorage.avgRating;
+  int get totalTrips => TokenStorage.totalTrips;
 
   double monthlyEarnings = 0.0;
   int unreadNotifications = 2;
