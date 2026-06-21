@@ -142,7 +142,7 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Column(
-                          crossAxisAlignment:CrossAxisAlignment.start, 
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildInputLabel("Date"),
                             GestureDetector(
@@ -154,14 +154,13 @@ class HomeScreen extends StatelessWidget {
                                   lastDate: DateTime(2101),
                                 );
                                 if (pickedDate != null) {
-                                  // Update your controller or state here
-                                  //controller.dateController.text = DateFormat('MM/dd/yyyy').format(pickedDate);
+                                  final String formattedDate = "${pickedDate.month.toString().padLeft(2, '0')}/${pickedDate.day.toString().padLeft(2, '0')}/${pickedDate.year}";
+                                  controller.dateController.text = formattedDate;
                                 }
                               },
                               child: AbsorbPointer(
-                                // Prevents the keyboard from popping up
                                 child: CustomTextField(
-                                  controller: TextEditingController(text: ""),
+                                  controller: controller.dateController,
                                   hintText: "mm/dd/yyyy",
                                   prefixIconPath: 'assets/icons/calendar.svg',
                                 ),
@@ -176,7 +175,7 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             _buildInputLabel("Seat"),
                             CustomTextField(
-                              controller: TextEditingController(text: "1 Seat"), // Temporary controller for design, normally uses dynamic seat state
+                              controller: controller.seatController, // Temporary controller for design, normally uses dynamic seat state
                               hintText: "1 Seat",
                               prefixIconPath: 'assets/icons/seats.svg',
                             ),

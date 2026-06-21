@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ride_sharing/core/token/token_storage.dart';
 import 'package:ride_sharing/features/ride_details/ride_details_model/ride_details_model.dart';
 
 // class RideDetailsController extends ChangeNotifier {
@@ -72,7 +73,7 @@ class RideDetailsController extends ChangeNotifier {
     totalPrice: 0.0, date: '', time: '', duration: '', distance: '', totalSeats: 0,
     pickup: '', pickupTime: '', dropoff: '', estArrival: '', driverName: '',
     driverInitials: '', driverRating: 0.0, driverTrips: 0, carModel: '',
-    carLicense: '', vehicleColor: '',
+    carLicense: '', vehicleColor: '', id: 0, driverId: 0,
   );
   RideDetailsModel get ride => _ride;
 
@@ -85,13 +86,35 @@ class RideDetailsController extends ChangeNotifier {
 
     try {
       final baseUrl = dotenv.env['API_BASE_URL'];
-      final url = '$baseUrl/api/v1/rides/$rideId/'; 
+      final String? token = TokenStorage.accessToken;
+      
+      // FIXED: Adjusted endpoint route path to properly query passenger-scoped details matching search context
+      final url = '$baseUrl/api/v1/passenger/rides/$rideId/'; 
 
-      final response = await _dio.get(url);
+      final response = await _dio.get(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            if (token != null) 'Authorization': 'Bearer $token',
+          },
+        ),
+      );
 
       if (response.data != null && response.data['success'] == true) {
-        final serverData = response.data['data'];
+        dynamic serverData = response.data['data'];
         
+        // Handle if data comes nested under results list array
+        if (serverData != null && serverData['results'] != null) {
+          final List<dynamic> resultsList = serverData['results'];
+          if (resultsList.isNotEmpty) {
+            serverData = resultsList.firstWhere(
+              (element) => element['id'] == rideId, 
+              orElse: () => resultsList.first,
+            );
+          }
+        }
+
         _ride = RideDetailsModel.fromJson(serverData);
 
         final driverVer = serverData['driver_verification'] ?? {};
@@ -102,7 +125,11 @@ class RideDetailsController extends ChangeNotifier {
         ];
       }
     } catch (e) {
-      debugPrint("Error loading ride details data profile: $e");
+      if (e is DioException && e.response != null) {
+        debugPrint("Server Ride Details Error Profile: ${e.response?.data}");
+      } else {
+        debugPrint("Error loading ride details data profile: $e");
+      }
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -126,6 +153,54 @@ class RideDetailsController extends ChangeNotifier {
 
   void bookNow(BuildContext context, double price) {
     GoRouter.of(context).go('/payment');
+  }
+
+  Future<void> navigateToChat(BuildContext context, {required int targetUserId, int? targetRideId}) async {
+    // FIXED: Capture the GoRouter instance immediately while the context is guaranteed to be valid
+    final router = GoRouter.of(context);
+    
+    _isLoading = true;
+    notifyListeners();
+
+    final baseUrl = dotenv.env['API_BASE_URL'];
+    final String? token = TokenStorage.accessToken;
+
+    try {
+      final Map<String, dynamic> requestBody = {
+        "user_id": targetUserId,
+        if (targetRideId != null) "ride_id": targetRideId,
+      };
+
+      final response = await _dio.post(
+        '$baseUrl/api/v1/conversations/',
+        data: requestBody,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            if (token != null) 'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final resData = response.data['data'];
+        if (resData != null && resData['id'] != null) {
+          final int validConversationId = resData['id'];
+          
+          debugPrint("SUCCESS: Redirecting via captured router instances → ID: $validConversationId");
+          router.push('/chat', extra: validConversationId);
+        }
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        debugPrint("Server Validation Error Details: ${e.response?.data}");
+      } else {
+        debugPrint("Error initializing conversation room payload: $e");
+      }
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   void navigateBack(BuildContext context) {

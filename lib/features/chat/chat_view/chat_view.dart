@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/chat_bubble.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
+import 'package:ride_sharing/core/token/token_storage.dart';
 import 'package:ride_sharing/features/chat/chat_controller/chat_controller.dart';
 import 'package:ride_sharing/features/chat/chat_model/chat_model.dart';
 import 'package:ride_sharing/features/chat/widget/trip_context.dart';
@@ -16,7 +18,7 @@ class ChatScreen extends StatelessWidget {
     final controller = context.watch<ChatController>();
 
     return BaseScaffold(
-  isCurved: true,
+      isCurved: true,
       // 1. Title Section: Driver Name
       title: Padding(
         padding: EdgeInsets.only(
@@ -92,25 +94,9 @@ class ChatScreen extends StatelessWidget {
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // White Offer Section
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 16.h),
-            color: Colors.white,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Make an Offer",
-                  style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800, color: Colors.black),
-                ),
-                SizedBox(height: 12.h),
-                controller.showOfferInput
-                    ? _buildDynamicOfferInputRow(controller, context)
-                    : _buildMakeOfferButton(controller),
-              ],
-            ),
-          ),
+          // FIXED: This dynamically switches based on who sent the last offer and their role
+          _buildActiveNegotiationBar(controller, context),
+          
           // Black Message Section
           Container(
             width: double.infinity,
@@ -177,6 +163,130 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
+  // FIXED: Logic to support the complete contextual counter-offer flow dynamically
+  Widget _buildActiveNegotiationBar(ChatController controller, BuildContext context) {
+    final offerMsg = controller.messages.firstWhere(
+      (msg) => msg.text.contains('💰'),
+      orElse: () => ChatMessage(text: '', time: '', sender: MessageSender.me),
+    );
+
+    // Case 1: No active offer framework yet -> Show original selection inputs
+    if (offerMsg.text.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 16.h),
+        color: Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Make an Offer",
+              style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800, color: Colors.black),
+            ),
+            SizedBox(height: 12.h),
+            controller.showOfferInput
+                ? _buildDynamicOfferInputRow(controller, context)
+                : _buildMakeOfferButton(controller),
+          ],
+        ),
+      );
+    }
+
+    final bool isMe = offerMsg.sender == MessageSender.me;
+    final bool isPending = offerMsg.text.toLowerCase().contains('pending');
+    final bool isAccepted = offerMsg.text.toLowerCase().contains('accepted');
+    final String amountStr = RegExp(r'\d+').stringMatch(offerMsg.text) ?? "0";
+
+    // Case 2: Deal is Accepted
+    if (isAccepted) {
+      if (TokenStorage.isDriver) {
+        return Container(
+          width: double.infinity,
+          color: const Color(0xFFE8F5E9),
+          padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 20.w),
+          child: Text(
+            "🤝 Offer accepted at \$$amountStr. Awaiting trip complete payment.",
+            style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold, color: Colors.green.shade900),
+            textAlign: TextAlign.center,
+          ),
+        );
+      } else {
+        return Container(
+          width: double.infinity,
+          color: Colors.white,
+          padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 16.h),
+          child: Row(
+            children: [
+              _buildActionButton(
+                "Proceed to Pay \$$amountStr", 
+                Colors.green, 
+                Colors.white, 
+                () => GoRouter.of(context).push('/payment'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+
+    // Case 3: I made the offer -> Show holding tray status panel
+    if (isPending && isMe) {
+      return Container(
+        width: double.infinity,
+        color: const Color(0xFFFFF3E0),
+        padding: EdgeInsets.all(14.h),
+        alignment: Alignment.center,
+        child: Text(
+          "⏳ You have offered \$$amountStr. Waiting for response...",
+          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w600, color: Colors.orange.shade900),
+        ),
+      );
+    }
+
+    // Case 4: Other side made the offer -> Provide counter/accept utilities
+    if (isPending && !isMe) {
+      return Container(
+        width: double.infinity,
+        padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 16.h),
+        color: Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Counter Offer Received: \$$amountStr",
+              style: TextStyle(fontSize: 15.sp, fontWeight: FontWeight.w800, color: Colors.black),
+            ),
+            SizedBox(height: 12.h),
+            controller.showOfferInput
+                ? _buildDynamicOfferInputRow(controller, context)
+                : Row(
+                    children: [
+                      _buildActionButton(
+                        "Accept", 
+                        Colors.green, 
+                        Colors.white, 
+                        () {
+                          controller.respondToOffer(context,'accept');
+                        } 
+                      ),
+                      SizedBox(width: 10.w),
+                      _buildActionButton(
+                        "Counter Offer", 
+                        Colors.white, 
+                        Colors.black, 
+                        () => controller.toggleOfferInput(true),
+                        isOutlined: true,
+                      ),
+                    ],
+                  ),
+          ],
+        ),
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+
   Widget _buildMakeOfferButton(ChatController controller) {
     return InkWell(
       onTap: () => controller.toggleOfferInput(true),
@@ -190,10 +300,10 @@ class ChatScreen extends StatelessWidget {
         ),
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center, // Centering the content horizontally
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(Icons.attach_money, color: Colors.black, size: 20),
+            const Icon(Icons.attach_money, color: Colors.black, size: 20),
             SizedBox(width: 8.w),
             Text(
               "Make a Price Offer", 

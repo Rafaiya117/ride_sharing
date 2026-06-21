@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
+//import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:ride_sharing/features/ride_details/ride_details_controller/ride_details_controller.dart';
 
 class DriverCardModular extends StatelessWidget {
   final String name;
@@ -21,9 +23,7 @@ class DriverCardModular extends StatelessWidget {
   });
 
   @override
-@override
   Widget build(BuildContext context) {
-    // FIXED: Safely verify name is not empty to eliminate the out-of-bounds index check crash
     final String avatarInitial = name.trim().isNotEmpty ? name.trim()[0].toUpperCase() : 'D';
 
     return Container(
@@ -39,13 +39,24 @@ class DriverCardModular extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Your Driver", 
-                style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 18.sp, color: Colors.black)),
+              Text(
+                "Your Driver", 
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.bold, 
+                  fontSize: 18.sp, 
+                  color: Colors.black
+                )
+              ),
               Row(
                 children: [
                   GestureDetector(
                     onTap: () {
-                      context.push('/chat');
+                      final controller = context.read<RideDetailsController>();
+                      controller.navigateToChat(
+                        context,
+                        targetUserId: controller.ride.driverId, 
+                        targetRideId: controller.ride.id,
+                      );
                     },
                     child: _circularIcon('assets/icons/chat_outline.svg'),
                   ),
@@ -58,7 +69,6 @@ class DriverCardModular extends StatelessWidget {
           SizedBox(height: 16.h),
           Row(
             children: [
-              // FIXED: Uses the safe variable string fallback evaluated above
               _avatarPlaceholder(avatarInitial),
               SizedBox(width: 12.w),
               Column(

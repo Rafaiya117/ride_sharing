@@ -167,6 +167,7 @@ class SearchResultsController extends ChangeNotifier {
   // }
 
   void openRideDetails(BuildContext context, RideResult ride) {
+    debugPrint('Ride id==================${ride.id}');
     GoRouter.of(context).push('/ride_details', extra: ride.id);
   }
 

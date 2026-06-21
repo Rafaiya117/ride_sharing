@@ -85,12 +85,25 @@ class RideDetailsScreen extends StatelessWidget {
               SizedBox(height: 20.h,),                
               _sectionTitle("Driver Image"),
               CustomInfoCard(
-                padding: EdgeInsets.zero,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15.r),
-                  child: Image.network('https://img.freepik.com/free-photo/man-car-driving_23-2148889981.jpg?semt=ais_incoming&w=740&q=80', fit: BoxFit.cover, height: 200.h),
+                  padding: EdgeInsets.zero,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15.r),
+                    child: Image.network(
+                      (controller.vehicleImages.length > 2 && controller.vehicleImages[2].isNotEmpty)
+                      ? controller.vehicleImages[2] : 'https://img.freepik.com/free-photo/man-car-driving_23-2148889981.jpg?semt=ais_incoming&w=740&q=80',
+                      fit: BoxFit.cover,
+                      height: 200.h,
+                      width: double.infinity, 
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.network(
+                          'https://img.freepik.com/free-photo/man-car-driving_23-2148889981.jpg?semt=ais_incoming&w=740&q=80',
+                          fit: BoxFit.cover,
+                          height: 200.h,
+                        );
+                      },
+                    ),
+                  ),
                 ),
-              ),
               SizedBox(height: 10.h),
               VehicleImageGallery(imageUrls: controller.vehicleImages),
               SizedBox(height: 20.h,),                

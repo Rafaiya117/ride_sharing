@@ -39,6 +39,8 @@
 // }
 
 class RideDetailsModel {
+  final int id; 
+  final int driverId; // FIXED: Added to hold the unique ID of the user you want to chat with
   final double totalPrice;
   final String date;
   final String time;
@@ -58,6 +60,8 @@ class RideDetailsModel {
   final String vehicleColor;
 
   RideDetailsModel({
+    required this.id,
+    required this.driverId, // FIXED
     required this.totalPrice, required this.date, required this.time,
     required this.duration, required this.distance, required this.totalSeats,
     required this.pickup, required this.pickupTime, required this.dropoff,
@@ -66,12 +70,10 @@ class RideDetailsModel {
     required this.carLicense, required this.vehicleColor,
   });
 
-  // FIXED: Added factory constructor to parse raw server network payloads cleanly
   factory RideDetailsModel.fromJson(Map<String, dynamic> json) {
     final driver = json['driver_verification'] ?? {};
     final rawDateTime = json['date_time'] ?? '';
     
-    // FIXED: Extracted and trimmed driver_name to safely check for empty strings
     final String parsedDriverName = (json['driver_name'] as String? ?? '').trim();
     final String driverNameDisplay = parsedDriverName.isNotEmpty ? parsedDriverName : 'Driver';
     final String initials = parsedDriverName.isNotEmpty 
@@ -79,6 +81,8 @@ class RideDetailsModel {
         : 'D';
 
     return RideDetailsModel(
+      id: json['id'] ?? 0,
+      driverId: json['driver_id'] ?? (driver['id'] ?? 0), 
       totalPrice: double.tryParse(json['price_per_seat'] ?? '0') ?? 0.0,
       date: rawDateTime.isNotEmpty ? rawDateTime.substring(0, 10) : 'N/A',
       time: rawDateTime.isNotEmpty ? rawDateTime.substring(11, 16) : '--:--',
@@ -89,8 +93,8 @@ class RideDetailsModel {
       pickupTime: rawDateTime.isNotEmpty ? rawDateTime.substring(11, 16) : '--:--',
       dropoff: json['drop_location'] ?? 'Unknown',
       estArrival: 'Est. arrival time',
-      driverName: driverNameDisplay, // FIXED
-      driverInitials: initials, // FIXED
+      driverName: driverNameDisplay, 
+      driverInitials: initials, 
       driverRating: double.tryParse(json['driver_rating'] ?? '0.0') ?? 0.0,
       driverTrips: 0, 
       carModel: driver['car_model'] ?? 'Standard Vehicle',

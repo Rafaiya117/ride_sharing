@@ -81,15 +81,15 @@ class ChatWebSocketService {
     _channel!.sink.add(jsonEncode(payload));
   }
 
-  void markAsRead() {
-    if (!_isConnected || _channel == null) return;
+  // void markAsRead() {
+  //   if (!_isConnected || _channel == null) return;
 
-    final payload = {
-      "action": "mark_read",
-    };
+  //   final payload = {
+  //     "action": "mark_read",
+  //   };
 
-    _channel!.sink.add(jsonEncode(payload));
-  }
+  //   _channel!.sink.add(jsonEncode(payload));
+  // }
 
   void _handleReconnect(int conversationId) {
     disconnect();

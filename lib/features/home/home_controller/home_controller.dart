@@ -82,7 +82,6 @@ import 'package:ride_sharing/features/home/model/home_model.dart';
 // }
 
 class HomeController extends ChangeNotifier {
-  // 1. FIXED: Point dynamic user data values directly to centralized TokenStorage session map
   String get userName => TokenStorage.userData?['name'] ?? "User";
   
   UserStats get stats => UserStats(
@@ -100,7 +99,8 @@ class HomeController extends ChangeNotifier {
   // 2. Planning Inputs
   final TextEditingController pickupController = TextEditingController();
   final TextEditingController dropoffController = TextEditingController();
-  
+  final TextEditingController dateController = TextEditingController();
+  final TextEditingController seatController = TextEditingController();
   // 3. Navbar State
   int _currentNavbarIndex = 0;
   int get currentNavbarIndex => _currentNavbarIndex;
@@ -117,12 +117,20 @@ class HomeController extends ChangeNotifier {
   void searchRides(BuildContext context) {
     String from = pickupController.text.trim();
     String to = dropoffController.text.trim();
-    String date = "2026-06-19"; 
-    int seats = 1;
+    String rawDate = dateController.text.trim(); 
+    int seats = int.tryParse(seatController.text.trim()) ?? 1;
 
     if (from.isEmpty || to.isEmpty) return;
-    print("Searching rides from $from to $to...");
-    context.push('/search_ride_screen?pickup_location=$from&drop_location=$to&date=$date&seats=$seats');
+    String formattedDate = rawDate;
+    if (rawDate.isNotEmpty && rawDate.contains('/')) {
+      final parts = rawDate.split('/');
+      if (parts.length == 3) {
+        formattedDate = "${parts[2]}-${parts[0]}-${parts[1]}";
+      }
+    }
+
+    print("Searching rides from $from to $to on date: $formattedDate...");
+    context.push('/search_ride_screen?pickup_location=$from&drop_location=$to&date=$formattedDate&seats=$seats');
   }
 
   void trackTrip(BuildContext context, UpcomingTrip trip) {
