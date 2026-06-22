@@ -339,7 +339,7 @@ class RideDetailsScreen extends StatelessWidget {
                 ),
               ),
               // Combining Text and Dynamic Data from controller
-              child: Text("Book Now • \$${controller.ride.totalPrice.toInt()}"),
+              child: Text("Book Now"),
             ),
           ),
         ],

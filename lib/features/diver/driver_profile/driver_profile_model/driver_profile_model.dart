@@ -32,7 +32,8 @@ class DriverProfileModel {
   final int totalTrips;
   final double rating;
   final bool isVerified;
-  // Vehicle Details (Keep these fallback defaults if your generic user endpoint skips them)
+  // ADDED: Property field tracking variable for stripe onboarding data matching the response
+  final bool stripeOnboardingComplete; 
   final String carModel;
   final String plateNumber;
   final String color;
@@ -45,6 +46,7 @@ class DriverProfileModel {
     required this.totalTrips,
     required this.rating,
     required this.isVerified,
+    required this.stripeOnboardingComplete, // ADDED to constructor parameters
     required this.carModel,
     required this.plateNumber,
     required this.color,
@@ -53,7 +55,6 @@ class DriverProfileModel {
 
   factory DriverProfileModel.fromJson(Map<String, dynamic> json) {
     final nameStr = json['name'] ?? 'User';
-    // Dynamically calculate initials from name tokens
     final initialsStr = nameStr.trim().isNotEmpty ? nameStr.trim().split(' ').map((l) => l[0]).take(2).join().toUpperCase(): 'U';
 
     return DriverProfileModel(
@@ -61,8 +62,10 @@ class DriverProfileModel {
       email: json['email'] ?? '',
       initials: initialsStr,
       totalTrips: json['total_trips'] ?? 0,
-      rating: (json['avg_rating'] ?? 0).toDouble(),
+      rating: double.tryParse(json['avg_rating']?.toString() ?? '0.0') ?? 0.0,
       isVerified: json['verification_status'] == 'approved' || json['verification_status'] == 'pending',
+      // FIXED: Safely map the missing onboarding property flag here
+      stripeOnboardingComplete: json['stripe_onboarding_complete'] ?? false, 
       carModel: json['car_model'] ?? "Not Provided",
       plateNumber: json['number_plate'] ?? "N/A",
       color: json['car_color'] ?? "N/A",

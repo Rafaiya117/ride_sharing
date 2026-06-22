@@ -151,12 +151,61 @@ class RideDetailsController extends ChangeNotifier {
 
   void makeOffer(BuildContext context) {}
 
-  void bookNow(BuildContext context, double price) {
-    GoRouter.of(context).go('/payment');
+  // void bookNow(BuildContext context, double price) {
+  //   GoRouter.of(context).go('/payment');
+  // }
+
+  // FIXED: Changed to Future<void> to execute the booking API call asynchronously
+  Future<void> bookNow(BuildContext context, double price) async {
+    final router = GoRouter.of(context);
+    final int rideId = _ride.id;
+    
+    if (rideId == 0) {
+      debugPrint("Invalid ride ID tracking context.");
+      return;
+    }
+
+    _isLoading = true;
+    notifyListeners();
+
+    final baseUrl = dotenv.env['API_BASE_URL'];
+    final String? token = TokenStorage.accessToken;
+
+    try {
+      final Map<String, dynamic> requestBody = {
+        "ride_id": rideId,
+      };
+
+      final response = await _dio.post(
+        '$baseUrl/api/v1/passenger/rides/book/',
+        data: requestBody,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            if (token != null) 'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        if (response.data != null && response.data['success'] == true) {
+          debugPrint("SUCCESS: Ride booked successfully, forwarding to payment verification.");
+          router.go('/payment', extra: response.data['data']);
+        }
+      }
+    } catch (e) {
+      if (e is DioException && e.response != null) {
+        debugPrint("Server Ride Booking Validation Error: ${e.response?.data}");
+      } else {
+        debugPrint("Error initializing booking request execution sequence: $e");
+      }
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> navigateToChat(BuildContext context, {required int targetUserId, int? targetRideId}) async {
-    // FIXED: Capture the GoRouter instance immediately while the context is guaranteed to be valid
     final router = GoRouter.of(context);
     
     _isLoading = true;

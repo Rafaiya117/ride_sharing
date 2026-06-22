@@ -117,7 +117,7 @@ class PaymentScreen extends StatelessWidget {
           CustomButton( 
             // DYNAMIC LABEL: "Pay... Now" for card, "Save" for others (Cash/Credits)
             text: controller.selectedMethod == PaymentMethodType.card
-              ? "Next \$${controller.payment.totalAmount.toStringAsFixed(0)} Now"
+              ? "Next"
               : "Save",
             onTap: () => controller.processPayment(context),
           ),

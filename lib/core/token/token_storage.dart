@@ -10,6 +10,7 @@ class TokenStorage {
   static String? accessToken;
   static Map<String, dynamic>? userData;
   static int get currentUserId => userData?['id'] ?? 0;
+  static bool stripeOnboardingComplete = false;
 
   // --- Shared Properties ---
   static String get userName => userData?['name'] ?? 'User';

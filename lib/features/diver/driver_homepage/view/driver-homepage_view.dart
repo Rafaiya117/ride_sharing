@@ -284,7 +284,53 @@ class DriverHomeScreen extends StatelessWidget {
     );
   }
 
+//   Widget _buildPostRideButton(BuildContext context) {
+//   return InkWell( 
+//     onTap: () {
+//       showModalBottomSheet(
+//         context: context,
+//         isScrollControlled: true, 
+//         backgroundColor: Colors.transparent, 
+//         builder: (context) => Padding(
+//           // Adjusts modal for keyboard visibility
+//           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+//           child: PostRideView(),
+//         ),
+//       );
+//     },
+//     borderRadius: BorderRadius.circular(12.r),
+//     child: Container(
+//       width: double.infinity,
+//       height: 50.h,
+//       decoration: BoxDecoration(
+//         color: const Color(0xFF121212),
+//         borderRadius: BorderRadius.circular(12.r),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withOpacity(0.1),
+//             blurRadius: 10,
+//             offset: const Offset(0, 4),
+//           )
+//         ],
+//       ),
+//       child: Center(
+//         child: Row(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             Icon(Icons.add, color: Colors.white, size: 20.sp),
+//             SizedBox(width: 8.w),
+//             Text("Post New Ride", 
+//               style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w600)),
+//           ],
+//         ),
+//       ),
+//     ),
+//   );
+// }
+
   Widget _buildPostRideButton(BuildContext context) {
+
+  final driverController = Provider.of<DriverHomeController>(context);
   return InkWell( 
     onTap: () {
       showModalBottomSheet(
@@ -292,9 +338,9 @@ class DriverHomeScreen extends StatelessWidget {
         isScrollControlled: true, 
         backgroundColor: Colors.transparent, 
         builder: (context) => Padding(
-          // Adjusts modal for keyboard visibility
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: PostRideView(),
+          child: driverController.isStripeComplete
+          ? const PostRideView() : _buildStripeOnboardingPopup(context, driverController),
         ),
       );
     },
@@ -328,6 +374,57 @@ class DriverHomeScreen extends StatelessWidget {
   );
 }
 
+Widget _buildStripeOnboardingPopup(BuildContext context, DriverHomeController controller) {
+  return Container(
+    decoration: const BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    padding: EdgeInsets.all(24.w),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Setup Payout Options",
+          style: GoogleFonts.inter(fontSize: 20.sp, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
+        SizedBox(height: 8.h),
+        Text(
+          "To post new active ride shares, connect your identity profile using Stripe's secure registration panel.",
+          style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey.shade600, height: 1.4),
+        ),
+        SizedBox(height: 24.h),
+        Row(
+          children: [
+            Expanded(
+              child: TextButton(
+                onPressed: () => Navigator.pop(context), // Skip logic close action
+                style: TextButton.styleFrom(minimumSize: Size(double.infinity, 50.h)),
+                child: Text("Skip", style: GoogleFonts.inter(color: Colors.grey.shade700, fontSize: 16.sp, fontWeight: FontWeight.w600)),
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: controller.isStripeLoading 
+                ? null : () => controller.startStripeOnboarding(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF121212),
+                  minimumSize: Size(double.infinity, 50.h),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                ),
+                child: controller.isStripeLoading
+                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                : Text("Connect Stripe", style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.w600)),
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
   Widget _buildRequestCard(dynamic request, int index, dynamic controller) {
     return Container(
       margin: EdgeInsets.only(bottom: 15.h),

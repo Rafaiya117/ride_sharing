@@ -99,11 +99,11 @@ class DriverProfileController extends ChangeNotifier {
       carModel: "",
       plateNumber: "",
       color: "",
-      availableSeats: 0,
+      availableSeats: 0, 
+      stripeOnboardingComplete: false,
     );
   }
 
-  // Navigation methods remain completely untouched
   // void navigateToEdit(BuildContext context) => context.push('/drive_edit_profile_screen');
   Future<void> navigateToEdit(BuildContext context) async {
     final mapUpdated = await context.push('/drive_edit_profile_screen');

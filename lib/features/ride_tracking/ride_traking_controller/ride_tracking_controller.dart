@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ride_sharing/core/components/ride_completed_popup.dart';
 import 'package:ride_sharing/features/ride_tracking/ride_tracking_model/ride_tracking_model.dart';
 
 class TrackRideController extends ChangeNotifier {
@@ -35,31 +34,31 @@ class TrackRideController extends ChangeNotifier {
     _popupTimer?.cancel(); 
     _popupTimer = Timer(const Duration(seconds: 3), () {
       if (context.mounted && ModalRoute.of(context)?.isCurrent == true) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => RideCompletedPopUp(
-            fromLocation: pickup,
-            toLocation: dropoff,
-            totalAmount: price,
-            isCash: selectedPaymentMethod == "Cash",
-            onContinueToPayment: () {
-              GoRouter.of(context).push('/cash_payment');
-            },
-          ),
-        );
+        // showDialog(
+        //   context: context,
+        //   barrierDismissible: false,
+        //   builder: (context) => RideCompletedPopUp(
+        //     fromLocation: pickup,
+        //     toLocation: dropoff,
+        //     totalAmount: price,
+        //     isCash: selectedPaymentMethod == "Cash",
+        //     onContinueToPayment: () {
+        //       GoRouter.of(context).push('/cash_payment');
+        //     },
+        //   ),
+        // );
       }
     });
   }
 
   void triggerEmergencySOS(BuildContext context) {
-    print("EMERGENCY SOS TRIGGERED! Calling emergency services and notifying platform...");
+    debugPrint("EMERGENCY SOS TRIGGERED! Calling emergency services and notifying platform...");
     // GoRouter.of(context).push('/emergencyContacts');
   }
 
   void openChatWithDriver(BuildContext context) {
-    print("Opening chat with ${driver.name}...");
-    // GoRouter.of(context).push('/chat', extra: driver);
+    //print("Opening chat with ${driver.name}...");
+    GoRouter.of(context).push('/chat', extra:13 );
   }
 
   void callDriver() {
