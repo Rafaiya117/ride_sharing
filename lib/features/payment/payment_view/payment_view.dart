@@ -10,7 +10,13 @@ import 'package:ride_sharing/features/payment/payment_controller/payment_control
 import 'package:ride_sharing/features/payment/payment_model/payment_model.dart';
 
 class PaymentScreen extends StatelessWidget {
-  const PaymentScreen({super.key});
+  // FIXED: Added bookingId variable parameter to the class constructor
+  final int bookingId;
+
+  const PaymentScreen({
+    super.key,
+    required this.bookingId, // FIXED: Now required dynamically from GoRouter
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +56,13 @@ class PaymentScreen extends StatelessWidget {
         children: [
           // 1. --- Dynamic Trip Summary Card ---
           PaymentInfoCard(
-            title: "Trip Summary", // Section title above card fits design
+            title: "Trip Summary", 
             child: Column(
               children: [
                 _buildSummaryTile("Route", controller.payment.route),
                 _buildSummaryTile("Date & Time", controller.payment.date),
                 _buildSummaryTile("Driver", controller.payment.driverName),
-                _buildSummaryTile("Seats", "${controller.payment.seats} seat"), // assumed singular seat display standard
+                _buildSummaryTile("Seats", "${controller.payment.seats} seat"), 
               ],
             ),
           ),
@@ -67,7 +73,7 @@ class PaymentScreen extends StatelessWidget {
             isMainPadding: false,
             titleInside: false,
             child: ListView.builder(
-              padding: EdgeInsets.zero, // Set to zero to remove extra gap inside card
+              padding: EdgeInsets.zero, 
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: controller.availableMethods.length,
@@ -112,16 +118,18 @@ class PaymentScreen extends StatelessWidget {
               ],
             ),
           ),
-          //SizedBox(height: 20.h), 
           // 4. --- REUSABLE PRIMARY SOLID BLACK BUTTON ---
-          CustomButton( 
-            // DYNAMIC LABEL: "Pay... Now" for card, "Save" for others (Cash/Credits)
-            text: controller.selectedMethod == PaymentMethodType.card
-              ? "Next"
-              : "Save",
-            onTap: () => controller.processPayment(context),
+          CustomButton(
+            text: controller.isPaying
+                ? "Processing..."
+                : (controller.selectedMethod == PaymentMethodType.card ? "Next" : "Save"),
+            onTap: () {
+              if (controller.isPaying) return;
+              // FIXED: Uses the constructor's dynamic bookingId property context instead of hardcoded 8
+              controller.processPayment(context, bookingId);
+            },
           ),
-          SizedBox(height: 20.h), // Bottom spacing
+          SizedBox(height: 20.h), 
         ],
       ),
     );

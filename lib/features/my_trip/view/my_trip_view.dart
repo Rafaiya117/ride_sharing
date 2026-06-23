@@ -266,21 +266,57 @@ class MyTripsScreen extends StatelessWidget {
           width: double.infinity,
         ),
       ),
-      // FIXED: Attached the dynamic bottom navigation bar matching the controller interface state
       bottomNavigationBar: CustomBottomNavbar(
         currentIndex: controller.currentNavbarIndex,
         onTap: (index) => controller.setNavbarIndex(index),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _sectionTitle("My Booking Trip"),
-          _buildBookingTripCard(controller.bookingTrip, controller),
-          SizedBox(height: 24.h),
-          _sectionTitle("Active Trip"),
-          _buildActiveTripCard(controller.activeTrip, controller),
-          SizedBox(height: 40.h),
-        ],
+      // FIXED: Used FutureBuilder to safely handle the call once on load without re-triggering the build method
+      child: FutureBuilder(
+        future: context.read<MyTripsController>().fetchMyTrips(),
+        builder: (context, snapshot) {
+          if (controller.isLoading && controller.bookingTrips.isEmpty && controller.activeTrips.isEmpty) {
+            return const Center(child: Padding(padding: EdgeInsets.all(40.0), child: CircularProgressIndicator()));
+          }
+          
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _sectionTitle("My Booking Trip"),
+                if (controller.bookingTrips.isEmpty)
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.h),
+                    child: Text(
+                      "No booked trips available.", 
+                      style: GoogleFonts.inter(color: Colors.grey)
+                    ),
+                  )
+                else
+                  ...controller.bookingTrips.map((trip) => Padding(
+                    padding: EdgeInsets.only(bottom: 16.h),
+                    child: _buildBookingTripCard(trip, controller),
+                  )),                  
+                
+                SizedBox(height: 24.h),
+                _sectionTitle("Active Trip"),
+                if (controller.activeTrips.isEmpty)
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10.h),
+                    child: Text(
+                      "No active ongoing trips.", 
+                      style: GoogleFonts.inter(color: Colors.grey)
+                    ),
+                  )
+                else
+                  ...controller.activeTrips.map((trip) => Padding(
+                    padding: EdgeInsets.only(bottom: 16.h),
+                    child: _buildActiveTripCard(trip, controller),
+                  )),
+                SizedBox(height: 40.h),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -389,38 +425,55 @@ class MyTripsScreen extends StatelessWidget {
 
   // --- Reusable Small Widgets ---
   BoxDecoration _cardDecoration() => BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 15,
-            offset: const Offset(0, 6),
-          )
-        ],
-      );
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(16.r),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withOpacity(0.03),
+        blurRadius: 15,
+        offset: const Offset(0, 6),
+      )
+    ],
+  );
 
   Widget _divider() => Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.h),
-        child: Divider(height: 1, color: Colors.grey.shade100),
-      );
+    padding: EdgeInsets.symmetric(vertical: 16.h),
+    child: Divider(
+      height: 1, 
+      color: Colors.grey.shade100
+    ),
+  );
 
   Widget _sectionTitle(String title) => Padding(
-        padding: EdgeInsets.only(bottom: 16.h, top: 8.h),
-        child: Text(title, style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF111111))),
-      );
+    padding: EdgeInsets.only(bottom: 16.h, top: 8.h),
+    child: Text(
+      title, 
+      style: GoogleFonts.inter(
+        fontSize: 22.sp, 
+        fontWeight: FontWeight.bold, 
+        color: const Color(0xFF111111)
+      )
+    ),
+  );
 
   Widget _driverAvatar(String initial) => Container(
-        width: 44.r,
-        height: 44.r,
-        decoration: const BoxDecoration(color: Color(0xFF131D33), shape: BoxShape.circle),
-        child: Center(
-          child: Text(
-            initial,
-            style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.sp),
-          ),
+    width: 44.r,
+    height: 44.r,
+    decoration: const BoxDecoration(
+      color: Color(0xFF131D33), 
+      shape: BoxShape.circle
+    ),
+    child: Center(
+      child: Text(
+        initial,
+        style: GoogleFonts.inter(
+          color: Colors.white, 
+          fontWeight: FontWeight.bold, 
+          fontSize: 16.sp
         ),
-      );
+      ),
+    ),
+  );
 
   Widget _buildRouteInfo(String pickup, String dropoff) {
     return Container(
@@ -458,69 +511,80 @@ class MyTripsScreen extends StatelessWidget {
   }
 
   Widget _buildCardHeader(String date, bool isUpcoming) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(children: [
-            Icon(Icons.calendar_today_outlined, size: 16.r, color: Colors.grey.shade700),
-            SizedBox(width: 8.w),
-            Text(date, style: GoogleFonts.inter(color: Colors.grey.shade700, fontSize: 14.sp, fontWeight: FontWeight.w500)),
-          ]),
-          if (isUpcoming)
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
-              decoration: BoxDecoration(color: const Color(0xFFE8F0FE), borderRadius: BorderRadius.circular(20.r)),
-              child: Text("Upcoming", style: GoogleFonts.inter(color: const Color(0xFF1967D2), fontWeight: FontWeight.bold, fontSize: 12.sp)),
-            )
-        ],
-      );
-
-  Widget _buildDriverRow(TripModel trip, {required bool isBooking}) => Row(
-        children: [
-          _driverAvatar(trip.initial),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(trip.driverName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
-                SizedBox(height: 4.h),
-                Row(
-                  children: [
-                    Icon(Icons.star, size: 14.r, color: Colors.black),
-                    Text(" ${trip.rating}", style: GoogleFonts.inter(fontSize: 13.sp, fontWeight: FontWeight.w500, color: Colors.grey.shade700)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text("\$${double.tryParse(trip.price)?.toStringAsFixed(0) ?? trip.price}", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 22.sp, color: const Color(0xFF111111))),
-              SizedBox(height: 2.h),
-              Text(trip.durationOrCar, style: GoogleFonts.inter(color: Colors.grey.shade500, fontSize: 12.sp)),
-            ],
-          )
-        ],
-      );
-
-  Widget _priceColumn(String price) => Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text("\$$price", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 26.sp, color: const Color(0xFF111111))),
-          Text("per seat", style: GoogleFonts.inter(color: Colors.grey.shade500, fontSize: 12.sp)),
-        ],
-      );
-
-  Widget _buildTimeInfo(String date, String time) => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Row(
         children: [
           Icon(Icons.calendar_today_outlined, size: 16.r, color: Colors.grey.shade700),
-          SizedBox(width: 6.w),
-          Text(date, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey.shade700, fontWeight: FontWeight.w500)),
-          SizedBox(width: 16.w),
-          Icon(Icons.access_time, size: 16.r, color: Colors.grey.shade700),
-          SizedBox(width: 6.w),
-          Text(time, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey.shade700, fontWeight: FontWeight.w500)),
+          SizedBox(width: 8.w),
+          Text(date, style: GoogleFonts.inter(color: Colors.grey.shade700, fontSize: 14.sp, fontWeight: FontWeight.w500)),
+        ]
+      ),
+      if (isUpcoming)
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 6.h),
+          decoration: BoxDecoration(
+            color: const Color(0xFFE8F0FE), 
+            borderRadius: BorderRadius.circular(20.r)
+          ),
+          child: Text(
+            "Upcoming", 
+            style: GoogleFonts.inter(
+              color: const Color(0xFF1967D2), 
+              fontWeight: FontWeight.bold, fontSize: 12.sp
+            )
+          ),
+        )
+    ],
+  );
+
+  Widget _buildDriverRow(TripModel trip, {required bool isBooking}) => Row(
+    children: [
+      _driverAvatar(trip.initial),
+      SizedBox(width: 12.w),
+      Expanded(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(trip.driverName, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 16.sp)),
+            SizedBox(height: 4.h),
+            Row(
+              children: [
+                Icon(Icons.star, size: 14.r, color: Colors.black),
+                Text(" ${trip.rating}", style: GoogleFonts.inter(fontSize: 13.sp, fontWeight: FontWeight.w500, color: Colors.grey.shade700)),
+              ],
+            ),
+          ],
+        ),
+      ),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text("\$${double.tryParse(trip.price)?.toStringAsFixed(0) ?? trip.price}", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 22.sp, color: const Color(0xFF111111))),
+          SizedBox(height: 2.h),
+          Text(trip.durationOrCar, style: GoogleFonts.inter(color: Colors.grey.shade500, fontSize: 12.sp)),
         ],
-      );
+      )
+    ],
+  );
+
+  Widget _priceColumn(String price) => Column(
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: [
+      Text("\$$price", style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 26.sp, color: const Color(0xFF111111))),
+      Text("per seat", style: GoogleFonts.inter(color: Colors.grey.shade500, fontSize: 12.sp)),
+    ],
+  );
+
+  Widget _buildTimeInfo(String date, String time) => Row(
+    children: [
+      Icon(Icons.calendar_today_outlined, size: 16.r, color: Colors.grey.shade700),
+      SizedBox(width: 6.w),
+      Text(date, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey.shade700, fontWeight: FontWeight.w500)),
+      SizedBox(width: 16.w),
+      Icon(Icons.access_time, size: 16.r, color: Colors.grey.shade700),
+      SizedBox(width: 6.w),
+      Text(time, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey.shade700, fontWeight: FontWeight.w500)),
+    ],
+  );
 }

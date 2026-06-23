@@ -78,7 +78,7 @@ class SearchResultsController extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  String _selectedFilter = "Recent"; // Default updated to match specification rules
+  String _selectedFilter = "Recent"; 
   String get selectedFilter => _selectedFilter;
 
   // Track coordinates locally for dynamic headers
@@ -87,7 +87,7 @@ class SearchResultsController extends ChangeNotifier {
   String get fromLocation => _fromLocation;
   String get toLocation => _toLocation;
 
-  // Cache parameters to re-trigger API requests if sort type filters change query parameters
+
   Map<String, dynamic> _lastSearchParams = {};
 
   Future<void> fetchAvailableRides({
@@ -121,7 +121,6 @@ class SearchResultsController extends ChangeNotifier {
           ..._lastSearchParams,
           'sort_by': sortBy,
         },
-
         options: Options(
           headers: {
             'Content-Type': 'application/json',
@@ -133,7 +132,24 @@ class SearchResultsController extends ChangeNotifier {
       if (response.data != null && response.data['success'] == true) {
         debugPrint('!-------$response-------!');
         final List rawResults = response.data['data']['results'] ?? [];
-        _results = rawResults.map((json) => RideResult.fromJson(json)).toList();
+        
+        _results = rawResults.map((json) {
+          final Map<String, dynamic> sanitizedJson = Map<String, dynamic>.from(json);
+          final numericalKeys = [
+            'driver_rating', 
+            'price_per_seat', 
+            'door_pickup_charge', 
+            'distance_km',
+            'price' 
+          ];
+
+          for (var key in numericalKeys) {
+            if (sanitizedJson[key] is String) {
+              sanitizedJson[key] = double.tryParse(sanitizedJson[key]) ?? 0.0;
+            }
+          }
+          return RideResult.fromJson(sanitizedJson);
+        }).toList();
       }
     } catch (e) {
       debugPrint("Error fetching rides: $e");
@@ -142,16 +158,14 @@ class SearchResultsController extends ChangeNotifier {
       notifyListeners();
     }
   }
-  // FIXED: Consolidated function working in both list configurations safely
+
   void setFilter(String filter) {
     _selectedFilter = filter;
     
     if (filter == "Lowest Price") {
-      // Local clean array sorting mapping rules
       _results.sort((a, b) => a.price.compareTo(b.price));
       notifyListeners();
     } else {
-      // Re-trigger network backend endpoint sorting if user requests "Recent" 
       fetchAvailableRides(
         pickup: _lastSearchParams['pickup_location'] ?? '',
         drop: _lastSearchParams['drop_location'] ?? '',

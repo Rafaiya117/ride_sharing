@@ -1,17 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/reusable_primary_button.dart';
+import 'package:ride_sharing/features/home/home_controller/home_controller.dart';
 import 'package:ride_sharing/features/payment/payment_controller/payment_controller.dart';
+import 'package:flutter_stripe/flutter_stripe.dart' hide PaymentMethodType, PaymentMethodData;
+import 'package:stripe_platform_interface/stripe_platform_interface.dart' as stripe_platform_interface;
 
-class StripeCardBottomSheet extends StatelessWidget {
+class StripeCardBottomSheet extends StatefulWidget {
   const StripeCardBottomSheet({super.key});
 
   @override
+  State<StripeCardBottomSheet> createState() => _StripeCardBottomSheetState();
+}
+
+class _StripeCardBottomSheetState extends State<StripeCardBottomSheet> {
+  final CardFormEditController _cardFormController = CardFormEditController();
+  bool _isSuccess = false; 
+
+  @override
+  void dispose() {
+    _cardFormController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final paymentController = context.watch<PaymentController>();
+
     return Container(
-      // Padding to lift content above keyboard
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -20,7 +39,7 @@ class StripeCardBottomSheet extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         child: Column(
-          mainAxisSize: MainAxisSize.min, // Hug content
+          mainAxisSize: MainAxisSize.min, 
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Header: Back icon and Title
@@ -38,89 +57,89 @@ class StripeCardBottomSheet extends StatelessWidget {
               style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20.h),
-
-            // Card Information Section
-            _buildSectionLabel("Card information"),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Column(
-                children: [
-                  _buildStripeField("Card number", showIcons: true),
-                  const Divider(height: 1, thickness: 1),
-                  Row(
-                    children: [
-                      Expanded(child: _buildStripeField("MM / YY")),
-                      Container(width: 1, height: 50.h, color: Colors.grey.shade300),
-                      Expanded(child: _buildStripeField("CVC")),
-                    ],
-                  ),
-                ],
+            _buildSectionLabel("Card & Billing information"),
+            SizedBox(
+              height: 240.h,
+              child: CardFormField(
+                controller: _cardFormController,
+                style: CardFormStyle(
+                  borderColor: const Color(0xFF007AFF),
+                  borderWidth: 1,
+                  borderRadius: 12,
+                  textColor: Colors.black,
+                  backgroundColor: Colors.grey.shade50,
+                  fontSize: 15.sp.toInt(),
+                  placeholderColor: Colors.grey.shade400,
+                ),
               ),
             ),
             SizedBox(height: 20.h),
-
-            // Billing Address Section
-            _buildSectionLabel("Billing address"),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 15.w),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              child: Column(
-                children: [
-                   DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      isExpanded: true,
-                      value: "United States",
-                      items: const [DropdownMenuItem(value: "United States", child: Text("United States"))],
-                      onChanged: (v) {},
-                    ),
-                  ),
-                  const Divider(height: 1, thickness: 1),
-                  TextField(
-                    decoration: InputDecoration(
-                      hintText: "ZIP",
-                      border: InputBorder.none,
-                      hintStyle: GoogleFonts.inter(color: Colors.grey.shade400),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 15.h),
-
-            // Checkbox Row
             Row(
               children: [
                 SizedBox(
                   height: 24.w,
                   width: 24.w,
-                  child: Checkbox(value: true, activeColor: const Color(0xFF007AFF), onChanged: (v) {}),
-                ),
-                SizedBox(width: 10.w),
-                Expanded(
-                  child: Text(
-                    "Save this card for future powdur payments",
-                    style: GoogleFonts.inter(fontSize: 12.sp, color: Colors.grey.shade600),
+                  child: Checkbox(
+                    value: true, 
+                    activeColor: const Color(0xFF007AFF), 
+                    onChanged: (v) {}),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 30.h),
-
-            // Main Pay Button
-            ReusablePrimaryButton(
-              // Assuming your controller has the amount
-              text: "Pay \$135.00", 
-              onTap: () {
-                Navigator.pop(context); // Close sheet
-                context.read<PaymentController>().completeStripePayment(context);
-              },
-            ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Text(
+                      "Save this card for future payments",
+                      style: GoogleFonts.inter(fontSize: 12.sp, color: Colors.grey.shade600),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 30.h),
+            _isSuccess
+              ? Center(
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.elasticOut,
+                  padding: EdgeInsets.all(12.w),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF1DB954),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.check, color: Colors.white, size: 40.sp),
+                  ),
+                )
+                : ReusablePrimaryButton(
+                  text: paymentController.isPaying 
+                    ? "Processing..." : "Pay \$${paymentController.payment.totalAmount.toStringAsFixed(2)}", 
+                    onTap: paymentController.isPaying 
+                      ? () {} 
+                      : () async {
+                        if (_cardFormController.details.complete == true) {
+                          final cardParams = PaymentMethodParams.card(
+                            paymentMethodData: stripe_platform_interface.PaymentMethodData());
+                              // Trigger operations pipeline
+                              bool success = await paymentController.confirmCustomCardPayment(context, cardParams);                              
+                              if (success && context.mounted) {
+                                setState(() {
+                                  _isSuccess = true;
+                                });                      
+                                // Keep checkmark visible briefly before final screen routing transition execution
+                                await Future.delayed(const Duration(milliseconds: 1000));
+                                if (context.mounted) {
+                                  context.read<HomeController>().clearInputs();
+                                  Navigator.pop(context); // Dismiss sheet safely
+                                  GoRouter.of(context).push('/user_home_screen'); // Direct navigation route handling
+                                }
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Please enter complete card and billing details first."),
+                                  backgroundColor: Colors.redAccent,
+                                ),
+                              );
+                            }
+                          },
+                  ),
             SizedBox(height: 10.h),
           ],
         ),
@@ -132,20 +151,6 @@ class StripeCardBottomSheet extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
       child: Text(text, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey.shade600)),
-    );
-  }
-
-  Widget _buildStripeField(String hint, {bool showIcons = false}) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15.w),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: hint,
-          border: InputBorder.none,
-          hintStyle: GoogleFonts.inter(color: Colors.grey.shade400),
-          suffixIcon: showIcons ? Icon(Icons.credit_card, size: 20.sp, color: Colors.grey) : null,
-        ),
-      ),
     );
   }
 }

@@ -52,6 +52,9 @@ dependencies:
   path: ^1.9.1
   web_socket_channel: ^3.0.3
   url_launcher: ^6.3.2
+  flutter_stripe: ^13.0.0
+  stripe_platform_interface: ^13.0.0
+
 
 
 

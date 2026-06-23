@@ -151,9 +151,18 @@ final GoRouter appRouter = GoRouter(
         );
       },
     ),
+    // GoRoute(
+    //   path: '/payment',
+    //   builder: (context, state) => PaymentScreen(),
+    // ),
     GoRoute(
       path: '/payment',
-      builder: (context, state) => PaymentScreen(),
+      builder: (context, state) {
+        // Extract the dynamic data map from extra
+        final Map<String, dynamic>? bookingData = state.extra as Map<String, dynamic>?;
+        final int dynamicBookingId = bookingData?['id'] ?? bookingData?['booking_id'] ?? 0;
+        return PaymentScreen(bookingId: dynamicBookingId);
+      },
     ),
     GoRoute(
       path: '/ride_tracking',

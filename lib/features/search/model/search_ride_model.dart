@@ -41,8 +41,14 @@ class RideResult {
   });
 
   factory RideResult.fromJson(Map<String, dynamic> json) {
-    final minutes = json['journey_minutes'] ?? 0;
-    final km = json['distance_km'] ?? 0;
+    // FIXED: Safely parse potential String/int mix-ups to numbers before evaluation
+    final int minutes = json['journey_minutes'] is int 
+        ? json['journey_minutes'] 
+        : (int.tryParse(json['journey_minutes']?.toString() ?? '0') ?? 0);
+
+    final double km = json['distance_km'] is num 
+        ? (json['distance_km'] as num).toDouble() 
+        : (double.tryParse(json['distance_km']?.toString() ?? '0.0') ?? 0.0);
 
     return RideResult(
       id: json['id'] ?? 0,
@@ -50,12 +56,14 @@ class RideResult {
       departureDate: json['date_time'] != null ? json['date_time'].toString().substring(0, 10) : '',
       pickup: json['pickup_location'] ?? '',
       dropoff: json['drop_location'] ?? '',
-      price: double.tryParse(json['price_per_seat'] ?? '0') ?? 0.0,
+      // FIXED: Force a fallback to string '0.0' so tryParse handles double/string shapes smoothly
+      price: double.tryParse(json['price_per_seat']?.toString() ?? '0.0') ?? 0.0,
       seatsLeft: json['available_seats'] ?? 0,
       driverName: json['driver_name'] ?? 'Unknown',
-      driverRating: double.tryParse(json['driver_rating'] ?? '0.0') ?? 0.0,
+      // FIXED: Force a fallback to string '0.0' to prevent type comparison crashing
+      driverRating: double.tryParse(json['driver_rating']?.toString() ?? '0.0') ?? 0.0,
       duration: minutes > 0 ? "${minutes}m" : "N/A",
-      distance: km > 0 ? "${km} km" : "N/A",
+      distance: km > 0 ? "${km.toStringAsFixed(1)} km" : "N/A",
       carModel: json['car_model'] ?? "Standard Ride", 
     );
   }
