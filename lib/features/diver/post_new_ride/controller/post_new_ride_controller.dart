@@ -6,10 +6,8 @@ import 'package:ride_sharing/core/token/token_storage.dart';
 import 'package:ride_sharing/features/diver/post_new_ride/model/post_new_ride_model.dart';
 
 class PostRideController extends ChangeNotifier {
-  // Instance of the model
   final PostRideModel ride = PostRideModel();
 
-  // Text Controllers
   final TextEditingController pickupLocationController = TextEditingController();
   final TextEditingController dropoffLocationController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
@@ -23,9 +21,143 @@ class PostRideController extends ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  String? pickupLat;
+  String? pickupLng;
+  String? dropoffLat;
+  String? dropoffLng;
+
+  // FIXED: Fields to hold calculated routing specifications from API 3
+  double? routeDistanceKm;
+  int? routeDurationMinutes;
+  String? routePolyline;
+
+  List<dynamic> pickupSuggestions = [];
+  List<dynamic> dropoffSuggestions = [];
+
   void _setLoading(bool value) {
     _isLoading = value;
     notifyListeners();
+  }
+
+Future<List<dynamic>> searchPlaces(String query, {required bool isPickup}) async {
+    if (query.isEmpty) {
+      if (isPickup) {
+        pickupSuggestions = [];
+      } else {
+        dropoffSuggestions = [];
+      }
+      notifyListeners();
+      return [];
+    }
+    
+    final String? token = TokenStorage.accessToken; // Fetch session token
+
+    try {
+      String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
+      if (baseUrl.endsWith('/')) baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+      
+      final response = await _dio.get(
+        '$baseUrl/api/v1/maps/places/', 
+        queryParameters: {'query': query},
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            if (token != null) 'Authorization': 'Bearer $token', // Injected protection header
+          },
+        ),
+      );
+      if (response.data != null && response.data['success'] == true) {
+        final List results = response.data['data'] ?? [];
+        if (isPickup) pickupSuggestions = results; else dropoffSuggestions = results;
+        notifyListeners();
+        return results;
+      }
+    } catch (e) {
+      debugPrint("Autocomplete search exception: $e");
+    }
+    return [];
+  }
+
+  // FIXED: Added Authorization header to resolve potential 401 exceptions on detail lookups
+  Future<void> fetchPlaceDetails(String placeId, {required bool isPickup}) async {
+    final String? token = TokenStorage.accessToken; // Fetch session token
+
+    try {
+      String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
+      if (baseUrl.endsWith('/')) baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+
+      final response = await _dio.get(
+        '$baseUrl/api/v1/maps/place-details/', 
+        queryParameters: {'place_id': placeId},
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            if (token != null) 'Authorization': 'Bearer $token', // Injected protection header
+          },
+        ),
+      );
+      if (response.data != null && response.data['success'] == true) {
+        final data = response.data['data'];
+        if (isPickup) {
+          pickupLat = data['lat']?.toString();
+          pickupLng = data['lng']?.toString();
+          pickupLocationController.text = data['formatted_address'] ?? data['name'];
+          pickupSuggestions = [];
+        } else {
+          dropoffLat = data['lat']?.toString();
+          dropoffLng = data['lng']?.toString();
+          dropoffLocationController.text = data['formatted_address'] ?? data['name'];
+          dropoffSuggestions = [];
+        }
+        notifyListeners();
+
+        if (pickupLat != null && dropoffLat != null) {
+          await calculateRoute();
+        }
+      }
+    } catch (e) {
+      debugPrint("Details retrieval exception: $e");
+    }
+  }
+
+  // FIXED: New isolated function handling API 3 route calculation payloads
+  Future<void> calculateRoute() async {
+    final token = TokenStorage.accessToken;
+    if (token == null) return;
+
+    try {
+      String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
+      if (baseUrl.endsWith('/')) baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+
+      final response = await _dio.post(
+        '$baseUrl/api/v1/maps/route/',
+        data: {
+          "origin_lat": double.tryParse(pickupLat ?? ''),
+          "origin_lng": double.tryParse(pickupLng ?? ''),
+          "dest_lat": double.tryParse(dropoffLat ?? ''),
+          "dest_lng": double.tryParse(dropoffLng ?? '')
+        },
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      if (response.data != null && response.data['success'] == true) {
+        final routeData = response.data['data'];
+        routeDistanceKm = double.tryParse(routeData['distance_km']?.toString() ?? '');
+        routeDurationMinutes = int.tryParse(routeData['duration_minutes']?.toString() ?? '');
+        routePolyline = routeData['polyline'];
+        
+        debugPrint("API 3 Route Computed: $routeDistanceKm km, $routeDurationMinutes mins");
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint("Error fetching route specifications from API 3: $e");
+    }
   }
 
   void toggleDoorPickUp(bool value) {
@@ -39,7 +171,6 @@ class PostRideController extends ChangeNotifier {
   }
 
   Future<void> submitRide(BuildContext context) async {
-    // Read directly from text controllers to catch user inputs dynamically
     final String pickupText = pickupLocationController.text.trim();
     final String dropoffText = dropoffLocationController.text.trim();
     final String dateText = dateController.text.trim();
@@ -49,11 +180,13 @@ class PostRideController extends ChangeNotifier {
     final double priceInput = double.tryParse(priceController.text) ?? 45.0;
     final double pickupChargeInput = double.tryParse(pickupChargesController.text) ?? 0.0;
 
-    debugPrint("Posting Ride: $pickupText to $dropoffText");
-
-    // 1. Structural input validation check against UI inputs
     if (pickupText.isEmpty || dropoffText.isEmpty) {
       _showSnackBar(context, "Please enter both pickup and drop-off locations", isError: true);
+      return;
+    }
+
+    if (pickupLat == null || dropoffLat == null) {
+      _showSnackBar(context, "Please select locations from the search dropdown lists.", isError: true);
       return;
     }
 
@@ -66,10 +199,10 @@ class PostRideController extends ChangeNotifier {
     _setLoading(true);
 
     try {
-      final baseUrl = dotenv.env['API_BASE_URL'];
+      String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
+      if (baseUrl.endsWith('/')) baseUrl = baseUrl.substring(0, baseUrl.length - 1);
       final url = '$baseUrl/api/v1/rides/'; 
 
-      // 2. Parse date/time strings from text fields safely
       String formattedDateTime = DateTime.now().toUtc().toIso8601String(); 
       if (dateText.isNotEmpty && timeText.isNotEmpty) {
         try {
@@ -77,16 +210,15 @@ class PostRideController extends ChangeNotifier {
         } catch (_) {}
       }
 
-      // 3. Post dynamic tracking map matching your exact payload sample structure
       final response = await _dio.post(
         url,
         data: {
           "pickup_location": pickupText,
-          "pickup_lat": "0.000000", 
-          "pickup_lng": "0.000000",
+          "pickup_lat": pickupLat, 
+          "pickup_lng": pickupLng,
           "drop_location": dropoffText,
-          "drop_lat": "0.000000",
-          "drop_lng": "0.000000",
+          "drop_lat": dropoffLat,
+          "drop_lng": dropoffLng,
           "date_time": formattedDateTime,
           "available_seats": seatsInput,
           "price_per_seat": priceInput.toStringAsFixed(2),
@@ -136,7 +268,6 @@ class PostRideController extends ChangeNotifier {
 
   @override
   void dispose() {
-    // Fixed: Properly dispose all newly initialized input text handlers to clear system memory
     pickupLocationController.dispose();
     dropoffLocationController.dispose();
     dateController.dispose();

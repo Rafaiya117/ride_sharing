@@ -117,26 +117,76 @@ class HomeScreen extends StatelessWidget {
                     style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
                   ),
                   SizedBox(height: 20.h),
-                  
-                  // Reusable input fields per image_3.png logic (rounded rect, prefix icon, hint)
                   _buildInputLabel("Pickup location"),
                   CustomTextField(
                     controller: controller.pickupController,
                     hintText: "Pickup location",
                     prefixIconPath: 'assets/icons/pickup_marker.svg',
                     showBorder: true,
+                    onChanged: (val) =>
+                        controller.searchPlaces(val, isPickup: true),
                   ),
+                  if (controller.pickupSuggestions.isNotEmpty)
+                    Container(
+                      height: 180.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: controller.pickupSuggestions.length,
+                        itemBuilder: (context, idx) {
+                          final item = controller.pickupSuggestions[idx];
+                          return ListTile(
+                            title: Text(
+                              item['description'] ?? '',
+                              style: GoogleFonts.inter(fontSize: 14.sp),
+                            ),
+                            onTap: () => controller.fetchPlaceDetails(
+                              item['place_id'],
+                              isPickup: true,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   SizedBox(height: 15.h),
-                  
+
                   _buildInputLabel("Drop-off location"),
                   CustomTextField(
                     controller: controller.dropoffController,
                     hintText: "Drop-off location",
                     prefixIconPath: 'assets/icons/dropoff_marker.svg',
                     showBorder: true,
+                    onChanged: (val) => controller.searchPlaces(val, isPickup: false),
                   ),
-                  SizedBox(height: 15.h),
-                  
+                  if (controller.dropoffSuggestions.isNotEmpty)
+                    Container(
+                      height: 180.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: controller.dropoffSuggestions.length,
+                        itemBuilder: (context, idx) {
+                          final item = controller.dropoffSuggestions[idx];
+                          return ListTile(
+                            title: Text(
+                              item['description'] ?? '',
+                              style: GoogleFonts.inter(fontSize: 14.sp),
+                            ),
+                            onTap: () => controller.fetchPlaceDetails(
+                              item['place_id'],
+                              isPickup: false,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  SizedBox(height: 15.h),                  
                   // Date & Seats Row (Using slightly wider spacing for design)
                   Row(
                     children: [
@@ -215,7 +265,6 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20.h),
-          // Dynamic Upcoming Trip Card per MVC logic
           UpcomingTripCard(
             trip: controller.nextTrip,
             onTrackPressed: () => controller.trackTrip(context, controller.nextTrip),

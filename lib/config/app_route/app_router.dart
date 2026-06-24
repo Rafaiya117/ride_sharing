@@ -256,9 +256,17 @@ final GoRouter appRouter = GoRouter(
       path: '/drive_trip_screen',
       builder: (context, state) => DriverTripScreen(),
     ),
+    // GoRoute(
+    //   path: '/drive_ridedetails_screen',
+    //   builder: (context, state) => DriverRideDetailsScreen(),
+    // ),
+
     GoRoute(
       path: '/drive_ridedetails_screen',
-      builder: (context, state) => DriverRideDetailsScreen(),
+      builder: (context, state) {
+        final rideId = state.uri.queryParameters['rideId'] ?? (state.extra as String? ?? '');
+        return DriverRideDetailsScreen(rideId: rideId);
+      },
     ),
     GoRoute(
       path: '/drive_trackride_screen',

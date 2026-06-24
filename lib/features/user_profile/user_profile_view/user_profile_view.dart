@@ -19,38 +19,38 @@ class ProfileScreen extends StatelessWidget {
 
     return BaseScaffold(
       title: Row(
-    children: [
-      Expanded(
-        child: Text(
-          "Profile",
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w700,
+        children: [
+          Expanded(
+            child: Text(
+              "Profile",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
+        ],
+      ),
+      titleAlign: TextAlign.center,
+      isCurved: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.pop(context),
+      ),
+      actions: [
+        IconButton(
+          padding: EdgeInsets.only(right: 8.w),
+          icon: SvgPicture.asset(
+            'assets/icons/edit.svg', // Ensure this path is correct
+            width: 22.w,
+            height: 22.w,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          ),
+          onPressed: () => controller.navigateToEditProfile(context),
         ),
-      ),
-    ],
-  ),
-  titleAlign: TextAlign.center,
-  isCurved: true,
-  leading: IconButton(
-    icon: const Icon(Icons.arrow_back, color: Colors.white),
-    onPressed: () => Navigator.pop(context),
-  ),
-  actions: [
-    IconButton(
-      padding: EdgeInsets.only(right: 8.w),
-      icon: SvgPicture.asset(
-        'assets/icons/edit.svg', // Ensure this path is correct
-        width: 22.w,
-        height: 22.w,
-        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-      ),
-      onPressed: () => controller.navigateToEditProfile(context),
-    ),
-  ],
+      ],
       // Pass the navbar here to ensure it shows on the profile tab if needed
       // bottomNavigationBar: CustomBottomNavbar(
       //   currentIndex: 3, // Assuming Account is index 3
@@ -59,7 +59,6 @@ class ProfileScreen extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(height: 10.h), 
-
           Container(
             width: 80.r,
             height: 80.r,

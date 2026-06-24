@@ -476,15 +476,28 @@ Widget _buildStripeOnboardingPopup(BuildContext context, DriverHomeController co
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () => controller.acceptRequest(index),
-                  child: _buildBtn("Accept", Colors.black, Colors.white, 'assets/icons/accept_icon.svg'),
-                ),
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => controller.declineRequest(index),
-                  child: _buildBtn("Decline", Colors.white, Colors.black, 'assets/icons/decline_icon.svg', hasBorder: true),
+                  // FIXED: Passes "accept" action string to the unified handler
+                      onTap: () => controller.handleRideRequest(index, "accept"),
+                      child: _buildBtn(
+                        "Accept",
+                        Colors.black,
+                        Colors.white,
+                        'assets/icons/accept_icon.svg',
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: GestureDetector(
+                        // FIXED: Passes "reject" action string to the unified handler
+                    onTap: () => controller.handleRideRequest(index, "reject"),
+                    child: _buildBtn(
+                      "Decline",
+                      Colors.white,
+                      Colors.black,
+                    'assets/icons/decline_icon.svg',
+                    hasBorder: true,
+                  ),
                 ),
               ),
             ],

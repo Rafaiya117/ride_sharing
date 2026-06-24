@@ -55,6 +55,7 @@ class MyTripsController extends ChangeNotifier {
   List<TripModel> _allTrips = [];
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  bool _hasFetched = false;
 
   void setNavbarIndex(int index) {
     _currentNavbarIndex = index;
@@ -65,8 +66,10 @@ class MyTripsController extends ChangeNotifier {
   List<TripModel> get activeTrips => _allTrips.where((trip) => trip.status == 'accepted' && trip.timelineStatus == 'ongoing').toList();
 
   Future<void> fetchMyTrips() async {
+    if (_isLoading || _hasFetched) return;
+    
     _isLoading = true;
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) => notifyListeners());
 
     try {
       String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
@@ -91,6 +94,8 @@ class MyTripsController extends ChangeNotifier {
         ? response.data['data'] : {};            
         final List rawList = dataMap['results'] ?? [];
         _allTrips = rawList.map((json) => TripModel.fromJson(json)).toList();
+        
+        _hasFetched = true; 
       }
     } catch (e) {
       debugPrint("Error loading passenger trip history lists: $e");

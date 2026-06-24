@@ -17,7 +17,6 @@ class DriverTripScreen extends StatelessWidget {
     final controller = context.watch<DriverTripController>();
 
     return BaseScaffold(
-      // --- Header exactly as shown ---
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -51,15 +50,37 @@ class DriverTripScreen extends StatelessWidget {
         currentIndex: controller.currentNavbarIndex,
         onTap: (index) => controller.setNavbarIndex(index), 
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildTitle("My Posted Rides"),
-          if (controller.postedRide != null) _buildPostedRideCard(context,controller.postedRide!),
-          _buildTitle("Active Trip"),
-          if (controller.activeTrip != null) _buildActiveTripCard(context,controller.activeTrip!),
-          SizedBox(height: 20.h),
-        ],
+      // FIXED: FutureBuilder handles safe execution cleanly once on load
+      child: FutureBuilder(
+        future: context.read<DriverTripController>().fetchDriverTrips(),
+        builder: (context, snapshot) {
+          if (controller.isLoading && controller.postedRide == null && controller.activeTrip == null) {
+            return const Center(child: Padding(padding: EdgeInsets.all(40.0), child: CircularProgressIndicator()));
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTitle("My Posted Rides"),
+              if (controller.postedRide != null) 
+                _buildPostedRideCard(context, controller.postedRide!)
+              else
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.h),
+                  child: Text("No posted rides available.", style: GoogleFonts.inter(color: Colors.grey)),
+                ),                
+              _buildTitle("Active Trip"),
+              if (controller.activeTrip != null) 
+                _buildActiveTripCard(context, controller.activeTrip!)
+              else
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.h),
+                  child: Text("No active ongoing trips.", style: GoogleFonts.inter(color: Colors.grey)),
+                ),
+              SizedBox(height: 20.h),
+            ],
+          );
+        },
       ),
     );
   }
@@ -73,7 +94,7 @@ class DriverTripScreen extends StatelessWidget {
 
   // --- Specific Card UI Components ---
 
-  Widget _buildPostedRideCard(BuildContext context, PostedRideModel ride) { // Added context
+ Widget _buildPostedRideCard(BuildContext context, PostedRideModel ride) { // Added context
   return GestureDetector(
     onTap: () => context.push('/drive_ridedetails_screen', extra: ride.id), // Change route name as needed
     child: Container(
@@ -113,9 +134,13 @@ class DriverTripScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.h),
-          // IMPORTANT: Wrap the button in a GestureDetector/InkWell to catch its own tap
-          // OR leave as is if clicking "Cancel" should only trigger cancellation logic.
-          _actionBtn("Cancel Ride", Colors.red, const Color(0xFFFFF1F0), 'assets/icons/cancel.svg'),
+          // FIXED: Wrapped with an independent GestureDetector to prevent tap propagation to parent card routing profile
+          GestureDetector(
+            onTap: () {
+              context.read<DriverTripController>().cancelRide(context, ride.id.toString());
+            },
+            child: _actionBtn("Cancel Ride", Colors.red, const Color(0xFFFFF1F0), 'assets/icons/cancel.svg'),
+          ),
         ],
       ),
     ),

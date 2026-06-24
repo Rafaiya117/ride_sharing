@@ -1,163 +1,11 @@
 // ignore_for_file: prefer_final_fields
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/core/token/token_storage.dart';
 import 'package:ride_sharing/features/home/model/home_model.dart';
 
-// class HomeController extends ChangeNotifier {
-//   // 1. Dynamic User Data (Mocked)
-//   String _userName = "Safi";
-//   UserStats _stats = UserStats(trips: 24, rating: 4.8, upcoming: 1);
-//   UpcomingTrip _nextTrip = UpcomingTrip(
-//     pickup: "New York, NY", dropoff: "Boston, MA", 
-//     date: "Mar 6, 2026", time: "09:00 AM", pricePerSeat: 45.0, 
-//     driverName: "Sarah Johnson", carModel: "Honda Accord 2022"
-//   );
-
-//   // 2. Planning Inputs
-//   final TextEditingController pickupController = TextEditingController();
-//   final TextEditingController dropoffController = TextEditingController();
-  
-//   // 3. Navbar State
-//   int _currentNavbarIndex = 0;
-//   int get currentNavbarIndex => _currentNavbarIndex;
-//   // Getters
-//   String get userName => _userName;
-//   UserStats get stats => _stats;
-//   UpcomingTrip get nextTrip => _nextTrip;
-  
-
-//   // --- Methods ---
-  
-//   void setNavbarIndex(int index) {
-//     _currentNavbarIndex = index;
-//     notifyListeners();
-//   }
-
-//   // void searchRides(BuildContext context) {
-//   //   String from = pickupController.text.trim();
-//   //   String to = dropoffController.text.trim();
-//   //   print("Searching rides from $from to $to...");
-//   //   GoRouter.of(context).push('/search_ride_screen');
-//   // }
-
-//   void searchRides(BuildContext context) {
-//     String from = pickupController.text.trim();
-//     String to = dropoffController.text.trim();
-//     String date = "2026-06-19"; 
-//     int seats = 1;
-
-//     if (from.isEmpty || to.isEmpty) return;
-//     print("Searching rides from $from to $to...");
-//     context.push('/search_ride_screen?pickup_location=$from&drop_location=$to&date=$date&seats=$seats');
-//   }
-
-//   void trackTrip(BuildContext context, UpcomingTrip trip) {
-//     print("Tracking trip: ${trip.pickup} to ${trip.dropoff} with ${trip.driverName}...");
-//     GoRouter.of(context).push('/ride_tracking');
-//   }
-
-//   void shareTripWithFamily(BuildContext context) {
-//     print("Sharing trip details...");
-//     // Implement share dialog
-//   }
-
-//   void openNotifications(BuildContext context) {
-//     print("Opening notifications...");
-//     // GoRouter.of(context).push('/notifications');
-//   }
-
-//   void openProfile(BuildContext context) {
-//     print("Opening profile...");
-//     GoRouter.of(context).push('/profile_screen');
-//   }
-
-//   @override
-//   void dispose() {
-//     pickupController.dispose();
-//     dropoffController.dispose();
-//     super.dispose();
-//   }
-// }
-
-// class HomeController extends ChangeNotifier {
-//   String get userName => TokenStorage.userData?['name'] ?? "User";
-  
-//   UserStats get stats => UserStats(
-//     trips: TokenStorage.userData?['total_trips'] ?? 0,
-//     rating: double.tryParse((TokenStorage.userData?['avg_rating'] ?? '0.0').toString()) ?? 0.0,
-//     upcoming: 1, // Retained fallback design variable
-//   );
-
-//   UpcomingTrip _nextTrip = UpcomingTrip(
-//     pickup: "New York, NY", dropoff: "Boston, MA", 
-//     date: "Mar 6, 2026", time: "09:00 AM", pricePerSeat: 45.0, 
-//     driverName: "Sarah Johnson", carModel: "Honda Accord 2022"
-//   );
-
-//   // 2. Planning Inputs
-//   final TextEditingController pickupController = TextEditingController();
-//   final TextEditingController dropoffController = TextEditingController();
-//   final TextEditingController dateController = TextEditingController();
-//   final TextEditingController seatController = TextEditingController();
-//   // 3. Navbar State
-//   int _currentNavbarIndex = 0;
-//   int get currentNavbarIndex => _currentNavbarIndex;
-  
-//   // Getters
-//   UpcomingTrip get nextTrip => _nextTrip;
-
-//   // --- Methods ---
-//   void setNavbarIndex(int index) {
-//     _currentNavbarIndex = index;
-//     notifyListeners();
-//   }
-
-//   void searchRides(BuildContext context) {
-//     String from = pickupController.text.trim();
-//     String to = dropoffController.text.trim();
-//     String rawDate = dateController.text.trim(); 
-//     int seats = int.tryParse(seatController.text.trim()) ?? 1;
-
-//     if (from.isEmpty || to.isEmpty) return;
-//     String formattedDate = rawDate;
-//     if (rawDate.isNotEmpty && rawDate.contains('/')) {
-//       final parts = rawDate.split('/');
-//       if (parts.length == 3) {
-//         formattedDate = "${parts[2]}-${parts[0]}-${parts[1]}";
-//       }
-//     }
-
-//     print("Searching rides from $from to $to on date: $formattedDate...");
-//     context.push('/search_ride_screen?pickup_location=$from&drop_location=$to&date=$formattedDate&seats=$seats');
-//   }
-
-//   void trackTrip(BuildContext context, UpcomingTrip trip) {
-//     print("Tracking trip: ${trip.pickup} to ${trip.dropoff} with ${trip.driverName}...");
-//     GoRouter.of(context).push('/ride_tracking');
-//   }
-
-//   void shareTripWithFamily(BuildContext context) {
-//     print("Sharing trip details...");
-//   }
-
-//   void openNotifications(BuildContext context) {
-//     print("Opening notifications...");
-//   }
-
-//   void openProfile(BuildContext context) {
-//     print("Opening profile...");
-//     GoRouter.of(context).push('/profile_screen');
-//   }
-
-//   @override
-//   void dispose() {
-//     pickupController.dispose();
-//     dropoffController.dispose();
-//     super.dispose();
-//   }
-// }
 
 class HomeController extends ChangeNotifier {
   String get userName => TokenStorage.userData?['name'] ?? "User";
@@ -165,7 +13,7 @@ class HomeController extends ChangeNotifier {
   UserStats get stats => UserStats(
     trips: TokenStorage.userData?['total_trips'] ?? 0,
     rating: double.tryParse((TokenStorage.userData?['avg_rating'] ?? '0.0').toString()) ?? 0.0,
-    upcoming: 1, // Retained fallback design variable
+    upcoming: 1, 
   );
 
   UpcomingTrip _nextTrip = UpcomingTrip(
@@ -174,31 +22,121 @@ class HomeController extends ChangeNotifier {
     driverName: "Sarah Johnson", carModel: "Honda Accord 2022"
   );
 
-  // 2. Planning Inputs
   final TextEditingController pickupController = TextEditingController();
   final TextEditingController dropoffController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final TextEditingController seatController = TextEditingController();
-  // 3. Navbar State
+  
   int _currentNavbarIndex = 0;
   int get currentNavbarIndex => _currentNavbarIndex;
-  
-  // Getters
   UpcomingTrip get nextTrip => _nextTrip;
 
-  // --- Methods ---
+  final Dio _dio = Dio();
+
+  // FIXED: Properties to hold coordinates and autocomplete suggestions
+  String? pickupLat;
+  String? pickupLng;
+  String? dropoffLat;
+  String? dropoffLng;
+
+  List<dynamic> pickupSuggestions = [];
+  List<dynamic> dropoffSuggestions = [];
+
   void setNavbarIndex(int index) {
     _currentNavbarIndex = index;
     notifyListeners();
   }
 
-  // FIXED: Added method to cleanly erase input text memory values when required
   void clearInputs() {
     pickupController.clear();
     dropoffController.clear();
     dateController.clear();
     seatController.clear();
+    pickupSuggestions = [];
+    dropoffSuggestions = [];
+    pickupLat = null;
+    pickupLng = null;
+    dropoffLat = null;
+    dropoffLng = null;
     notifyListeners();
+  }
+
+  // FIXED: Autocomplete prediction lookup (API 1)
+  Future<List<dynamic>> searchPlaces(String query, {required bool isPickup}) async {
+    if (query.isEmpty) {
+      if (isPickup) {
+        pickupSuggestions = [];
+      } else {
+        dropoffSuggestions = [];
+      }
+      notifyListeners();
+      return [];
+    }
+    
+    final String? token = TokenStorage.accessToken;
+
+    try {
+      String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
+      if (baseUrl.endsWith('/')) baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+      
+      final response = await _dio.get(
+        '$baseUrl/api/v1/maps/places/', 
+        queryParameters: {'query': query},
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            if (token != null) 'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      if (response.data != null && response.data['success'] == true) {
+        final List results = response.data['data'] ?? [];
+        if (isPickup) pickupSuggestions = results; else dropoffSuggestions = results;
+        notifyListeners();
+        return results;
+      }
+    } catch (e) {
+      debugPrint("User Autocomplete search exception: $e");
+    }
+    return [];
+  }
+
+  // FIXED: Detailed geometry coordinate extraction (API 2)
+  Future<void> fetchPlaceDetails(String placeId, {required bool isPickup}) async {
+    final String? token = TokenStorage.accessToken;
+
+    try {
+      String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
+      if (baseUrl.endsWith('/')) baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+
+      final response = await _dio.get(
+        '$baseUrl/api/v1/maps/place-details/', 
+        queryParameters: {'place_id': placeId},
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            if (token != null) 'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      if (response.data != null && response.data['success'] == true) {
+        final data = response.data['data'];
+        if (isPickup) {
+          pickupLat = data['lat']?.toString();
+          pickupLng = data['lng']?.toString();
+          pickupController.text = data['formatted_address'] ?? data['name'];
+          pickupSuggestions = [];
+        } else {
+          dropoffLat = data['lat']?.toString();
+          dropoffLng = data['lng']?.toString();
+          dropoffController.text = data['formatted_address'] ?? data['name'];
+          dropoffSuggestions = [];
+        }
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint("User Details retrieval exception: $e");
+    }
   }
 
   void searchRides(BuildContext context) {
@@ -208,6 +146,7 @@ class HomeController extends ChangeNotifier {
     int seats = int.tryParse(seatController.text.trim()) ?? 1;
 
     if (from.isEmpty || to.isEmpty) return;
+    
     String formattedDate = rawDate;
     if (rawDate.isNotEmpty && rawDate.contains('/')) {
       final parts = rawDate.split('/');
@@ -216,25 +155,22 @@ class HomeController extends ChangeNotifier {
       }
     }
 
-    print("Searching rides from $from to $to on date: $formattedDate...");
-    context.push('/search_ride_screen?pickup_location=$from&drop_location=$to&date=$formattedDate&seats=$seats');
+    // FIXED: Appends the precise verified geolocation lat/lng details to the query route parameters
+    context.push(
+      '/search_ride_screen?pickup_location=$from&drop_location=$to&date=$formattedDate&seats=$seats'
+      '&pickup_lat=${pickupLat ?? ""}&pickup_lng=${pickupLng ?? ""}'
+      '&drop_lat=${dropoffLat ?? ""}&drop_lng=${dropoffLng ?? ""}'
+    );
   }
 
   void trackTrip(BuildContext context, UpcomingTrip trip) {
-    print("Tracking trip: ${trip.pickup} to ${trip.dropoff} with ${trip.driverName}...");
     GoRouter.of(context).push('/ride_tracking');
   }
 
-  void shareTripWithFamily(BuildContext context) {
-    print("Sharing trip details...");
-  }
-
-  void openNotifications(BuildContext context) {
-    print("Opening notifications...");
-  }
-
+  void shareTripWithFamily(BuildContext context) {}
+  void openNotifications(BuildContext context) {}
+  
   void openProfile(BuildContext context) {
-    print("Opening profile...");
     GoRouter.of(context).push('/profile_screen');
   }
 
@@ -242,7 +178,6 @@ class HomeController extends ChangeNotifier {
   void dispose() {
     pickupController.dispose();
     dropoffController.dispose();
-    // FIXED: Added remaining controllers to avoid memory leaks completely
     dateController.dispose();
     seatController.dispose();
     super.dispose();

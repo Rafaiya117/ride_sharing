@@ -1,33 +1,69 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ride_sharing/core/token/token_storage.dart';
 import 'package:ride_sharing/features/user_profile/user_profile_model/user_profile_model.dart';
 
 class ProfileController extends ChangeNotifier {
-  late ProfileModel _profile;
+  // FIXED: Initialized with a default model configuration instance to support view loading states
+  ProfileModel _profile = ProfileModel(
+    name: "Loading...",
+    email: "...",
+    initials: "",
+    totalTrips: 0,
+    rating: 0.0,
+    availableCredits: 0.0,
+    isVerified: false,
+  );
+  
   ProfileModel get profile => _profile;
 
-  // 2. Dynamic Input State for Promo Code
   final TextEditingController promoCodeController = TextEditingController();
   bool _isPromoInputValid = false;
   bool get isPromoInputValid => _isPromoInputValid;
 
+  final Dio _dio = Dio();
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   ProfileController() {
-    _mockInitialData(); 
+    fetchProfileData(); // FIXED: Triggers backend request instantly when active
   }
 
-  void _mockInitialData() {
-    _profile = ProfileModel(
-      name: "John Doe",
-      email: "safimahmud1412@gmail.com",
-      initials: "J",
-      totalTrips: 45,
-      rating: 4.8,
-      availableCredits: 15.0,
-      isVerified: true, 
-    );
-  }
+  // FIXED: Fetch real profile information from the API
+  Future<void> fetchProfileData() async {
+    final String? token = TokenStorage.accessToken;
+    if (token == null) return;
 
-  // --- Dynamic Methods ---
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
+      if (baseUrl.endsWith('/')) baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+
+      final response = await _dio.get(
+        '$baseUrl/api/v1/driver/profile/', 
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.data != null && response.data['success'] == true) {
+        final profileData = response.data['data'];
+        _profile = ProfileModel.fromJson(profileData);
+      }
+    } catch (e) {
+      debugPrint("Exception caught retrieving profile datasets: $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 
   void onPromoInputChanged(String value) {
     _isPromoInputValid = value.trim().isNotEmpty;
@@ -37,8 +73,7 @@ class ProfileController extends ChangeNotifier {
   void redeemPromoCode(BuildContext context) {
     String code = promoCodeController.text.trim();
     if (code.isNotEmpty) {
-      print("Redeeming promo code dynamically: $code...");
-      // Show dynamic success dialogue standard
+      debugPrint("Redeeming promo code dynamically: $code...");
       promoCodeController.clear();
       _isPromoInputValid = false;
       notifyListeners();
@@ -46,27 +81,27 @@ class ProfileController extends ChangeNotifier {
   }
 
   void navigateToEditProfile(BuildContext context) {
-    print("Navigating dynamically to edit profile...");
+    debugPrint("Navigating dynamically to edit profile...");
     GoRouter.of(context).push('/edit_profile', extra: _profile);
   }
 
   void viewCreditHistory(BuildContext context) {
-    print("Navigating dynamically to credit history...");
+    debugPrint("Navigating dynamically to credit history...");
     GoRouter.of(context).push('/creditHistory');
   }
 
   void navigateToTripHistory(BuildContext context) {
-    print("Navigating dynamically to trip history...");
+    debugPrint("Navigating dynamically to trip history...");
     GoRouter.of(context).push('/my_trip_history');
   }
 
   void navigateToReviews(BuildContext context) {
-    print("Navigating dynamically to user reviews...");
+    debugPrint("Navigating dynamically to user reviews...");
     GoRouter.of(context).push('/review_user');
   }
 
   void navigateToPaymentMethods(BuildContext context) {
-    print("Navigating dynamically to payment methods...");
+    debugPrint("Navigating dynamically to payment methods...");
     GoRouter.of(context).push('/payment');
   }
 

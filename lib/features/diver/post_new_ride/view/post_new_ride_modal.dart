@@ -28,44 +28,99 @@ class PostRideView extends StatelessWidget {
             SizedBox(height: 20.h),
 
             _buildLabel("Pickup Location"),
-            // Asset path instead of Icons.circle
-           _buildTextField(
-              hint: "Starting location", 
-              iconPath: 'assets/icons/pickup_marker.svg', 
-              iconColor: Colors.grey,
-              controller: controller.pickupLocationController, 
-            ),
-            SizedBox(height: 15.h),
-            
-            _buildLabel("Drop-off Location"),
             _buildTextField(
-              hint: "Destination", 
-              iconPath: 'assets/icons/dropoff_marker.svg', 
-              iconColor: Colors.black,
-              controller: controller.dropoffLocationController, 
+              hint: "Starting location",
+              iconPath: 'assets/icons/pickup_marker.svg',
+              iconColor: Colors.grey,
+              controller: controller.pickupLocationController,
+              // FIXED: Listen to input changes for API 1 suggestions
+              onChanged: (val) => controller.searchPlaces(val, isPickup: true),
             ),
+            // FIXED: Display the pickup suggestions list dropdown mapping
+            if (controller.pickupSuggestions.isNotEmpty)
+              Container(
+                height: 200.h,
+                color: Colors.white,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.pickupSuggestions.length,
+                  itemBuilder: (context, idx) {
+                    final item = controller.pickupSuggestions[idx];
+                    return ListTile(
+                      title: Text(
+                        item['description'] ?? '',
+                        style: GoogleFonts.inter(fontSize: 14.sp),
+                      ),
+                      onTap: () => controller.fetchPlaceDetails(
+                        item['place_id'],
+                        isPickup: true,
+                      ),
+                    );
+                  },
+                ),
+              ),
             SizedBox(height: 15.h),
 
+            _buildLabel("Drop-off Location"),
+            _buildTextField(
+              hint: "Destination",
+              iconPath: 'assets/icons/dropoff_marker.svg',
+              iconColor: Colors.black,
+              controller: controller.dropoffLocationController,
+              // FIXED: Listen to input changes for API 1 suggestions
+              onChanged: (val) => controller.searchPlaces(val, isPickup: false),
+            ),
+            // FIXED: Display the drop-off suggestions list dropdown mapping
+            if (controller.dropoffSuggestions.isNotEmpty)
+              Container(
+                height: 200.h,
+                color: Colors.white,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.dropoffSuggestions.length,
+                  itemBuilder: (context, idx) {
+                    final item = controller.dropoffSuggestions[idx];
+                    return ListTile(
+                      title: Text(
+                        item['description'] ?? '',
+                        style: GoogleFonts.inter(fontSize: 14.sp),
+                      ),
+                      onTap: () => controller.fetchPlaceDetails(
+                        item['place_id'],
+                        isPickup: false,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            SizedBox(height: 15.h),
             _buildDateTimeRow(),
             SizedBox(height: 15.h),
 
             _buildSeatsPriceRow(controller),
             SizedBox(height: 20.h),
 
-            _buildToggleRow("Door Pick-up", ride.isDoorPickUp, controller.toggleDoorPickUp),
-            if (ride.isDoorPickUp) _buildActionInput(controller.pickupChargesController),
-            
+            _buildToggleRow(
+              "Door Pick-up",
+              ride.isDoorPickUp,
+              controller.toggleDoorPickUp,
+            ),
+            if (ride.isDoorPickUp)
+              _buildActionInput(controller.pickupChargesController),
+
             SizedBox(height: 10.h),
-            
-            _buildToggleRow("Door Drop-off", ride.isDoorDropOff, controller.toggleDoorDropOff),
-            if (ride.isDoorDropOff) _buildActionInput(controller.dropoffChargesController),
+
+            _buildToggleRow(
+              "Door Drop-off",
+              ride.isDoorDropOff,
+              controller.toggleDoorDropOff,
+            ),
+            if (ride.isDoorDropOff)
+              _buildActionInput(controller.dropoffChargesController),
 
             SizedBox(height: 25.h),
-
             _buildDocSection(),
-
             SizedBox(height: 25.h),
-
             _buildSubmitButton(context, controller),
             SizedBox(height: 10.h),
           ],
@@ -143,24 +198,37 @@ class PostRideView extends StatelessWidget {
 
   // --- Updated Helper Methods with SvgPicture.asset ---
 
-  Widget _buildTextField({required String hint, required String iconPath, Color? iconColor, TextEditingController? controller}) {
+  Widget _buildTextField({
+    required String hint,
+    required String iconPath,
+    Color? iconColor,
+    TextEditingController? controller,
+    ValueChanged<String>? onChanged, // FIXED: Added to listen to key up events
+  }) {
     return TextField(
       controller: controller,
+      onChanged: onChanged, // FIXED
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: GoogleFonts.inter(color: Colors.grey),
         prefixIcon: Padding(
-          padding: EdgeInsets.all(12.r), // Adjust padding to center SVG correctly
+          padding: EdgeInsets.all(12.r),
           child: SvgPicture.asset(
-            iconPath, 
-            colorFilter: ColorFilter.mode(iconColor ?? Colors.grey, BlendMode.srcIn),
+            iconPath,
+            colorFilter: ColorFilter.mode(
+              iconColor ?? Colors.grey,
+              BlendMode.srcIn,
+            ),
             width: 8.sp,
             height: 8.sp,
           ),
         ),
         filled: true,
         fillColor: const Color(0xFFF3F4F6),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.r), borderSide: BorderSide.none),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.r),
+          borderSide: BorderSide.none,
+        ),
         contentPadding: EdgeInsets.symmetric(vertical: 15.h),
       ),
     );

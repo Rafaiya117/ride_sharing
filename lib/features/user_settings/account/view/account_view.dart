@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
+import 'package:ride_sharing/core/utils/bottom_nav.dart';
 import 'package:ride_sharing/features/user_settings/account/controller/account_controller.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -23,31 +24,38 @@ class AccountScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Welcome back", 
-                style: GoogleFonts.inter(color: Colors.white70, fontSize: 14.sp)),
-              Text("Safi", 
-                style: GoogleFonts.inter(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeight.bold)),
-            ],
-          ),
-          Row(
-            children: [
-              _buildNotificationIcon(),
-              SizedBox(width: 15.w),
-              CircleAvatar(
-                radius: 18.r,
-                //backgroundColor: Colors.white24,
-                child: SvgPicture.asset(
-                  'assets/icons/user_icon.svg', // Ensure this path matches your assets folder
-                  width: 20.r,
-                  height: 20.r,
-                  // colorFilter: const ColorFilter.mode(
-                  //   Colors.white,
-                  //   BlendMode.srcIn,
-                  // ),
-                ),
+              Text(
+                "Account", 
+                style: GoogleFonts.inter(
+                  color: Colors.white, 
+                  fontSize: 24.sp, 
+                  fontWeight: FontWeight.bold
+                )
               ),
             ],
           ),
+          // Row(
+          //   children: [
+          //     _buildNotificationIcon(),
+          //     SizedBox(width: 15.w),
+          //     IconButton(
+          //       iconSize: 36.r, 
+          //       padding: EdgeInsets.zero,
+          //       constraints: const BoxConstraints(),
+          //       onPressed: () {
+          //         context.push('/profile_screen');
+          //       },
+          //       icon: CircleAvatar(
+          //         radius: 18.r,
+          //         child: SvgPicture.asset(
+          //           'assets/icons/user_icon.svg',
+          //           width: 20.r,
+          //           height: 20.r,
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
         ],
       ),
 
@@ -61,6 +69,10 @@ class AccountScreen extends StatelessWidget {
         ),
       ),
 
+      bottomNavigationBar: CustomBottomNavbar(
+        currentIndex: controller.currentNavbarIndex,
+        onTap: (index) => controller.setNavbarIndex(index),
+      ),
       // 3. --- Body Content ---
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,11 +132,18 @@ class AccountScreen extends StatelessWidget {
         children: [
           Icon(Icons.swap_horiz, color: Colors.white, size: 22.r),
           SizedBox(width: 12.w),
-          Text("Switch to Driver Mode", 
-            style: GoogleFonts.inter(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.w500)),
+          Text(
+            "Switch to Driver Mode", 
+            style: GoogleFonts.inter(
+              color: Colors.white, 
+              fontSize: 14.sp, 
+              fontWeight: FontWeight.w500
+            ),
+          ),
           const Spacer(),
           CircleAvatar(
             radius: 12.r,
+            // ignore: deprecated_member_use
             backgroundColor: Colors.white.withOpacity(0.2),
             child: Icon(Icons.arrow_forward, color: Colors.white, size: 14.r),
           )
@@ -137,7 +156,13 @@ class AccountScreen extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: 4.w, bottom: 10.h, top: 5.h),
       child: Text(text, 
-        style: GoogleFonts.inter(fontSize: 12.sp, fontWeight: FontWeight.bold, color: Colors.grey.shade600, letterSpacing: 0.5)),
+        style: GoogleFonts.inter(
+          fontSize: 12.sp, 
+          fontWeight: FontWeight.bold, 
+          color: Colors.grey.shade600, 
+          letterSpacing: 0.5
+        ),
+      ),
     );
   }
 
@@ -193,34 +218,45 @@ class AccountScreen extends StatelessWidget {
   }
 
   Widget _buildLogoutButton() {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.r),
+  return Container(
+    width: double.infinity,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(15.r), 
+      border: Border.all(
+        color: const Color(0xFFE5E7EB), 
+        width: 1,
       ),
-      child: TextButton.icon(
-        onPressed: () {},
-        icon: const Icon(Icons.logout, color: Colors.red),
-        label: Text("Log Out", 
-          style: GoogleFonts.inter(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 16.sp)),
-        style: TextButton.styleFrom(padding: EdgeInsets.symmetric(vertical: 15.h)),
+    ),
+    child: TextButton(
+      onPressed: () {},
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.symmetric(vertical: 14.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
       ),
-    );
-  }
-
-  Widget _buildNotificationIcon() {
-    return Stack(
-      children: [
-        Icon(Icons.notifications_none, color: Colors.white, size: 28.r),
-        Positioned(
-          right: 2, top: 2,
-          child: Container(
-            width: 8.r, height: 8.r,
-            decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min, 
+        children: [
+          SvgPicture.asset(
+            'assets/icons/logout.svg', 
+            width: 18.w,
+            height: 18.w,
+            colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn),
+            placeholderBuilder: (context) => const Icon(Icons.logout, color: Colors.red, size: 18),
           ),
-        )
-      ],
-    );
-  }
+          SizedBox(width: 12.w), // FIXED: Balanced horizontal gap spacer
+          Text(
+            "Log Out",
+            style: GoogleFonts.inter(
+              color: Colors.red, 
+              fontWeight: FontWeight.w600, 
+              fontSize: 16.sp,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 }

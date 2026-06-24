@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 
 
 class AccountController extends ChangeNotifier {
+ 
+ int _currentNavbarIndex = 5;
+ int get currentNavbarIndex => _currentNavbarIndex;
+
+  void setNavbarIndex(int index) {
+    _currentNavbarIndex = index;
+    notifyListeners();
+  }
+
   bool _pushNotifications = true;
   bool _rideUpdates = true;
   bool _promotionalOffers = false;

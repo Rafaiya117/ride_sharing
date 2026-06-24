@@ -159,12 +159,12 @@ class DriverHomeController extends ChangeNotifier {
     RideRequestModel(
       passengerName: "Michael Chen", initial: "M", rating: 4.8, 
       pickupTimeAgo: "2 mins ago", price: 90.0, seats: 2,
-      pickupLocation: "Downtown NYC", dropoffLocation: "Boston Common",
+      pickupLocation: "Downtown NYC", dropoffLocation: "Boston Common", bookingId: '',
     ),
     RideRequestModel(
       passengerName: "Emma Williams", initial: "E", rating: 4.9, 
       pickupTimeAgo: "5 mins ago", price: 45.0, seats: 1,
-      pickupLocation: "Brooklyn", dropoffLocation: "Cambridge, MA",
+      pickupLocation: "Brooklyn", dropoffLocation: "Cambridge, MA", bookingId: '',
     ),
   ];
   List<RideRequestModel> get rideRequests => _rideRequests;
@@ -208,7 +208,6 @@ class DriverHomeController extends ChangeNotifier {
 
           if (launched) {
             debugPrint("Stripe Onboarding overlay opened natively within the app layer.");
-            // FIXED: Removed the invalid getProfileData() call to resolve the compiler error
           }
         }
       }
@@ -292,5 +291,61 @@ class DriverHomeController extends ChangeNotifier {
         notifyListeners();
       }
     });
+  }
+
+  Future<void> handleRideRequest(int index, String action) async {
+    if (index >= _rideRequests.length) return;
+    
+    final targetRide = _rideRequests[index];
+    final String bookingId = targetRide.bookingId;
+    final String? token = TokenStorage.accessToken;
+
+    // Save previous status in case we need to roll back on API failure
+    final String previousStatus = targetRide.status;
+
+    // Optimistic local state update for snappy UI feel
+    targetRide.status = action == "accept" ? "accepted" : "declined";
+    notifyListeners();
+
+    try {
+      String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
+      if (baseUrl.endsWith('/')) {
+        baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+      }
+
+      final response = await _dio.post(
+        '$baseUrl/api/v1/bookings/$bookingId/', // Dynamic path parameter mapping
+        data: {
+          "action": action, // Injects "accept" or "reject" dynamically into the JSON body payload
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            if (token != null) 'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.data != null && response.data['success'] == true) {
+        debugPrint("SUCCESS: Server confirmed $action -> ${response.data['data']['message']}");
+        
+        // If the action was a rejection, wait a brief moment then remove it from the dashboard list
+        if (action == "reject") {
+          await Future.delayed(const Duration(milliseconds: 800));
+          if (index < _rideRequests.length) {
+            _rideRequests.removeAt(index);
+            notifyListeners();
+          }
+        }
+      } else {
+        // Rollback state cleanly if backend rejects the validation rules
+        targetRide.status = previousStatus;
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint("Error processing ride request ($action): $e");
+      targetRide.status = previousStatus;
+      notifyListeners();
+    }
   }
 }

@@ -11,7 +11,8 @@ class CustomTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final TextEditingController controller;
   final Widget? suffixIcon;
-  final bool showBorder; // 1. Added this
+  final bool showBorder; 
+  final ValueChanged<String>? onChanged; // FIXED: Added callback listener
 
   const CustomTextField({
     super.key,
@@ -21,7 +22,8 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     required this.controller,
     this.suffixIcon,
-    this.showBorder = false, // 2. Default to false
+    this.showBorder = false, 
+    this.onChanged, // FIXED
   });
 
   @override
@@ -35,13 +37,13 @@ class CustomTextField extends StatelessWidget {
       decoration: BoxDecoration(
         color: inputColor,
         borderRadius: BorderRadius.circular(15.r),
-        // 3. Conditional border logic
         border: showBorder ? Border.all(color: const Color(0xFFE0E0E0), width: 1) : null,
       ),
       child: TextField(
         controller: controller,
         obscureText: isPassword,
         keyboardType: keyboardType,
+        onChanged: onChanged, // FIXED
         textAlignVertical: TextAlignVertical.center,
         style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.black),
         decoration: InputDecoration(

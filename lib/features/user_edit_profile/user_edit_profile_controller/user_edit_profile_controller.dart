@@ -1,16 +1,16 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ride_sharing/core/token/token_storage.dart';
 import 'package:ride_sharing/features/user_edit_profile/user_edit_profile_model/user_edit_profile_model.dart';
 
 class EditProfileController extends ChangeNotifier {
-  // 1. Dynamic User Profile Data
   late UserProfile _currentUser;
   UserProfile get currentUser => _currentUser;
 
   final ImagePicker _picker = ImagePicker();
-
-  // 2. Local State Variables (Mocked from image_10.png)
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -20,38 +20,39 @@ class EditProfileController extends ChangeNotifier {
   };
   Map<String, dynamic> get initialsData => _initialsData;
 
-  // 3. Controllers for text fields (allows dynamic updates)
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
 
+  // FIXED: Constructor updated to automatically extract storage parameters on init
   EditProfileController() {
-    _mockInitialData(); // Load data when controller is created
+    _loadProfileFromStorage(); 
   }
 
-  // standard dynamic logic for loading profile data
-  void _mockInitialData() {
+  void _loadProfileFromStorage() {
+    final Map<String, dynamic>? userData = TokenStorage.userData;
+
     _currentUser = UserProfile(
-      photoPath: null, 
-      fullName: 'John Doe',
-      email: 'safimahmud1412@gmail.com',
-      phoneNumber: '+8801728583881',
-      homeAddress: '123 Main St, City, State',
+      photoPath: userData?['profile_photo'], 
+      fullName: userData?['name'] ?? 'User',
+      email: userData?['email'] ?? '',
+      phoneNumber: userData?['phone'] ?? '',
+      homeAddress: userData?['address'] ?? '', 
     );
 
-    // Dynamic price logic standard: Update controllers with initial values
+    // Populate controllers with values fetched directly from system storage
     fullNameController.text = _currentUser.fullName;
     emailController.text = _currentUser.email;
     phoneController.text = _currentUser.phoneNumber;
     addressController.text = _currentUser.homeAddress;
+    
+    if (_currentUser.fullName.isNotEmpty) {
+      _initialsData['letter'] = _currentUser.fullName.trim()[0].toUpperCase();
+    }
   }
 
-  // --- Methods ---
-
-  // standardized MVC logic
   Future<void> changePhoto(BuildContext context) async {
-    // Standard design: Show a bottom sheet to choose between Gallery or Camera
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20.r))),
@@ -84,15 +85,13 @@ class EditProfileController extends ChangeNotifier {
     try {
       final XFile? pickedFile = await _picker.pickImage(
         source: source,
-        maxWidth: 512, // Standard optimization for avatars
+        maxWidth: 512,
         maxHeight: 512,
         imageQuality: 85,
       );
 
       if (pickedFile != null) {
-        // Update your model path dynamically
-        // _profile = _profile.copyWith(photoPath: pickedFile.path); 
-        
+        _currentUser.photoPath = pickedFile.path;
         print("Dynamic photo update: ${pickedFile.path}");
         notifyListeners();
       }
@@ -101,20 +100,71 @@ class EditProfileController extends ChangeNotifier {
     }
   }
   
-  // standardized mvc logic for saving a model standard price logic
-  void saveChanges() {
-    print("Action dynamically triggered: Save changes (Placeholder logic)");
+  Future<void> saveChanges(BuildContext context) async {
+    final String? token = TokenStorage.accessToken;
+    if (token == null) return;
+
+     final Dio _dio = Dio();
+     
     _isLoading = true;
     notifyListeners();
 
-    // Mock API delay
-    Future.delayed(const Duration(seconds: 1), () {
+    try {
+      String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
+      if (baseUrl.endsWith('/')) baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+      final response = await _dio.patch(
+        '$baseUrl/api/v1/driver/profile/', 
+        data: {
+          "name": fullNameController.text.trim(),
+          "email": emailController.text.trim(),
+          "phone": phoneController.text.trim(),
+          "address": addressController.text.trim(),
+        },
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.data != null && response.data['success'] == true) {
+        final updatedData = response.data['data'];
+        
+        // FIXED: Updates global TokenStorage so that the changes immediately reflect across other tabs
+        TokenStorage.userData = updatedData; 
+
+        // Update the local controller state model 
+        _loadProfileFromStorage();
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Profile updated successfully!"), backgroundColor: Colors.green),
+          );
+          Navigator.pop(context); // Return to previous profile screen view
+        }
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(response.data?['message'] ?? "Failed to save profile changes"), backgroundColor: Colors.red),
+          );
+        }
+      }
+    } on DioException catch (e) {
+      debugPrint("Dio error while patching profile profile: ${e.response?.data}");
+      if (context.mounted) {
+        String errorMsg = e.response?.data?['message'] ?? "Server validation rejected updates";
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMsg), backgroundColor: Colors.red),
+        );
+      }
+    } catch (e) {
+      debugPrint("Unexpected profile exception: $e");
+    } finally {
       _isLoading = false;
       notifyListeners();
-      // Logic to send updated text field data to an API
-      print("Dynamic updates applied locally to model: ");
-      print("Name: ${fullNameController.text}");
-    });
+    }
   }
 
   @override

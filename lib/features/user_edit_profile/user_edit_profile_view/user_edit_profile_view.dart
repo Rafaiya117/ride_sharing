@@ -44,7 +44,7 @@ class EditProfileView extends StatelessWidget {
           SizedBox(height: 40.h),
           CustomButton(
             text: "Save Changes",
-            onTap: controller.saveChanges,
+            onTap:()=> controller.saveChanges(context),
             iconPath: 'assets/icons/save.svg',
             //isLoading: controller.isLoading,
           ),

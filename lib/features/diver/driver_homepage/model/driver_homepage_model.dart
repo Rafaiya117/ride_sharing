@@ -16,6 +16,7 @@
 // }
 
 class RideRequestModel {
+  final String bookingId; // FIXED: Added to hold unique API path parameters
   final String passengerName;
   final String initial;
   final double rating;
@@ -27,6 +28,7 @@ class RideRequestModel {
   String status;
 
   RideRequestModel({
+    required this.bookingId, // FIXED
     required this.passengerName, 
     required this.initial, 
     required this.rating,

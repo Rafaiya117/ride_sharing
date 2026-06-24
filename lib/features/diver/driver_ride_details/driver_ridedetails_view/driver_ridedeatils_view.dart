@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -8,158 +9,180 @@ import 'package:ride_sharing/features/diver/driver_ride_details/driver_ridedetai
 import 'package:ride_sharing/features/diver/driver_ride_details/driver_ridedetails_model/driver_ridedetails_model.dart';
 
 class DriverRideDetailsScreen extends StatelessWidget {
-  const DriverRideDetailsScreen({super.key});
+  final String rideId; // FIXED: Inject target path ID required for fetching details
+
+  const DriverRideDetailsScreen({super.key, required this.rideId});
 
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<DriverRideDetailsController>();
-    final data = controller.ride;
 
     return BaseScaffold(
       title: Row(
-    children: [
-      // 1. Invisible spacer to balance the share button's 48px width on the right
-      const SizedBox(width: 48), 
-      // 2. Expanded takes up the middle space
-      Expanded(
-        child: Text(
-          "Ride Details",
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
-    ],
-  ),
-  titleAlign: TextAlign.center,
-  isCurved: true,
-  actions: [
-    IconButton(
-      icon: const Icon(Icons.share_outlined, color: Colors.white),
-      onPressed: controller.shareRide,
-    ),
-  ],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. Blue Summary Card
-          _buildSummaryCard(data),
-          SizedBox(height: 20.h),
-
-          // 2. Journey Route Section
-          _buildWhiteCard(
-            title: "Journey Route",
-            child: Column(
-              children: [
-                _buildRoutePoint(Icons.circle, Colors.grey, "Pickup", data.pickupLocation, data.pickupTime),
-                _buildRouteConnector(),
-                _buildRoutePoint(Icons.circle, Colors.black, "Drop-off", data.dropoffLocation, data.estArrival),
-              ],
+          // FIXED: Replaced empty placeholder box with the back navigation button
+          IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => context.pop(),
+          ), 
+          Expanded(
+            child: Text(
+              "Ride Details",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
-          SizedBox(height: 20.h),
+        ],
+      ),
+      titleAlign: TextAlign.center,
+      isCurved: true,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.share_outlined, color: Colors.white),
+          onPressed: controller.shareRide,
+        ),
+      ],
+      // FIXED: FutureBuilder handles stateless query data fetching seamlessly
+      child: FutureBuilder(
+        future: context.read<DriverRideDetailsController>().fetchRideDetails(rideId),
+        builder: (context, snapshot) {
+          if (controller.isLoading && controller.ride == null) {
+            return const Center(child: Padding(padding: EdgeInsets.all(40.0), child: CircularProgressIndicator()));
+          }
 
-          // 3. Passenger Card with Chat/Call
-          _buildWhiteCard(
-            title: "Passenger",
-            chatSvgPath: 'assets/icons/chat_outline.svg', // SVG from image
-            callSvgPath: 'assets/icons/phone_outline.svg', // SVG from image
-            child: Row(
-              children: [
-                // Avatar
-                Container(
-                  width: 60.r,
-                  height: 60.r,
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(
-                      20.r,
-                    ), // Match image curve
-                  ),
-                  child: Center(
-                    child: Text(
-                      "L",
-                      style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 28.sp,
-                      ),
-                    ),
-                  ),
+          final data = controller.ride;
+          if (data == null) {
+            return const Center(child: Text("Failed to retrieve ride profile info."));
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 1. Blue Summary Card
+              _buildSummaryCard(data),
+              SizedBox(height: 20.h),
+
+              // 2. Journey Route Section
+              _buildWhiteCard(
+                title: "Journey Route",
+                child: Column(
+                  children: [
+                    _buildRoutePoint(Icons.circle, Colors.grey, "Pickup", data.pickupLocation, data.pickupTime),
+                    _buildRouteConnector(),
+                    _buildRoutePoint(Icons.circle, Colors.black, "Drop-off", data.dropoffLocation, data.estArrival),
+                  ],
                 ),
-                SizedBox(width: 16.w),
-                // Name and Ratings
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Lisa Martinez",
-                        style: GoogleFonts.inter(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
+              ),
+              SizedBox(height: 20.h),
+
+              // 3. Passenger Card with Chat/Call
+              _buildWhiteCard(
+                title: "Passenger",
+                chatSvgPath: 'assets/icons/chat_outline.svg',
+                callSvgPath: 'assets/icons/phone_outline.svg',
+                // FIXED: Direct chat routing action using the dynamic data mapping parameters
+                onChatTap: () {
+                  context.read<DriverRideDetailsController>().navigateToChat(
+                    context,
+                    targetUserId: data.passengerId,
+                    targetRideId: int.tryParse(rideId),
+                  );
+                },
+                onCallTap: () => controller.callPassenger(),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 60.r,
+                      height: 60.r,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Center(
+                        child: Text(
+                          data.passengerInitial,
+                          style: GoogleFonts.inter(
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 28.sp,
+                          ),
                         ),
                       ),
-                      SizedBox(height: 8.h),
-                      Row(
+                    ),
+                    SizedBox(width: 16.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Rating Badge
-                          _buildBadge(
-                            "4.9",
-                            Colors.black,
-                            Colors.white,
-                            'assets/icons/star_filled_white.svg',
-                          ),
-                          SizedBox(width: 12.w),
-                          // Trip Count
                           Text(
-                            "• 54 trips",
+                            data.passengerName,
                             style: GoogleFonts.inter(
-                              fontSize: 14.sp,
-                              color: Colors.grey,
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
                             ),
+                          ),
+                          SizedBox(height: 8.h),
+                          Row(
+                            children: [
+                              _buildBadge(
+                                data.rating.toString(),
+                                Colors.black,
+                                Colors.white,
+                                'assets/icons/star_filled_white.svg',
+                              ),
+                              SizedBox(width: 12.w),
+                              Text(
+                                "• ${data.totalTrips} trips",
+                                style: GoogleFonts.inter(
+                                  fontSize: 14.sp,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          SizedBox(height: 20.h),
-          // 4. Safety & Support
-          _buildWhiteCard(
-            title: "Safety & Support",
-            child: Column(
-              children: [
-                _buildSupportTile(Icons.shield_outlined, Colors.green, "Live Trip Tracking", "Share location with family & friends"),
-                Divider(height: 24.h, indent: 45.w),
-                _buildSupportTile(Icons.phone_in_talk_outlined, Colors.red, "Emergency Support", "24/7 assistance & emergency contacts"),
-              ],
-            ),
-          ),
-          
-          SizedBox(height: 30.h),
-          
-          // 5. Start Ride Button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => controller.startRide(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1A1A1A),
-                padding: EdgeInsets.symmetric(vertical: 16.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
               ),
-              child: Text("Start Ride", style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
-            ),
-          ),
-          SizedBox(height: 20.h),
-        ],
+              SizedBox(height: 20.h),
+              
+              // 4. Safety & Support
+              _buildWhiteCard(
+                title: "Safety & Support",
+                child: Column(
+                  children: [
+                    _buildSupportTile(Icons.shield_outlined, Colors.green, "Live Trip Tracking", "Share location with family & friends"),
+                    Divider(height: 24.h, indent: 45.w),
+                    _buildSupportTile(Icons.phone_in_talk_outlined, Colors.red, "Emergency Support", "24/7 assistance & emergency contacts"),
+                  ],
+                ),
+              ),
+              
+              SizedBox(height: 30.h),
+              
+              // 5. Start Ride Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => controller.startRide(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1A1A1A),
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                  ),
+                  child: Text("Start Ride", style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              SizedBox(height: 20.h),
+            ],
+          );
+        },
       ),
     );
   }
@@ -208,6 +231,8 @@ class DriverRideDetailsScreen extends StatelessWidget {
   required Widget child,
   String? chatSvgPath, // Changed to optional
   String? callSvgPath, // Changed to optional
+  VoidCallback? onChatTap, // FIXED: Added named parameter
+  VoidCallback? onCallTap, // FIXED: Added named parameter
 }) {
   return Container(
     padding: EdgeInsets.all(16.w),
@@ -234,9 +259,11 @@ class DriverRideDetailsScreen extends StatelessWidget {
             if (chatSvgPath != null || callSvgPath != null)
               Row(
                 children: [
-                  if (chatSvgPath != null) _buildActionButton(chatSvgPath, 20.r, () {}),
+                  // FIXED: Passed onChatTap callback parameter here
+                  if (chatSvgPath != null) _buildActionButton(chatSvgPath, 20.r, onChatTap ?? () {}),
                   if (chatSvgPath != null && callSvgPath != null) SizedBox(width: 8.w),
-                  if (callSvgPath != null) _buildActionButton(callSvgPath, 20.r, () {}),
+                  // FIXED: Passed onCallTap callback parameter here
+                  if (callSvgPath != null) _buildActionButton(callSvgPath, 20.r, onCallTap ?? () {}),
                 ],
               ),
           ],
@@ -252,12 +279,12 @@ class DriverRideDetailsScreen extends StatelessWidget {
 Widget _buildActionButton(String svgPath, double size, VoidCallback onTap) {
   return InkWell(
     onTap: onTap,
-    borderRadius: BorderRadius.circular(20.r), // Standard roundness
+    borderRadius: BorderRadius.circular(20.r), 
     child: Container(
-      width: 48.r, // Diameter of the round button
+      width: 48.r, 
       height: 48.r,
       decoration: const BoxDecoration(
-        color: Color(0xFFF5F5F5), // The grey background from image
+        color: Color(0xFFF5F5F5), 
         shape: BoxShape.circle,
       ),
       child: Center(

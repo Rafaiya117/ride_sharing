@@ -43,7 +43,7 @@ class DriverProfileView extends StatelessWidget {
         ),
       ],
       child: controller.isLoading
-          ? const Center(child: CircularProgressIndicator(color: Colors.black))
+        ? const Center(child: CircularProgressIndicator(color: Colors.black))
           : SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Column(
@@ -78,7 +78,6 @@ class DriverProfileView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 12.h),
-
                   // Verification Badge
                   Container(
                     padding: EdgeInsets.symmetric(
@@ -87,8 +86,7 @@ class DriverProfileView extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: controller.profile.isVerified
-                          ? const Color(0xFFF3F8F3)
-                          : const Color(0xFFFFF5F0),
+                      ? const Color(0xFFF3F8F3): const Color(0xFFFFF5F0),
                       borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Row(
@@ -96,11 +94,9 @@ class DriverProfileView extends StatelessWidget {
                       children: [
                         Icon(
                           controller.profile.isVerified
-                              ? Icons.shield_outlined
-                              : Icons.error_outline,
+                          ? Icons.shield_outlined: Icons.error_outline,
                           color: controller.profile.isVerified
-                              ? Colors.green
-                              : Colors.orange,
+                          ? Colors.green: Colors.orange,
                           size: 16.sp,
                         ),
                         SizedBox(width: 6.w),
@@ -108,8 +104,7 @@ class DriverProfileView extends StatelessWidget {
                           controller.profile.isVerified ? "Verified Driver": "Verification Pending",
                           style: GoogleFonts.inter(
                             color: controller.profile.isVerified
-                                ? Colors.green
-                                : Colors.orange,
+                            ? Colors.green : Colors.orange,
                             fontSize: 12.sp,
                             fontWeight: FontWeight.bold,
                           ),
