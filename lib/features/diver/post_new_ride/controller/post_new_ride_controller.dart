@@ -206,7 +206,10 @@ Future<List<dynamic>> searchPlaces(String query, {required bool isPickup}) async
       String formattedDateTime = DateTime.now().toUtc().toIso8601String(); 
       if (dateText.isNotEmpty && timeText.isNotEmpty) {
         try {
-          formattedDateTime = Uri.decodeComponent("${dateText}T${timeText}:00.000Z");
+          // FIXED: Parse the text into a real DateTime object first, then format it cleanly to UTC ISO 8601 string
+          final String normalizedTime = timeText.split(':').length == 2 ? "$timeText:00" : timeText;
+          final DateTime parsedDateTime = DateTime.parse("${dateText}T$normalizedTime");
+          formattedDateTime = parsedDateTime.toUtc().toIso8601String();
         } catch (_) {}
       }
 
@@ -254,7 +257,7 @@ Future<List<dynamic>> searchPlaces(String query, {required bool isPickup}) async
       _setLoading(false);
     }
   }
-
+  
   void _showSnackBar(BuildContext context, String message, {bool isError = false}) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(

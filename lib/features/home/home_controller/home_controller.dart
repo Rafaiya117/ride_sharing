@@ -10,16 +10,24 @@ import 'package:ride_sharing/features/home/model/home_model.dart';
 class HomeController extends ChangeNotifier {
   String get userName => TokenStorage.userData?['name'] ?? "User";
   
+  // List<UpcomingTrip> _tripsList = [];
+  // List<UpcomingTrip> get tripsList => _tripsList;
+
+  // UserStats get stats => UserStats(
+  //   trips: TokenStorage.userData?['total_trips'] ?? 0,
+  //   rating: double.tryParse((TokenStorage.userData?['avg_rating'] ?? '0.0').toString()) ?? 0.0,
+  //   upcoming: _tripsList.length, 
+  // );
+
+  List<UpcomingTrip> _tripsList = [];
+  List<UpcomingTrip> get tripsList => _tripsList;
+  List<UpcomingTrip> get activeOngoingTrips => _tripsList
+  .where((trip) => trip.status == "accepted" && trip.timelineStatus == "ongoing").toList();
+
   UserStats get stats => UserStats(
     trips: TokenStorage.userData?['total_trips'] ?? 0,
     rating: double.tryParse((TokenStorage.userData?['avg_rating'] ?? '0.0').toString()) ?? 0.0,
-    upcoming: 1, 
-  );
-
-  UpcomingTrip _nextTrip = UpcomingTrip(
-    pickup: "New York, NY", dropoff: "Boston, MA", 
-    date: "Mar 6, 2026", time: "09:00 AM", pricePerSeat: 45.0, 
-    driverName: "Sarah Johnson", carModel: "Honda Accord 2022"
+    upcoming: activeOngoingTrips.length, // Sync stats with active filtered items
   );
 
   final TextEditingController pickupController = TextEditingController();
@@ -29,11 +37,9 @@ class HomeController extends ChangeNotifier {
   
   int _currentNavbarIndex = 0;
   int get currentNavbarIndex => _currentNavbarIndex;
-  UpcomingTrip get nextTrip => _nextTrip;
 
   final Dio _dio = Dio();
 
-  // FIXED: Properties to hold coordinates and autocomplete suggestions
   String? pickupLat;
   String? pickupLng;
   String? dropoffLat;
@@ -61,14 +67,62 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  // FIXED: Autocomplete prediction lookup (API 1)
+  Future<void> fetchUserBookings() async {
+    final String? token = TokenStorage.accessToken;
+    if (token == null) return;
+
+    try {
+      String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
+      if (baseUrl.endsWith('/')) baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+
+      final response = await _dio.get(
+        '$baseUrl/api/v1/passenger/my-bookings/', 
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      if (response.data != null && response.data['success'] == true) {
+        final List dynamicList = response.data['data']['results'] ?? [];
+        debugPrint('!-------- user ride to track $dynamicList');
+        _tripsList = dynamicList.map((item) {
+          String formattedDate = "Unknown Date";
+          String formattedTime = "Unknown Time";
+          if (item['date_time'] != null) {
+            try {
+              DateTime dt = DateTime.parse(item['date_time']);
+              formattedDate = "${dt.day}/${dt.month}/${dt.year}";
+              formattedTime = "${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}";
+            } catch (_) {}
+          }
+
+          return UpcomingTrip(
+            rideId: item['ride_id'] ?? 0, // FIXED: Maps specific ID parameter from response JSON payload
+            pickup: item['pickup_location'] ?? '',
+            dropoff: item['drop_location'] ?? '',
+            date: formattedDate,
+            time: formattedTime,
+            pricePerSeat: double.tryParse(item['price_per_seat']?.toString() ?? '0.0') ?? 0.0,
+            driverName: item['driver_name'] ?? 'Driver',
+            carModel: "Car Ride #${item['ride_id']}", 
+            status: item['status'] ?? '',
+            timelineStatus: item['timeline_status'] ?? '',
+          );
+        }).toList();
+
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint("Error fetching user bookings: $e");
+    }
+  }
+
   Future<List<dynamic>> searchPlaces(String query, {required bool isPickup}) async {
     if (query.isEmpty) {
-      if (isPickup) {
-        pickupSuggestions = [];
-      } else {
-        dropoffSuggestions = [];
-      }
+      if (isPickup) pickupSuggestions = []; else dropoffSuggestions = [];
       notifyListeners();
       return [];
     }
@@ -101,7 +155,6 @@ class HomeController extends ChangeNotifier {
     return [];
   }
 
-  // FIXED: Detailed geometry coordinate extraction (API 2)
   Future<void> fetchPlaceDetails(String placeId, {required bool isPickup}) async {
     final String? token = TokenStorage.accessToken;
 
@@ -155,7 +208,6 @@ class HomeController extends ChangeNotifier {
       }
     }
 
-    // FIXED: Appends the precise verified geolocation lat/lng details to the query route parameters
     context.push(
       '/search_ride_screen?pickup_location=$from&drop_location=$to&date=$formattedDate&seats=$seats'
       '&pickup_lat=${pickupLat ?? ""}&pickup_lng=${pickupLng ?? ""}'
@@ -163,8 +215,9 @@ class HomeController extends ChangeNotifier {
     );
   }
 
+  // FIXED: Access tracking module parameter natively via rideId routing key parameter
   void trackTrip(BuildContext context, UpcomingTrip trip) {
-    GoRouter.of(context).push('/ride_tracking');
+    context.push('/ride_tracking?ride_id=${trip.rideId}');
   }
 
   void shareTripWithFamily(BuildContext context) {}

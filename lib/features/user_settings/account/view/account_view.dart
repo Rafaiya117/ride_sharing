@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
+import 'package:ride_sharing/core/token/token_storage.dart';
 import 'package:ride_sharing/core/utils/bottom_nav.dart';
 import 'package:ride_sharing/features/user_settings/account/controller/account_controller.dart';
 
@@ -107,7 +108,7 @@ class AccountScreen extends StatelessWidget {
           ]),
 
           SizedBox(height: 30.h),
-          _buildLogoutButton(),
+          _buildLogoutButton(context),
           SizedBox(height: 40.h),
         ],
       ),
@@ -217,19 +218,21 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildLogoutButton() {
-  return Container(
-    width: double.infinity,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(15.r), 
-      border: Border.all(
-        color: const Color(0xFFE5E7EB), 
-        width: 1,
+  Widget _buildLogoutButton(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15.r),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1),
       ),
-    ),
-    child: TextButton(
-      onPressed: () {},
+      child: TextButton(
+        onPressed: () {
+          TokenStorage.accessToken = null;
+          if (context.mounted) {
+            context.pushReplacement('/role');
+          }
+      },
       style: TextButton.styleFrom(
         padding: EdgeInsets.symmetric(vertical: 14.h),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),

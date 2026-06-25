@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/floating_map_marker.dart';
 import 'package:ride_sharing/core/theme/background_template/back_ground_template.dart';
@@ -10,14 +12,22 @@ import 'package:ride_sharing/features/ride_tracking/widget/floating_status_card.
 import 'package:ride_sharing/features/ride_tracking/widget/trip_details_widget.dart';
 
 class TrackRideScreen extends StatelessWidget {
-  const TrackRideScreen({super.key});
+  final int rideId; // FIXED: Extracted matching query parameter from route routing data layer definitions
+
+  const TrackRideScreen({
+    super.key,
+    required this.rideId,
+  });
 
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<TrackRideController>();
     const iconColor = Colors.white;
+
+    // FIXED: Safely start synchronization hooks exactly once during rendering setup
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.startRideTimeout(context);
+      controller.startDriverTrackingLoop(rideId);
     });
 
     return BaseScaffold(
@@ -40,7 +50,7 @@ class TrackRideScreen extends StatelessWidget {
       isCurved: true,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => controller.navigateBack(context),
+        onPressed: () => context.pop(),
       ),
       actions: [
         IconButton(
@@ -54,21 +64,27 @@ class TrackRideScreen extends StatelessWidget {
           onPressed: () => controller.shareTripWithFamily(context),
         ),
       ],
-        child: Container(
-          color: const Color(0xFFF2F2F2), 
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Stack(
-            children: [
-            // 1. Map Background
+      child: Container(
+        color: const Color(0xFFF2F2F2), 
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Stack(
+          children: [
             Positioned.fill(
-              child: Image.asset(
-                'assets/images/map_placeholder.png',
-                fit: BoxFit.fitWidth,
-                alignment: Alignment.topCenter,
+              child: controller.driverPosition == null
+                ? const Center(child: CircularProgressIndicator.adaptive())
+                : GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                  target: controller.driverPosition!,
+                  zoom: 15.0,
+                ),
+                markers: controller.markers,
+                onMapCreated: (mapController) => controller.setMapController(mapController),
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: false,
               ),
             ),
-            
+           
             // 2. Floating Status Card
             Positioned(
               top: 20.h, left: 20.w, right: 20.w,

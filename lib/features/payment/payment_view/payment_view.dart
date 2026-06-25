@@ -101,11 +101,11 @@ class PaymentScreen extends StatelessWidget {
                   controller.payment.rideFare,
                   Colors.grey,
                 ),
-                _buildBreakdownTile(
-                  "Service fee",
-                  controller.payment.serviceFee,
-                  Colors.grey,
-                ),
+                // _buildBreakdownTile(
+                //   "Service fee",
+                //   controller.payment.serviceFee,
+                //   Colors.grey,
+                // ),
                 SizedBox(height: 10.h),
                 const Divider(thickness: 1, color: Color(0xFFE0E0E0)),
                 SizedBox(height: 10.h),
@@ -121,8 +121,7 @@ class PaymentScreen extends StatelessWidget {
           // 4. --- REUSABLE PRIMARY SOLID BLACK BUTTON ---
           CustomButton(
             text: controller.isPaying
-                ? "Processing..."
-                : (controller.selectedMethod == PaymentMethodType.card ? "Next" : "Save"),
+              ? "Processing..." : (controller.selectedMethod == PaymentMethodType.card ? "Next" : "Save"),
             onTap: () {
               if (controller.isPaying) return;
               // FIXED: Uses the constructor's dynamic bookingId property context instead of hardcoded 8

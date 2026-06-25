@@ -164,9 +164,18 @@ final GoRouter appRouter = GoRouter(
         return PaymentScreen(bookingId: dynamicBookingId);
       },
     ),
+    // GoRoute(
+    //   path: '/ride_tracking',
+    //   builder: (context, state) => TrackRideScreen(),
+    // ),
     GoRoute(
       path: '/ride_tracking',
-      builder: (context, state) => TrackRideScreen(),
+      builder: (context, state) {
+        final rideIdString = state.uri.queryParameters['ride_id'];
+        final rideId = int.tryParse(rideIdString ?? '') ?? 0;
+
+        return TrackRideScreen(rideId: rideId);
+      },
     ),
     GoRoute(
       path: '/cash_payment',

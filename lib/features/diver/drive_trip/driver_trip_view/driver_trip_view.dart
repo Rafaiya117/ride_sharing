@@ -147,9 +147,9 @@ class DriverTripScreen extends StatelessWidget {
   );
 }
 
-  Widget _buildActiveTripCard(BuildContext context, ActiveTripModel trip) { // Added BuildContext
+  Widget _buildActiveTripCard(BuildContext context, ActiveTripModel trip) { 
   return GestureDetector(
-    onTap: () => context.push('/drive_ridedetails_screen', extra: trip.id), // Redirect by ID
+    onTap: () => context.push('/drive_ridedetails_screen', extra: trip.id), 
     child: Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -162,16 +162,53 @@ class DriverTripScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(children: [
-                SvgPicture.asset('assets/icons/calender.svg', height: 16.r, width: 16.r, colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn)),
-                SizedBox(width: 8.w),
-                Text(trip.date, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 14.sp)),
-              ]),
-              Row(children: [
-                _buildBadge("Active", const Color(0xFFE3F2FD), Colors.blue, 'assets/icons/check.svg'),
-                SizedBox(width: 8.w),
-                _trackBtn(context),
-              ]),
+              // Left Section: Date Info (Expanded to prevent crowding)
+              Expanded(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/icons/calender.svg', 
+                      height: 16.r, 
+                      width: 16.r, 
+                      colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn)
+                    ),
+                    SizedBox(width: 6.w),
+                    Expanded(
+                      child: Text(
+                        trip.date, 
+                        style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 13.sp), // Slightly adjusted size for safety
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              
+              SizedBox(width: 4.w), // Compact safe spacer gap
+              
+              // FIXED: Wrap the right action block in a Flexible container to prevent horizontal overflow pushes
+              Flexible(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    // Wrap badge inside a Flexible to compress nicely if screen is ultra-small
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: _buildBadge("Active", const Color(0xFFE3F2FD), Colors.blue, 'assets/icons/check.svg'),
+                      ),
+                    ),
+                    SizedBox(width: 6.w),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: _trackBtn(context),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
           SizedBox(height: 16.h),
@@ -226,10 +263,18 @@ class DriverTripScreen extends StatelessWidget {
   Widget _buildLocationItem(String s, String l, String v, Color c) => Row(children: [
     SvgPicture.asset(s, width: 20.r, height: 20.r, colorFilter: ColorFilter.mode(c, BlendMode.srcIn)),
     SizedBox(width: 12.w),
-    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(l, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
-      Text(v, style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 14.sp)),
-    ])
+    // FIXED: Enclosed inside Expanded to force texts to truncate if they breach device bounds
+    Expanded(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(l, style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
+        Text(
+          v, 
+          style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 14.sp),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis, // Safe fallback "..." truncator
+        ),
+      ]),
+    )
   ]);
 
   Widget _buildLine() => Padding(
@@ -254,9 +299,30 @@ class DriverTripScreen extends StatelessWidget {
   );
 
   Widget _simpleTimeline(String s, String e) => Column(children: [
-    Row(children: [Icon(Icons.circle, size: 10.r, color: Colors.grey), SizedBox(width: 12.w), Text(s)]),
+    // FIXED: Wrapped the trailing texts inside Expanded containers to prevent right-edge clipping overflows
+    Row(children: [
+      Icon(Icons.circle, size: 10.r, color: Colors.grey), 
+      SizedBox(width: 12.w), 
+      Expanded(
+        child: Text(
+          s,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ]),
     _buildLine(),
-    Row(children: [Icon(Icons.circle, size: 10.r, color: Colors.black), SizedBox(width: 12.w), Text(e)]),
+    Row(children: [
+      Icon(Icons.circle, size: 10.r, color: Colors.black), 
+      SizedBox(width: 12.w), 
+      Expanded(
+        child: Text(
+          e,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ]),
   ]);
 
   Widget _trackBtn(BuildContext context) => GestureDetector(

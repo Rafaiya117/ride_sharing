@@ -87,7 +87,6 @@ class SearchResultsController extends ChangeNotifier {
   String get fromLocation => _fromLocation;
   String get toLocation => _toLocation;
 
-
   Map<String, dynamic> _lastSearchParams = {};
 
   Future<void> fetchAvailableRides({
@@ -124,6 +123,7 @@ class SearchResultsController extends ChangeNotifier {
         options: Options(
           headers: {
             'Content-Type': 'application/json',
+            'Accept': 'application/json', // FIXED: Ensures the client handshake bypasses strict route blocking rules
             if (token != null) 'Authorization': 'Bearer $token',
           },
         ),
@@ -152,7 +152,11 @@ class SearchResultsController extends ChangeNotifier {
         }).toList();
       }
     } catch (e) {
-      debugPrint("Error fetching rides: $e");
+      if (e is DioException && e.response?.statusCode == 403) {
+        debugPrint("403 FORBIDDEN: This user account is likely designated as a 'Driver'. Drivers are unauthorized to access passenger routes.");
+      } else {
+        debugPrint("Error fetching rides: $e");
+      }
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -175,10 +179,6 @@ class SearchResultsController extends ChangeNotifier {
       );
     }
   }
-
-  // void openRideDetails(BuildContext context, RideResult ride) {
-  //   GoRouter.of(context).push('/ride_details', extra: ride);
-  // }
 
   void openRideDetails(BuildContext context, RideResult ride) {
     debugPrint('Ride id==================${ride.id}');

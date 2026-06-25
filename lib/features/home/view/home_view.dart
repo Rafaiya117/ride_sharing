@@ -17,6 +17,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<HomeController>();
+    if (controller.tripsList.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.fetchUserBookings();
+      });
+    }
     return BaseScaffold(
       // --- CURVED BLACK HEADER ---
       title: Align(
@@ -251,12 +256,13 @@ class HomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // FIXED: Shows count of the active ongoing items
               Text(
-                "Upcoming Trips",
+                "Trips (${controller.activeOngoingTrips.length})",
                 style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E1E1E)),
               ),
               GestureDetector(
-                onTap: () {}, // View All Logic
+                onTap: () {}, 
                 child: Text(
                   "View all",
                   style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.grey, fontWeight: FontWeight.w400),
@@ -265,9 +271,23 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 20.h),
-          UpcomingTripCard(
-            trip: controller.nextTrip,
-            onTrackPressed: () => controller.trackTrip(context, controller.nextTrip),
+          
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            // FIXED: Loops over activeOngoingTrips instead of full tripsList
+            itemCount: controller.activeOngoingTrips.length,
+            itemBuilder: (context, index) {
+              final currentTrip = controller.activeOngoingTrips[index];
+              return Padding(
+                padding: EdgeInsets.only(bottom: 15.h),
+                child: UpcomingTripCard(
+                  key: ValueKey(currentTrip.rideId),
+                  trip: currentTrip,
+                  onTrackPressed: () => controller.trackTrip(context, currentTrip),
+                ),
+              );
+            },
           ),
           SizedBox(height: 25.h),
           // 4. --- Family Share Button ---

@@ -170,13 +170,26 @@ class DriverRideDetailsScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => controller.startRide(context),
+                  onPressed: () {
+                    if (controller.ride != null) {
+                      controller.startRide(context, rideId);
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF1A1A1A),
                     padding: EdgeInsets.symmetric(vertical: 16.h),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
                   ),
-                  child: Text("Start Ride", style: GoogleFonts.inter(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                  child: Text(
+                    "Start Ride",
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: 20.h),

@@ -23,7 +23,7 @@ class UpcomingTripCard extends StatelessWidget {
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r), // Standard corner radius
+        borderRadius: BorderRadius.circular(20.r), 
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -34,16 +34,74 @@ class UpcomingTripCard extends StatelessWidget {
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 1. --- Pickup/Dropoff Timeline ---
+          // 1. --- Header Section (Date/Time, Status Chip, Track Button) ---
+          Row(
+            children: [
+              Icon(Icons.calendar_today_outlined, size: 16.sp, color: Colors.black54),
+              SizedBox(width: 6.w),
+              Text(
+                "${trip.date} ${trip.time}",
+                style: GoogleFonts.inter(fontSize: 14.sp, fontWeight: FontWeight.bold, color: Colors.black87),
+              ),
+              const Spacer(),
+              // Active status chip indicator
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE3F2FD),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.check_circle_outline, size: 12.sp, color: Colors.blue),
+                    SizedBox(width: 4.w),
+                    Text(
+                      "Active",
+                      style: GoogleFonts.inter(color: Colors.blue, fontSize: 12.sp, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+              if (trip.status == "accepted" && trip.timelineStatus == "ongoing") ...[
+                SizedBox(width: 8.w),
+                SizedBox(
+                  height: 32.h,
+                  child: OutlinedButton(
+                    onPressed: onTrackPressed,
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Color(0xFFE0E0E0)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+                      padding: EdgeInsets.symmetric(horizontal: 12.w),
+                    ),
+                    child: Text("Track", style: GoogleFonts.inter(color: Colors.black, fontSize: 13.sp, fontWeight: FontWeight.w500)),
+                  ),
+                ),
+              ],
+            ],
+          ),
+          SizedBox(height: 16.h),
+
+          // 2. --- Vertical Pickup / Dropoff Timeline ---
           IntrinsicHeight(
             child: Row(
               children: [
                 Column(
                   children: [
-                    SvgPicture.asset('assets/icons/pickup_marker.svg', width: 20.w, colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn)),
-                    const Expanded(child: VerticalDivider(color: Colors.grey, thickness: 1.5, indent: 4, endIndent: 4)),
-                    SvgPicture.asset('assets/icons/dropoff_marker.svg', width: 20.w, colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn)),
+                    Container(
+                      width: 8.w,
+                      height: 8.w,
+                      decoration: const BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
+                    ),
+                    const Expanded(
+                      child: VerticalDivider(color: Colors.black12, thickness: 1.5, indent: 4, endIndent: 4),
+                    ),
+                    Container(
+                      width: 8.w,
+                      height: 8.w,
+                      decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
+                    ),
                   ],
                 ),
                 SizedBox(width: 15.w),
@@ -53,84 +111,68 @@ class UpcomingTripCard extends StatelessWidget {
                     children: [
                       Text(
                         trip.pickup,
-                        style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w500),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.black54),
                       ),
-                      const Spacer(),
+                      SizedBox(height: 12.h),
                       Text(
                         trip.dropoff,
-                        style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.w500),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.black87),
                       ),
                     ],
                   ),
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "\$${trip.pricePerSeat.toStringAsFixed(0)}", // pricePerSeat is dynamic double
-                      style: GoogleFonts.inter(fontSize: 22.sp, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "per seat",
-                      style: GoogleFonts.inter(fontSize: 12.sp, color: Colors.grey),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
-          SizedBox(height: 20.h),
-          const Divider(thickness: 1, color: Color(0xFFE0E0E0)),
-          SizedBox(height: 15.h),
+          SizedBox(height: 16.h),
+          const Divider(thickness: 1, color: Color(0xFFF5F5F5)),
+          SizedBox(height: 8.h),
 
-          // 2. --- Date & Time ---
+          // 3. --- Footer Section (Driver Profile & Fare Pricing) ---
           Row(
             children: [
-              SvgPicture.asset('assets/icons/calendar.svg', width: 16.w, colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn)),
-              SizedBox(width: 8.w),
-              Text(trip.date, style: GoogleFonts.inter(fontSize: 14.sp)),
-              SizedBox(width: 25.w),
-              SvgPicture.asset('assets/icons/clock.svg', width: 16.w, colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn)),
-              SizedBox(width: 8.w),
-              Text(trip.time, style: GoogleFonts.inter(fontSize: 14.sp)),
-            ],
-          ),
-          SizedBox(height: 20.h),
-          const Divider(thickness: 1, color: Color(0xFFE0E0E0)),
-          SizedBox(height: 15.h),
-
-          // 3. --- Driver info ---
-          Row(
-            children: [
-              // Assuming SVG Avatar, use NetworkImage for dynamic avatars normally
               CircleAvatar(
                 radius: 20.r,
-                backgroundColor: Colors.black12,
-                child: Text(trip.driverName.substring(0, 1), style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)), // Simple Initial
+                backgroundColor: Colors.black,
+                child: Text(
+                  trip.driverName.isNotEmpty ? trip.driverName.substring(0, 1).toUpperCase() : 'P', 
+                  style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)
+                ), 
               ),
               SizedBox(width: 12.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(trip.driverName, style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold)),
+                    Text(
+                      trip.driverName, 
+                      style: GoogleFonts.inter(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.black87)
+                    ),
                     SizedBox(height: 2.h),
-                    Text(trip.carModel, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey)),
+                    Row(
+                      children: [
+                        Text("5.0", style: GoogleFonts.inter(fontSize: 13.sp, color: Colors.grey)),
+                      ],
+                    ),
                   ],
                 ),
               ),
-              // TRACK BUTTON (Matches design)
-              SizedBox(
-                height: 35.h,
-                child: OutlinedButton(
-                  onPressed: onTrackPressed,
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Color(0xFFE0E0E0)),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    "\$${trip.pricePerSeat.toStringAsFixed(0)}", 
+                    style: GoogleFonts.inter(fontSize: 20.sp, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
-                  child: Text("Track", style: GoogleFonts.inter(color: Colors.black, fontSize: 14.sp, fontWeight: FontWeight.w500)),
-                ),
+                  Text(
+                    "Ongoing",
+                    style: GoogleFonts.inter(fontSize: 12.sp, color: Colors.grey),
+                  ),
+                ],
               ),
             ],
           ),

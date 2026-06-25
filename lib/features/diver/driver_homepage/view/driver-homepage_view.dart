@@ -16,9 +16,15 @@ class DriverHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = context.watch<DriverHomeController>();
 
+    if (controller.rideRequests.isEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.fetchRideRequests();
+        controller.startLocationTracking(context);
+      });
+    }
+
     return BaseScaffold(
       isCurved: false,
-      // 1. Title section now includes the Welcome text AND the Online Toggle
       title: Column(
         children: [
           Row(
@@ -70,7 +76,6 @@ class DriverHomeScreen extends StatelessWidget {
           SizedBox(height: 10.h), 
         ],
       ),
-      // 2. Bottom Navigation Bar added
       bottomNavigationBar: CustomBottomNavbar(
         currentIndex: controller.currentNavbarIndex,
         onTap: (index) => controller.setNavbarIndex(index), 
@@ -87,13 +92,14 @@ class DriverHomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Ride Requests (2)", 
+              // FIXED: Replaced static (2) with dynamic length
+              Text("Ride Requests (${controller.rideRequests.length})", 
                 style: GoogleFonts.inter(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.black87)),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFEBEE), 
-                  borderRadius: BorderRadius.circular(10.r) // More rectangular radius
+                  borderRadius: BorderRadius.circular(10.r)
                 ),
                 child: Text("New", style: GoogleFonts.inter(color: Colors.red, fontSize: 12.sp, fontWeight: FontWeight.bold)),
               ),
@@ -109,6 +115,7 @@ class DriverHomeScreen extends StatelessWidget {
       ),
     );
   }
+
 
   // --- Refined Helper Widgets for Exact Match ---
 

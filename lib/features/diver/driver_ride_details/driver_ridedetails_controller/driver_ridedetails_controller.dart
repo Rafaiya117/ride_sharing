@@ -42,7 +42,6 @@ class DriverRideDetailsController extends ChangeNotifier {
   DriverRideDetailsModel? _rideDetails;
   DriverRideDetailsModel? get ride => _rideDetails;
 
-  // FIXED: Implementation targeting ride_id path variable dynamically
   Future<void> fetchRideDetails(String rideId) async {
     if (_isLoading || _hasFetched) return;
     _isLoading = true;
@@ -56,7 +55,7 @@ class DriverRideDetailsController extends ChangeNotifier {
 
       final String? token = TokenStorage.accessToken;
       final response = await _dio.get(
-        '$baseUrl/api/v1/rides/$rideId/', // Injected path variable parameter
+        '$baseUrl/api/v1/rides/$rideId/', 
         options: Options(
           headers: {
             'Content-Type': 'application/json',
@@ -79,7 +78,43 @@ class DriverRideDetailsController extends ChangeNotifier {
     }
   }
 
+  // FIXED: Implemented the dynamic endpoint request block matching path specifications
+  Future<void> startRide(BuildContext context, String rideId) async {
+    if (_isLoading) return;
+    
+    _isLoading = true;
+    notifyListeners();
 
+    final String? token = TokenStorage.accessToken;
+    String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
+    if (baseUrl.endsWith('/')) baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+
+    try {
+      final response = await _dio.post(
+        '$baseUrl/api/v1/rides/$rideId/start/', 
+        data: {}, // FIXED: Explicitly provide an empty map body payload to resolve HTTP 400 validation requirements
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json', // FIXED: Included serialization type handshake header
+            if (token != null) 'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint("Ride status updated successfully on backend layer for ride ID: $rideId");
+        
+        // Contextually push or show status toast feedback to view elements here...
+      }
+    } catch (e) {
+      debugPrint("Error updating execution state machine transitions: $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+  
   Future<void> navigateToChat(BuildContext context, {required int targetUserId, int? targetRideId}) async {
     final router = GoRouter.of(context);
     
@@ -125,10 +160,6 @@ class DriverRideDetailsController extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
-  }
-
-  void startRide(BuildContext context) {
-    print("Ride Started for ${_rideDetails?.passengerName}");
   }
 
   void callPassenger() => print("Calling passenger...");
