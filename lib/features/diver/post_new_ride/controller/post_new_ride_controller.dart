@@ -39,7 +39,7 @@ class PostRideController extends ChangeNotifier {
     notifyListeners();
   }
 
-Future<List<dynamic>> searchPlaces(String query, {required bool isPickup}) async {
+  Future<List<dynamic>> searchPlaces(String query, {required bool isPickup}) async {
     if (query.isEmpty) {
       if (isPickup) {
         pickupSuggestions = [];
@@ -78,9 +78,9 @@ Future<List<dynamic>> searchPlaces(String query, {required bool isPickup}) async
     return [];
   }
 
-  // FIXED: Added Authorization header to resolve potential 401 exceptions on detail lookups
+  // inside class PostRideController ...
   Future<void> fetchPlaceDetails(String placeId, {required bool isPickup}) async {
-    final String? token = TokenStorage.accessToken; // Fetch session token
+    final String? token = TokenStorage.accessToken; 
 
     try {
       String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
@@ -92,7 +92,7 @@ Future<List<dynamic>> searchPlaces(String query, {required bool isPickup}) async
         options: Options(
           headers: {
             'Accept': 'application/json',
-            if (token != null) 'Authorization': 'Bearer $token', // Injected protection header
+            if (token != null) 'Authorization': 'Bearer $token', 
           },
         ),
       );
@@ -101,12 +101,12 @@ Future<List<dynamic>> searchPlaces(String query, {required bool isPickup}) async
         if (isPickup) {
           pickupLat = data['lat']?.toString();
           pickupLng = data['lng']?.toString();
-          pickupLocationController.text = data['formatted_address'] ?? data['name'];
+          pickupLocationController.text = data['formatted_address'] ?? data['name'] ?? data['description'] ?? '';
           pickupSuggestions = [];
         } else {
           dropoffLat = data['lat']?.toString();
           dropoffLng = data['lng']?.toString();
-          dropoffLocationController.text = data['formatted_address'] ?? data['name'];
+          dropoffLocationController.text = data['formatted_address'] ?? data['name'] ?? data['description'] ?? '';
           dropoffSuggestions = [];
         }
         notifyListeners();
@@ -206,7 +206,6 @@ Future<List<dynamic>> searchPlaces(String query, {required bool isPickup}) async
       String formattedDateTime = DateTime.now().toUtc().toIso8601String(); 
       if (dateText.isNotEmpty && timeText.isNotEmpty) {
         try {
-          // FIXED: Parse the text into a real DateTime object first, then format it cleanly to UTC ISO 8601 string
           final String normalizedTime = timeText.split(':').length == 2 ? "$timeText:00" : timeText;
           final DateTime parsedDateTime = DateTime.parse("${dateText}T$normalizedTime");
           formattedDateTime = parsedDateTime.toUtc().toIso8601String();
@@ -217,11 +216,13 @@ Future<List<dynamic>> searchPlaces(String query, {required bool isPickup}) async
         url,
         data: {
           "pickup_location": pickupText,
-          "pickup_lat": pickupLat, 
-          "pickup_lng": pickupLng,
+          // FIXED: Explicitly parsed coordinates to numeric doubles to prevent server payload type mismatch
+          "pickup_lat": double.tryParse(pickupLat!), 
+          "pickup_lng": double.tryParse(pickupLng!),
           "drop_location": dropoffText,
-          "drop_lat": dropoffLat,
-          "drop_lng": dropoffLng,
+          // FIXED: Explicitly parsed coordinates to numeric doubles to prevent server payload type mismatch
+          "drop_lat": double.tryParse(dropoffLat!),
+          "drop_lng": double.tryParse(dropoffLng!),
           "date_time": formattedDateTime,
           "available_seats": seatsInput,
           "price_per_seat": priceInput.toStringAsFixed(2),
@@ -233,6 +234,7 @@ Future<List<dynamic>> searchPlaces(String query, {required bool isPickup}) async
           headers: {
             'Authorization': 'Bearer $token',
             'Accept': 'application/json',
+            'Content-Type': 'application/json', // FIXED: Declared explicit payload type
           },
         ),
       );

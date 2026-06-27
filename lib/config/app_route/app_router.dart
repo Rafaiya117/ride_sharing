@@ -158,10 +158,19 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/payment',
       builder: (context, state) {
-        // Extract the dynamic data map from extra
-        final Map<String, dynamic>? bookingData = state.extra as Map<String, dynamic>?;
-        final int dynamicBookingId = bookingData?['id'] ?? bookingData?['booking_id'] ?? 0;
-        return PaymentScreen(bookingId: dynamicBookingId);
+        final Map<String, dynamic>? bookingData =
+            state.extra as Map<String, dynamic>?;
+
+        final int dynamicBookingId =
+            bookingData?['id'] ?? bookingData?['booking_id'] ?? 0;
+        // FIXED: Safely capture the ride id out of the booking extra response data context
+        final int dynamicRideId =
+            bookingData?['ride_id'] ?? bookingData?['ride']?['id'] ?? 0;
+
+        return PaymentScreen(
+          bookingId: dynamicBookingId,
+          rideId: dynamicRideId, // Pass this to the view layout
+        );
       },
     ),
     // GoRoute(
@@ -277,9 +286,17 @@ final GoRouter appRouter = GoRouter(
         return DriverRideDetailsScreen(rideId: rideId);
       },
     ),
+    // GoRoute(
+    //   path: '/drive_trackride_screen',
+    //   builder: (context, state) => DriverTrackScreen(),
+    // ),
     GoRoute(
-      path: '/drive_trackride_screen',
-      builder: (context, state) => DriverTrackScreen(),
+      path: '/drive_trackride_screen', // Plain path matching
+      builder: (context, state) {
+        // FIXED: Extract the raw string parameter handle casted from state.extra context values
+        final rideId = state.extra as String? ?? '';
+        return DriverTrackScreen(rideId: rideId);
+      },
     ),
     GoRoute(
       path: '/drive_complateride_screen',

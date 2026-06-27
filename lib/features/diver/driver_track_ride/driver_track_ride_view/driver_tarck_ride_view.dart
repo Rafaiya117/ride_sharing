@@ -8,7 +8,9 @@ import 'package:ride_sharing/features/diver/driver_track_ride/driver_track_ride_
 import 'package:ride_sharing/features/diver/driver_track_ride/driver_track_ride_model/driver_track_ride_model.dart';
 
 class DriverTrackScreen extends StatelessWidget {
-  const DriverTrackScreen({super.key});
+  final String rideId; // FIXED: Inject dynamic string handle identification logic into track view constructor layers
+
+  const DriverTrackScreen({super.key, required this.rideId});
 
   @override
   Widget build(BuildContext context) {
@@ -17,71 +19,68 @@ class DriverTrackScreen extends StatelessWidget {
 
     return BaseScaffold(
       title: Row(
-    children: [
-      IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.pop(context),
-      ),
-      SizedBox(width: 8.w),
-      Expanded(
-        child: Text(
-          "Track Ride",
-          textAlign: TextAlign.center,
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w700,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
           ),
-        ),
-      ),
-    ],
-  ),
-  titleAlign: TextAlign.center,
-  isCurved: true,
-  actions: [
-    IconButton(
-      icon: const Icon(Icons.share_outlined, color: Colors.white),
-      onPressed: controller.shareTrip,
-    ),
-  ],
-      child: SizedBox(
-        height: 1.sh - 100.h, // Adjust based on BaseScaffold header height
-        child: Stack(
-          children: [
-            // 1. Map Background
-            Positioned.fill(
-              child: Image.asset('assets/images/map_placeholder.png', fit: BoxFit.cover),
-            ),
-
-            // 2. Floating Arrival Card
-            Positioned(
-              top: 20.h, left: 20.w, right: 20.w,
-              child: _buildArrivalCard(trip),
-            ),
-
-            // 3. Status Badge on Map
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                   _buildStatusIndicator(trip.currentStatus),
-                ],
+          SizedBox(width: 8.w),
+          Expanded(
+            child: Text(
+              "Track Ride",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w700,
               ),
             ),
-
-            // 4. Emergency SOS Button
-            Positioned(
-              bottom: 280.h, left: 60.w, right: 60.w,
-              child: _buildSOSButton(controller.triggerSOS),
-            ),
-
-            // 5. Bottom Details Sheet
-            Positioned(
-              bottom: 0, left: 0, right: 0,
-              child: _buildDetailsSheet(trip, controller,context),
-            ),
-          ],
+          ),
+        ],
+      ),
+      titleAlign: TextAlign.center,
+      isCurved: true,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.share_outlined, color: Colors.white),
+          onPressed: controller.shareTrip,
         ),
+      ],
+      // FIXED: Wrapped with FutureBuilder to run the dynamic context fetching step safely on launch 
+      child: FutureBuilder(
+        future: context.read<DriverTrackController>().fetchRideDetails(rideId),
+        builder: (context, snapshot) {
+          return SizedBox(
+            height: 1.sh - 100.h, 
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Image.asset('assets/images/map_placeholder.png', fit: BoxFit.cover),
+                ),
+                Positioned(
+                  top: 20.h, left: 20.w, right: 20.w,
+                  child: _buildArrivalCard(trip),
+                ),
+                Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                       _buildStatusIndicator(trip.currentStatus),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  bottom: 280.h, left: 60.w, right: 60.w,
+                  child: _buildSOSButton(controller.triggerSOS),
+                ),
+                Positioned(
+                  bottom: 0, left: 0, right: 0,
+                  child: _buildDetailsSheet(trip, controller, context),
+                ),
+              ],
+            ),
+          );
+        }
       ),
     );
   }
@@ -160,7 +159,7 @@ class DriverTrackScreen extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(color: Colors.white),
       child: Padding(
-        padding: EdgeInsets.all(12.w), // Slightly increased for better spacing
+        padding: EdgeInsets.all(12.w), 
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -177,7 +176,6 @@ class DriverTrackScreen extends StatelessWidget {
                     Text("${trip.carModel} • ${trip.carPlate}", style: GoogleFonts.inter(color: Colors.grey, fontSize: 12.sp)),
                   ]),
                 ),
-                // Updated to use SVG paths
                 _roundIconBtn('assets/icons/phone_outline.svg', controller.callPassenger),
                 SizedBox(width: 10.w),
                 _roundIconBtn('assets/icons/chat_outline.svg', controller.messagePassenger),
@@ -195,16 +193,25 @@ class DriverTrackScreen extends StatelessWidget {
             SizedBox(height: 20.h),
             _actionOutlineBtn("Share Trip with Family", controller.shareTrip),
             SizedBox(height: 12.h),
+            if (trip.status != "completed")
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () => controller.endRide(context),
+                onPressed: () => controller.endRide(context, rideId),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   padding: EdgeInsets.symmetric(vertical: 16.h),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
                 ),
-                child: Text("End Ride", style: GoogleFonts.inter(color: Colors.white, fontWeight: FontWeight.bold)),
+                child: Text(
+                  "End Ride",
+                  style: GoogleFonts.inter(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ],
@@ -213,8 +220,8 @@ class DriverTrackScreen extends StatelessWidget {
     );
   }
 
-// Ensure your _roundIconBtn is updated to handle the SVG String
-Widget _roundIconBtn(String svgPath, VoidCallback onTap) => InkWell(
+  // Ensure your _roundIconBtn is updated to handle the SVG String
+  Widget _roundIconBtn(String svgPath, VoidCallback onTap) => InkWell(
     onTap: onTap,
     child: Container(
       padding: EdgeInsets.all(10.r),

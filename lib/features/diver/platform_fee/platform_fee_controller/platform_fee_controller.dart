@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class FeePaymentController extends ChangeNotifier {
   final double tripEarnings = 28.00;
@@ -17,6 +18,6 @@ class FeePaymentController extends ChangeNotifier {
 
   void handlePayment(BuildContext context) {
     debugPrint("Paying \$${platformFee.toStringAsFixed(2)} via method $_selectedMethod");
-    Navigator.pop(context); 
+    context.push("/drive_home_screen");
   }
 }

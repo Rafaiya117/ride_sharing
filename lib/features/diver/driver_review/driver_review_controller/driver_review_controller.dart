@@ -1,8 +1,14 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ride_sharing/core/token/token_storage.dart';
 import 'package:ride_sharing/features/diver/driver_review/driver_review_model/driver_review_model.dart';
 
 class DriveReviewsController extends ChangeNotifier {
-  // 1. Dynamic Summary State (Mocked from image_8.png)
+  final Dio _dio = Dio(); 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   double get overallRating => 4.8;
   int get totalReviews => 8;
   
@@ -15,7 +21,6 @@ class DriveReviewsController extends ChangeNotifier {
   };
   Map<int, int> get starCounts => _starCounts;
 
-  // 2. Dynamic List of Reviews State standard MVC logic
   final List<DriverReviewModel> _reviews = [
     DriverReviewModel(
       passengerName: "Sarah Johnson", initials: "S", date: "Mar 2, 2026",
@@ -28,21 +33,57 @@ class DriveReviewsController extends ChangeNotifier {
   ];
   List<DriverReviewModel> get reviews => _reviews;
 
-  // --- Dynamic Methods ---
-
-  // Standard standard standard standard standard dynamic price standard standard standard price logic dynamic standard
   double getStarPercentage(int starLevel) {
     if (totalReviews == 0) return 0.0;
     int count = _starCounts[starLevel] ?? 0;
     return count / totalReviews;
   }
 
-  void showAllReviews() {
-    print("Action dynamically triggered: Show all standard standard reviews (placeholder standard)");
-    // Logic to update view or filter dynamic reviews
+  // FIXED: Added function to submit a ride review to the backend
+  Future<void> submitReview(BuildContext context, {required String rideId, required int rating, required String reviewText}) async {
+    if (_isLoading) return;
+    _isLoading = true;
+    notifyListeners();
+
+    final String? token = TokenStorage.accessToken;
+    String baseUrl = dotenv.env['API_BASE_URL'] ?? '';
+    if (baseUrl.endsWith('/')) baseUrl = baseUrl.substring(0, baseUrl.length - 1);
+
+    try {
+      final Map<String, dynamic> requestBody = {
+        "rating": rating,
+        "review": reviewText,
+      };
+
+      final response = await _dio.post(
+        '$baseUrl/api/v1/rides/$rideId/rate/', // Adjust endpoints path pattern if needed
+        data: requestBody,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            if (token != null) 'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.data != null && response.data['success'] == true) {
+        debugPrint("Review submitted successfully: ${response.data}");
+        if (context.mounted) {
+          Navigator.of(context).pop(); // Go back after successful submission
+        }
+      }
+    } catch (e) {
+      debugPrint("Error posting driver review: $e");
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
-  void navigateBack(BuildContext context) {
-    // Navigator.pop(context); // standard mvc pop
+  void showAllReviews() {
+    print("Action dynamically triggered: Show all standard standard reviews (placeholder standard)");
   }
+
+  void navigateBack(BuildContext context) {}
 }

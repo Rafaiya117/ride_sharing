@@ -204,7 +204,7 @@ class DriverTripScreen extends StatelessWidget {
                     SizedBox(width: 6.w),
                     FittedBox(
                       fit: BoxFit.scaleDown,
-                      child: _trackBtn(context),
+                      child: _trackBtn(context, trip.id.toString()),
                     ),
                   ],
                 ),
@@ -325,8 +325,8 @@ class DriverTripScreen extends StatelessWidget {
     ]),
   ]);
 
-  Widget _trackBtn(BuildContext context) => GestureDetector(
-    onTap: () => context.push('/drive_trackride_screen'), // Navigate to track page
+  Widget _trackBtn(BuildContext context, String rideId) => GestureDetector(
+    onTap: () => context.push('/drive_trackride_screen', extra: rideId), // FIXED: Passed rideId via GoRouter extra payload parameter
     child: Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
       decoration: BoxDecoration(

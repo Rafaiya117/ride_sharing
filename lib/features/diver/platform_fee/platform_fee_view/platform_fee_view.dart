@@ -169,7 +169,7 @@ class FeeRequiredPopup extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => controller.handlePayment(context),
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r))),
-                  child: Text("Pay \$${controller.platformFee.toStringAsFixed(2)} Now", style:GoogleFonts.inter(color: Colors.white)),
+                  child: Text("Pay  Now", style:GoogleFonts.inter(color: Colors.white)),
                 ),
               ),
               SizedBox(height: 10.h),

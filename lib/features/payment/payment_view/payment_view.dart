@@ -10,16 +10,22 @@ import 'package:ride_sharing/features/payment/payment_controller/payment_control
 import 'package:ride_sharing/features/payment/payment_model/payment_model.dart';
 
 class PaymentScreen extends StatelessWidget {
-  // FIXED: Added bookingId variable parameter to the class constructor
   final int bookingId;
+  final int rideId; // FIXED: Maintained dynamic id requirement context
 
   const PaymentScreen({
     super.key,
-    required this.bookingId, // FIXED: Now required dynamically from GoRouter
+    required this.bookingId,
+    required this.rideId,
   });
 
   @override
   Widget build(BuildContext context) {
+    // FIXED: Safely schedules the API request handler inline without triggering rebuild-loops
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<PaymentController>().getRideDetailsForPayment(context, rideId.toString());
+    });
+
     final controller = context.watch<PaymentController>();
     return BaseScaffold(
       // --- HEADER ---
@@ -124,7 +130,6 @@ class PaymentScreen extends StatelessWidget {
               ? "Processing..." : (controller.selectedMethod == PaymentMethodType.card ? "Next" : "Save"),
             onTap: () {
               if (controller.isPaying) return;
-              // FIXED: Uses the constructor's dynamic bookingId property context instead of hardcoded 8
               controller.processPayment(context, bookingId);
             },
           ),
@@ -161,9 +166,7 @@ class PaymentScreen extends StatelessWidget {
     );
   }
 
-  // Helper method for Price Breakdown tiles per design standard
-  // Change 'MaterialColor?' to 'Color?' here
-  Widget _buildBreakdownTile(String label,double amount,Color? amountColor, {bool isBold = false,}) {
+  Widget _buildBreakdownTile(String label, double amount, Color? amountColor, {bool isBold = false}) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.h),
       child: Row(

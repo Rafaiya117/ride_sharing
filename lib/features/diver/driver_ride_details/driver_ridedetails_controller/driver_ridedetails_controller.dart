@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -5,45 +7,20 @@ import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/core/token/token_storage.dart';
 import 'package:ride_sharing/features/diver/driver_ride_details/driver_ridedetails_model/driver_ridedetails_model.dart';
 
-// class DriverRideDetailsController extends ChangeNotifier {
-//   final DriverRideDetailsModel ride = DriverRideDetailsModel(
-//     totalPrice: 38,
-//     date: "Mar 7, 2026",
-//     time: "10:00 AM",
-//     duration: "4h 45m",
-//     distance: "225 miles",
-//     seats: 3,
-//     pickupLocation: "New York, NY",
-//     pickupTime: "10:00 AM",
-//     dropoffLocation: "Washington, DC",
-//     estArrival: "Est. arrival time",
-//     passengerName: "Lisa Martinez",
-//     passengerInitial: "L",
-//     rating: 4.9,
-//     totalTrips: 54,
-//   );
-
-//   void startRide(BuildContext context) {
-//     print("Ride Started for ${ride.passengerName}");
-//     // Implementation for navigation/status update
-//   }
-
-//   void callPassenger() => print("Calling passenger...");
-//   void messagePassenger() => print("Opening chat...");
-//   void shareRide() => print("Sharing ride link...");
-// }
-
 class DriverRideDetailsController extends ChangeNotifier {
   final Dio _dio = Dio();
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-  bool _hasFetched = false;
+
+
+  bool _isLocalStarted = false;
+  bool get isLocalStarted => _isLocalStarted;
 
   DriverRideDetailsModel? _rideDetails;
   DriverRideDetailsModel? get ride => _rideDetails;
 
   Future<void> fetchRideDetails(String rideId) async {
-    if (_isLoading || _hasFetched) return;
+    if (_isLoading) return; 
     _isLoading = true;
     WidgetsBinding.instance.addPostFrameCallback((_) => notifyListeners());
 
@@ -68,7 +45,9 @@ class DriverRideDetailsController extends ChangeNotifier {
         final Map<String, dynamic> dataObj = response.data['data'] is Map ? response.data['data'] : {};
         debugPrint('!------ Driver Ride details $dataObj');
         _rideDetails = DriverRideDetailsModel.fromJson(dataObj);
-        _hasFetched = true;
+        
+        // FIXED: Reset local lifecycle flags on fresh queries
+        _isLocalStarted = false;
       }
     } catch (e) {
       debugPrint("Error loading ride profile details: $e");
@@ -78,7 +57,6 @@ class DriverRideDetailsController extends ChangeNotifier {
     }
   }
 
-  // FIXED: Implemented the dynamic endpoint request block matching path specifications
   Future<void> startRide(BuildContext context, String rideId) async {
     if (_isLoading) return;
     
@@ -92,20 +70,26 @@ class DriverRideDetailsController extends ChangeNotifier {
     try {
       final response = await _dio.post(
         '$baseUrl/api/v1/rides/$rideId/start/', 
-        data: {}, // FIXED: Explicitly provide an empty map body payload to resolve HTTP 400 validation requirements
+        data: {}, 
         options: Options(
           headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json', // FIXED: Included serialization type handshake header
+            'Accept': 'application/json', 
             if (token != null) 'Authorization': 'Bearer $token',
           },
         ),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         debugPrint("Ride status updated successfully on backend layer for ride ID: $rideId");
         
-        // Contextually push or show status toast feedback to view elements here...
+        // FIXED: Explicitly flip state flag tracker to hide widget before popping out
+        _isLocalStarted = true;
+        notifyListeners();
+
+        if (context.mounted) {
+          Navigator.of(context).pop();
+        }
       }
     } catch (e) {
       debugPrint("Error updating execution state machine transitions: $e");

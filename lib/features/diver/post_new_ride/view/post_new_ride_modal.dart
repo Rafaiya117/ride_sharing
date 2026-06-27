@@ -51,10 +51,13 @@ class PostRideView extends StatelessWidget {
                         item['description'] ?? '',
                         style: GoogleFonts.inter(fontSize: 14.sp),
                       ),
-                      onTap: () => controller.fetchPlaceDetails(
-                        item['place_id'],
-                        isPickup: true,
-                      ),
+                     onTap: () {
+                      controller.pickupLocationController.text = item['description'] ?? '';
+                        controller.fetchPlaceDetails(
+                          item['place_id'],
+                          isPickup: true,
+                        );
+                      },
                     );
                   },
                 ),
@@ -85,16 +88,19 @@ class PostRideView extends StatelessWidget {
                         item['description'] ?? '',
                         style: GoogleFonts.inter(fontSize: 14.sp),
                       ),
-                      onTap: () => controller.fetchPlaceDetails(
-                        item['place_id'],
-                        isPickup: false,
-                      ),
+                      onTap: () {
+                        controller.dropoffLocationController.text = item['description'] ?? ''; 
+                        controller.fetchPlaceDetails(
+                          item['place_id'],
+                          isPickup: false,
+                        );
+                      },
                     );
                   },
                 ),
               ),
             SizedBox(height: 15.h),
-            _buildDateTimeRow(),
+            _buildDateTimeRow(context,controller),
             SizedBox(height: 15.h),
 
             _buildSeatsPriceRow(controller),
@@ -141,7 +147,7 @@ class PostRideView extends StatelessWidget {
               IconButton(
                 // Close button icon as SVG
                 icon: SvgPicture.asset('assets/icons/close.svg', width: 20.sp, height: 20.sp), 
-                onPressed: () => Navigator.pop(context)
+                onPressed: () => Navigator.pop(context),
               ),
             ],
           ),
@@ -151,7 +157,7 @@ class PostRideView extends StatelessWidget {
     );
   }
 
-  Widget _buildDateTimeRow() {
+  Widget _buildDateTimeRow(BuildContext context, PostRideController controller) {
     return Column(
       children: [
         Row(children: [
@@ -159,11 +165,48 @@ class PostRideView extends StatelessWidget {
           SizedBox(width: 15.w),
           Expanded(child: _buildLabel("Time")),
         ]),
-        Row(children: [
-          Expanded(child: _buildTextField(hint: "mm/dd/yyyy", iconPath: 'assets/icons/calendar.svg')),
-          SizedBox(width: 15.w),
-          Expanded(child: _buildTextField(hint: ".. : ..", iconPath: 'assets/icons/clock.svg')),
-        ]),
+        Row(
+          children: [
+            Expanded(
+              child: _buildTextField(
+                hint: "mm/dd/yyyy",
+                iconPath: 'assets/icons/calendar.svg',
+                controller: controller.dateController, 
+                readOnly: true, 
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(DateTime.now().year + 1),
+                  );
+                  if (pickedDate != null) {
+                    controller.dateController.text =
+                        "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+                  }
+                },
+              ),
+            ),
+            SizedBox(width: 15.w),
+            Expanded(
+              child: _buildTextField(
+                hint: ".. : ..",
+                iconPath: 'assets/icons/clock.svg',
+                controller: controller.timeController, 
+                readOnly: true, 
+                onTap: () async {
+                  TimeOfDay? pickedTime = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+                  if (pickedTime != null) {
+                    controller.timeController.text = "${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -198,16 +241,56 @@ class PostRideView extends StatelessWidget {
 
   // --- Updated Helper Methods with SvgPicture.asset ---
 
-  Widget _buildTextField({
-    required String hint,
-    required String iconPath,
-    Color? iconColor,
-    TextEditingController? controller,
-    ValueChanged<String>? onChanged, // FIXED: Added to listen to key up events
+  // Widget _buildTextField({
+  //   required String hint,
+  //   required String iconPath,
+  //   Color? iconColor,
+  //   TextEditingController? controller,
+  //   ValueChanged<String>? onChanged, // FIXED: Added to listen to key up events
+  // }) {
+  //   return TextField(
+  //     controller: controller,
+  //     onChanged: onChanged, // FIXED
+  //     decoration: InputDecoration(
+  //       hintText: hint,
+  //       hintStyle: GoogleFonts.inter(color: Colors.grey),
+  //       prefixIcon: Padding(
+  //         padding: EdgeInsets.all(12.r),
+  //         child: SvgPicture.asset(
+  //           iconPath,
+  //           colorFilter: ColorFilter.mode(
+  //             iconColor ?? Colors.grey,
+  //             BlendMode.srcIn,
+  //           ),
+  //           width: 8.sp,
+  //           height: 8.sp,
+  //         ),
+  //       ),
+  //       filled: true,
+  //       fillColor: const Color(0xFFF3F4F6),
+  //       border: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(12.r),
+  //         borderSide: BorderSide.none,
+  //       ),
+  //       contentPadding: EdgeInsets.symmetric(vertical: 15.h),
+  //     ),
+  //   );
+  // }
+
+ Widget _buildTextField({
+  required String hint,
+  required String iconPath,
+  Color? iconColor,
+  TextEditingController? controller,
+  ValueChanged<String>? onChanged,
+  VoidCallback? onTap,   // FIXED: Added optional tap action handler
+  bool readOnly = false, // FIXED: Added optional read-only flag defaulting to false
   }) {
     return TextField(
       controller: controller,
-      onChanged: onChanged, // FIXED
+      onChanged: onChanged,
+      onTap: onTap,       // FIXED
+      readOnly: readOnly, // FIXED
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: GoogleFonts.inter(color: Colors.grey),

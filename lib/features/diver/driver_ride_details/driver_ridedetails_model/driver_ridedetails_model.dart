@@ -13,8 +13,8 @@ class DriverRideDetailsModel {
   final String passengerInitial;
   final double rating;
   final int totalTrips;
-  // FIXED: Added property to capture target passenger ID for chat room initialization
   final int passengerId; 
+  final String status; // FIXED: Missing status configuration property tracking added
 
   DriverRideDetailsModel({
     required this.totalPrice,
@@ -31,7 +31,8 @@ class DriverRideDetailsModel {
     required this.passengerInitial,
     required this.rating,
     required this.totalTrips,
-    required this.passengerId, // FIXED
+    required this.passengerId, 
+    required this.status, // FIXED
   });
 
   factory DriverRideDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -59,7 +60,8 @@ class DriverRideDetailsModel {
       passengerInitial: pName.isNotEmpty ? pName[0].toUpperCase() : "P",
       rating: double.tryParse(mainPassenger['passenger_rating']?.toString() ?? '5.0') ?? 5.0,
       totalTrips: mainPassenger['passenger_trips'] ?? 0,
-      passengerId: mainPassenger['passenger_id'] ?? 0, // FIXED: Parsed from response array
+      passengerId: mainPassenger['passenger_id'] ?? 0, 
+      status: json['status'] ?? 'active', // FIXED: Successfully captures your JSON data status
     );
   }
 }

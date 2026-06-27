@@ -315,16 +315,12 @@ class RideDetailsScreen extends StatelessWidget {
               child: const Text("Make an Offer"),
             ),
           ),
-          SizedBox(width: 12.w), // Gap between buttons
-          // 2. "Book Now" Button (Solid Black)
+          SizedBox(width: 12.w), 
           Expanded(
             child: ElevatedButton(
-              onPressed: () =>
-                  controller.bookNow(context, controller.ride.totalPrice),
+              onPressed: () => controller.bookNow(context, controller.ride.totalPrice),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(
-                  0xFF131D33,
-                ), // Dark blue-black color from image
+                backgroundColor: const Color(0xFF131D33), // Dark blue-black color from image
                 foregroundColor: Colors.white, // Text Color
                 padding: EdgeInsets.symmetric(vertical: 16.h),
                 elevation: 0,
@@ -333,12 +329,10 @@ class RideDetailsScreen extends StatelessWidget {
                 ),
                 textStyle: GoogleFonts.inter(
                   fontSize: 14.sp,
-                  fontWeight:
-                      FontWeight.w700, // Bolder weight for dynamic pricing
+                  fontWeight:FontWeight.w700, // Bolder weight for dynamic pricing
                   color: Colors.white,
                 ),
               ),
-              // Combining Text and Dynamic Data from controller
               child: Text("Book Now"),
             ),
           ),

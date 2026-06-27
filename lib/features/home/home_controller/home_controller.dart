@@ -177,12 +177,12 @@ class HomeController extends ChangeNotifier {
         if (isPickup) {
           pickupLat = data['lat']?.toString();
           pickupLng = data['lng']?.toString();
-          pickupController.text = data['formatted_address'] ?? data['name'];
+          pickupController.text = data['formatted_address'] ?? data['name'] ?? data['description'] ?? '';
           pickupSuggestions = [];
         } else {
           dropoffLat = data['lat']?.toString();
           dropoffLng = data['lng']?.toString();
-          dropoffController.text = data['formatted_address'] ?? data['name'];
+          dropoffController.text = data['formatted_address'] ?? data['name'] ?? data['description'] ?? '';
           dropoffSuggestions = [];
         }
         notifyListeners();

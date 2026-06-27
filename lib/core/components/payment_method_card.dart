@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ride_sharing/features/payment/payment_controller/payment_controller.dart';
 import 'package:ride_sharing/features/payment/payment_model/payment_model.dart';
 
 class PaymentMethodCard extends StatelessWidget {
