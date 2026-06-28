@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:ride_sharing/core/components/custom_button.dart';
@@ -11,7 +12,7 @@ import 'package:ride_sharing/features/payment/payment_model/payment_model.dart';
 
 class PaymentScreen extends StatelessWidget {
   final int bookingId;
-  final int rideId; // FIXED: Maintained dynamic id requirement context
+  final int rideId; 
 
   const PaymentScreen({
     super.key,
@@ -21,32 +22,25 @@ class PaymentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // FIXED: Safely schedules the API request handler inline without triggering rebuild-loops
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<PaymentController>().getRideDetailsForPayment(context, rideId.toString());
-    });
-
     final controller = context.watch<PaymentController>();
+
+    if (controller.payment.route == "Loading route...") {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<PaymentController>().getRideDetailsForPayment(context, rideId.toString());
+      });
+    }
+
     return BaseScaffold(
-      // --- HEADER ---
       title: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             "Payment",
-            style: GoogleFonts.inter(
-              color: Colors.white,
-              fontSize: 22.sp,
-              fontWeight: FontWeight.bold,
-            ),
+            style: GoogleFonts.inter(color: Colors.white, fontSize: 22.sp, fontWeight: FontWeight.bold),
           ),
           Text(
             "Secure checkout",
-            style: GoogleFonts.inter(
-              color: Colors.white.withOpacity(0.8),
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w400,
-            ),
+            style: GoogleFonts.inter(color: Colors.white.withOpacity(0.8), fontSize: 14.sp, fontWeight: FontWeight.w400),
           ),
         ],
       ),
@@ -57,10 +51,9 @@ class PaymentScreen extends StatelessWidget {
         onPressed: () => controller.navigateBack(context),
       ),
 
-      // --- BODY CONTENT ---
       child: Column(
         children: [
-          // 1. --- Dynamic Trip Summary Card ---
+          // 1. Trip Summary
           PaymentInfoCard(
             title: "Trip Summary", 
             child: Column(
@@ -72,7 +65,7 @@ class PaymentScreen extends StatelessWidget {
               ],
             ),
           ),
-          // 2. --- Dynamic Payment Methods List ---
+          // 2. Payment Methods
           PaymentInfoCard(
             title: "Payment Method",
             showShadow: false,
@@ -94,7 +87,7 @@ class PaymentScreen extends StatelessWidget {
               },
             ),
           ),
-          // 3. --- Dynamic Price Breakdown Card ---
+          // 3. Price Breakdown
           PaymentInfoCard(
             title: "Price Breakdown",
             showShadow: true, 
@@ -102,35 +95,25 @@ class PaymentScreen extends StatelessWidget {
             isMainPadding: true,
             child: Column(
               children: [
-                _buildBreakdownTile(
-                  "Ride fare (${controller.payment.seats} seat)",
-                  controller.payment.rideFare,
-                  Colors.grey,
-                ),
-                // _buildBreakdownTile(
-                //   "Service fee",
-                //   controller.payment.serviceFee,
-                //   Colors.grey,
-                // ),
+                _buildBreakdownTile("Ride fare (${controller.payment.seats} seat)", controller.payment.rideFare, Colors.grey),
                 SizedBox(height: 10.h),
                 const Divider(thickness: 1, color: Color(0xFFE0E0E0)),
                 SizedBox(height: 10.h),
-                _buildBreakdownTile(
-                  "Total",
-                  controller.payment.totalAmount,
-                  Colors.black,
-                  isBold: true,
-                ),
+                _buildBreakdownTile("Total", controller.payment.totalAmount, Colors.black, isBold: true),
               ],
             ),
           ),
-          // 4. --- REUSABLE PRIMARY SOLID BLACK BUTTON ---
+          // 4. Solid Button Action handler
           CustomButton(
             text: controller.isPaying
               ? "Processing..." : (controller.selectedMethod == PaymentMethodType.card ? "Next" : "Save"),
             onTap: () {
               if (controller.isPaying) return;
-              controller.processPayment(context, bookingId);
+              if (controller.selectedMethod == PaymentMethodType.cash) {
+                GoRouter.of(context).push('/cash_payment', extra: {"ride_id": rideId});
+              } else {
+                controller.processPayment(context, bookingId);
+              }
             },
           ),
           SizedBox(height: 20.h), 
@@ -139,28 +122,14 @@ class PaymentScreen extends StatelessWidget {
     );
   }
 
-  // --- Helper Methods for Consistent Complex Layouts ---
   Widget _buildSummaryTile(String label, String value) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8.h),
       child: Row(
         children: [
-          Expanded(
-            flex: 1,
-            child: Text(
-              label,
-              style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey, fontWeight: FontWeight.w400),
-            ),
-          ),
+          Expanded(flex: 1, child: Text(label, style: GoogleFonts.inter(fontSize: 14.sp, color: Colors.grey))),
           SizedBox(width: 10.w),
-          Expanded(
-            flex: 2,
-            child: Text(
-              value,
-              textAlign: TextAlign.end,
-              style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.black, fontWeight: FontWeight.bold),
-            ),
-          ),
+          Expanded(flex: 2, child: Text(value, textAlign: TextAlign.end, style: GoogleFonts.inter(fontSize: 16.sp, color: Colors.black, fontWeight: FontWeight.bold))),
         ],
       ),
     );
@@ -172,22 +141,8 @@ class PaymentScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: GoogleFonts.inter(
-              fontSize: 16.sp,
-              color: isBold ? Colors.black : Colors.grey,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.w400,
-            ),
-          ),
-          Text(
-            "\$${amount.toStringAsFixed(0)}",
-            style: GoogleFonts.inter(
-              fontSize: isBold ? 24.sp : 16.sp,
-              color: amountColor ?? Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text(label, style: GoogleFonts.inter(fontSize: 16.sp, color: isBold ? Colors.black : Colors.grey, fontWeight: isBold ? FontWeight.bold : FontWeight.w400)),
+          Text("\$${amount.toStringAsFixed(0)}", style: GoogleFonts.inter(fontSize: isBold ? 24.sp : 16.sp, color: amountColor ?? Colors.black, fontWeight: FontWeight.bold)),
         ],
       ),
     );

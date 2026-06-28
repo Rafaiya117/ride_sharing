@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart' hide PaymentMethodType, PaymentMethodData; 
 //import 'package:stripe_platform_interface/stripe_platform_interface.dart' as stripe_platform_interface;
-import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/core/token/token_storage.dart';
 import 'package:ride_sharing/features/payment/payment_model/payment_model.dart';
 import 'package:ride_sharing/features/payment/payment_view/stripe_view.dart';
@@ -63,7 +62,6 @@ class PaymentController extends ChangeNotifier {
     );
   }
 
-  // FIXED: Call this from your view initialization step to load real API ride metrics safely
   void initializePaymentData(Map<String, dynamic> rideDataJson) {
     _payment = PaymentModel.fromJson(rideDataJson, _selectedMethod);
     notifyListeners();
@@ -99,8 +97,6 @@ class PaymentController extends ChangeNotifier {
 
       if (response.data != null && response.data['success'] == true) {
         final Map<String, dynamic> rideDataJson = response.data['data'] is Map ? response.data['data'] : {};
-        
-        // Pass the extracted payload to populate your models instantly
         initializePaymentData(rideDataJson);
       }
     } catch (e) {
@@ -111,7 +107,35 @@ class PaymentController extends ChangeNotifier {
     }
   }
 
-  Future<void> processPayment(BuildContext context, int bookingId) async {
+  // FIXED HELPER: Hits the Booking creation API with the correct sequential payload structure
+  Future<int?> _createNewBooking(String baseUrl, String? token, int rideId, String paymentMethod) async {
+    try {
+      final response = await _dio.post(
+        '$baseUrl/api/v1/passenger/bookings/',
+        data: {
+          "ride_id": rideId,
+          "payment_method": paymentMethod,
+          "seats_booked": _payment.seats,
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            if (token != null) 'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.data != null && response.data['success'] == true) {
+        return response.data['data']['id'] ?? response.data['data']['booking_id'];
+      }
+    } catch (e) {
+      debugPrint("Error creating base booking placeholder sequence: $e");
+    }
+    return null;
+  }
+
+  // FIXED: Generates the Booking ID before executing the Stripe checkout card gateway
+  Future<void> processPayment(BuildContext context, int rideId) async {
     _isPaying = true;
     notifyListeners();
 
@@ -123,13 +147,28 @@ class PaymentController extends ChangeNotifier {
     final String? token = TokenStorage.accessToken;
 
     try {
-      final String endpointUrl = _selectedMethod == PaymentMethodType.cash
-          ? '$baseUrl/api/v1/passenger/checkout/cash/'
-          : '$baseUrl/api/v1/passenger/checkout/';
+      // 1. Create the booking sequence entry first
+      final int? generatedBookingId = await _createNewBooking(baseUrl, token, rideId, "card");
+      if (generatedBookingId == null) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Failed to secure ride booking reservation."), backgroundColor: Colors.red),
+          );
+        }
+        return;
+      }
+
+      // 2. Perform checkout using the returned booking ID
+      final String endpointUrl = '$baseUrl/api/v1/passenger/checkout/';
+
+      final Map<String, dynamic> requestBody = {
+        "booking_id": generatedBookingId,
+        "payment_method": "card"
+      };
 
       final response = await _dio.post(
         endpointUrl,
-        data: {"booking_id": bookingId},
+        data: requestBody,
         options: Options(
           headers: {
             'Content-Type': 'application/json',
@@ -139,20 +178,6 @@ class PaymentController extends ChangeNotifier {
       );
 
       if (response.data != null && response.data['success'] == true) {
-        if (_selectedMethod == PaymentMethodType.cash) {
-          final String message = response.data['data']?['message'] ?? "Cash payment confirmed.";
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(message),
-                backgroundColor: const Color(0xFF1DB954), 
-              ),
-            );
-            GoRouter.of(context).push('/user_home_screen');
-          }
-          return;
-        }
-
         final paymentData = response.data['data'];
         final String? clientSecret = paymentData['payment_intent_client_secret'];
         final String? publishableKey = paymentData['publishable_key'];
@@ -174,7 +199,7 @@ class PaymentController extends ChangeNotifier {
         }
       }
     } catch (e) {
-      debugPrint("Error fetching checkout configurations: $e");
+      debugPrint("Error processing Stripe pipeline: $e");
     } finally {
       _isPaying = false;
       notifyListeners();
@@ -224,7 +249,6 @@ class PaymentController extends ChangeNotifier {
   }
 }
 
-// FIXED: Explicitly added the local helper data class definition to resolve layout compilation constraints cleanly
 class PaymentMethodData {
   final String title;
   final String subtitle;

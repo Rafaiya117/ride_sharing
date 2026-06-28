@@ -6,7 +6,9 @@ import 'package:ride_sharing/core/theme/background_template/back_ground_template
 import 'package:ride_sharing/features/cash_payment/cash_payment_controller/cash_payment_controller.dart';
 
 class CashPaymentScreen extends StatelessWidget {
-  const CashPaymentScreen({super.key});
+  final int rideId;
+
+  const CashPaymentScreen({super.key, required this.rideId,});
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +149,8 @@ class CashPaymentScreen extends StatelessWidget {
 
                   // 4. Confirm Button
                   ElevatedButton(
-                    onPressed: () => controller.processCashPayment(context, 42.0),
+                    // FIXED: Replaced hardcoded total parameters value logic with dynamic runtime variable context safely
+                    onPressed: () => controller.processCashPayment(context, rideId),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF00B14F), // Vibrant Green
                       minimumSize: Size(double.infinity, 58.h),

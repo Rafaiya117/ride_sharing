@@ -126,8 +126,7 @@ final GoRouter appRouter = GoRouter(
         // 1. Intercept the dynamic argument parameter from extra or query string
         final dynamic extraData = state.extra;
         final int rideId = extraData is int
-            ? extraData
-            : (int.tryParse(extraData.toString()) ?? 0);
+        ? extraData : (int.tryParse(extraData.toString()) ?? 0);
 
         // 2. Fetch controller instance and initialize network task
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -158,19 +157,9 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/payment',
       builder: (context, state) {
-        final Map<String, dynamic>? bookingData =
-            state.extra as Map<String, dynamic>?;
-
-        final int dynamicBookingId =
-            bookingData?['id'] ?? bookingData?['booking_id'] ?? 0;
-        // FIXED: Safely capture the ride id out of the booking extra response data context
-        final int dynamicRideId =
-            bookingData?['ride_id'] ?? bookingData?['ride']?['id'] ?? 0;
-
-        return PaymentScreen(
-          bookingId: dynamicBookingId,
-          rideId: dynamicRideId, // Pass this to the view layout
-        );
+        final Map<String, dynamic>? data = state.extra as Map<String, dynamic>?;
+        final int dynamicRideId = data?['ride_id'] ?? 0;
+        return PaymentScreen(bookingId: dynamicRideId, rideId: dynamicRideId);
       },
     ),
     // GoRoute(
@@ -187,9 +176,15 @@ final GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: '/cash_payment',
-      builder: (context, state) => CashPaymentScreen(),
-    ),
+  path: '/cash_payment',
+  builder: (context, state) {
+    final Map<String, dynamic>? data = state.extra as Map<String, dynamic>?;
+    final int dynamicRideId = data?['ride_id'] ?? 0;
+    
+    // Pass dynamicRideId parameter inside your actual CashPaymentPage class constructor setup
+    return CashPaymentScreen(rideId: dynamicRideId); 
+  },
+),
     GoRoute(
       path: '/rating_screen',
       builder: (context, state) => RatingScreen(),

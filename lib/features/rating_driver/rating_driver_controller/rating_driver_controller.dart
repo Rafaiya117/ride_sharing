@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_final_fields
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ride_sharing/features/rating_driver/rating_driver_model/rating_driver_model.dart';
 
 class RatingController extends ChangeNotifier {
@@ -43,7 +44,7 @@ class RatingController extends ChangeNotifier {
     
     String comments = commentsController.text.trim();
     print("Submitting dynamically: Rating $_selectedRating with comments: '$comments'");
-    // GoRouter.of(context).push('/home'); // Or Success page
+    context.push('/home'); // Or Success page
   }
 
   void navigateBack(BuildContext context) {
